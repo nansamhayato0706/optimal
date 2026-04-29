@@ -1,0 +1,266 @@
+/* =====================================================
+   datepicker-custom.css — jQuery UI Datepicker テーマ上書き
+   month-picker.css のデザインに合わせたスタイル
+   カラーは base.css の --hue / --sat 変数に連動
+   ===================================================== */
+
+/* --- ポップアップ本体 --- */
+.ui-datepicker {
+  width: 280px;
+  padding: 0;
+  background: var(--color-surface);
+  border: none;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  font-family: inherit;
+  z-index: 9999 !important;
+}
+
+/* --- ヘッダー（年月ナビゲーション） --- */
+.ui-datepicker .ui-datepicker-header {
+  background: linear-gradient(
+    135deg,
+    var(--color-header-grad-start),
+    var(--color-header-grad-end)
+  );
+  border: none;
+  border-radius: 0;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* --- 前月・次月ボタン --- */
+/* HTML順序が prev → next → title なので order で並び替え */
+.ui-datepicker .ui-datepicker-prev  { order: 1; }
+.ui-datepicker .ui-datepicker-title { order: 2; }
+.ui-datepicker .ui-datepicker-next  { order: 3; }
+
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+  position: static;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.20);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.12s;
+  top: auto;
+  flex-shrink: 0;
+}
+
+.ui-datepicker .ui-datepicker-prev:hover,
+.ui-datepicker .ui-datepicker-next:hover {
+  background: rgba(255,255,255,.36);
+  transform: scale(1.08);
+}
+
+.ui-datepicker .ui-datepicker-prev:active,
+.ui-datepicker .ui-datepicker-next:active {
+  transform: scale(0.94);
+}
+
+/* 前月・次月アイコン非表示 → テキスト矢印に差し替え */
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+  display: none;
+}
+
+.ui-datepicker .ui-datepicker-prev::after,
+.ui-datepicker .ui-datepicker-next::after {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1;
+}
+
+.ui-datepicker .ui-datepicker-prev::after {
+  content: '\2039';   /* ‹ */
+}
+
+.ui-datepicker .ui-datepicker-next::after {
+  content: '\203A';   /* › */
+}
+
+/* ホバー時の jQuery UI デフォルト位置ずれを打消し */
+.ui-datepicker .ui-datepicker-prev-hover,
+.ui-datepicker .ui-datepicker-next-hover {
+  top: auto;
+  left: auto;
+  right: auto;
+}
+
+/* --- タイトル（年月表示） --- */
+.ui-datepicker .ui-datepicker-title {
+  margin: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* 年・月セレクトボックス */
+.ui-datepicker .ui-datepicker-title select {
+  border: none;
+  border-radius: var(--r-md);
+  background: rgba(255,255,255,.92);
+  color: #333;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  padding: 4px 8px;
+  cursor: pointer;
+  margin: 0;
+  outline: none;
+  font-family: inherit;
+}
+
+.ui-datepicker .ui-datepicker-title select:focus {
+  outline: 2px solid rgba(255,255,255,.85);
+  outline-offset: 2px;
+}
+
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+  width: auto;
+}
+
+/* --- カレンダーテーブル --- */
+.ui-datepicker table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 4px;
+  margin: 0;
+  padding: 8px 10px 10px;
+  background: var(--color-accent-soft);
+}
+
+/* 曜日ヘッダー */
+.ui-datepicker th {
+  padding: 6px 0;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--color-accent-strong);
+  border: none;
+  background: transparent;
+}
+
+/* 日付セル */
+.ui-datepicker td {
+  padding: 0;
+  border: none;
+}
+
+.ui-datepicker td span,
+.ui-datepicker td a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+  text-decoration: none;
+  border-radius: var(--r-md);
+  border: 1.5px solid transparent;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+  transition:
+    background 0.13s,
+    border-color 0.13s,
+    color 0.13s,
+    transform 0.13s;
+}
+
+/* デフォルト（通常の日） */
+.ui-datepicker td .ui-state-default {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+/* ホバー */
+.ui-datepicker td .ui-state-hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+  transform: scale(1.08);
+}
+
+/* 選択日（アクティブ） */
+.ui-datepicker td .ui-state-active {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-strong)
+  );
+  border-color: transparent;
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: var(--shadow-mp-selected);
+}
+
+.ui-datepicker td .ui-state-active:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-mp-selected-hover);
+}
+
+/* 今日のハイライト */
+.ui-datepicker td .ui-state-highlight {
+  background: var(--color-surface);
+  border-color: var(--color-accent);
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  position: relative;
+}
+
+/* 今日 かつ 選択中 */
+.ui-datepicker td .ui-state-highlight.ui-state-active {
+  background: linear-gradient(
+    135deg,
+    var(--color-accent),
+    var(--color-accent-strong)
+  );
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* 無効日 */
+.ui-datepicker td .ui-state-disabled span {
+  color: var(--color-text-soft);
+  opacity: 0.4;
+  border-color: transparent;
+  background: transparent;
+}
+
+/* --- 他の月の日（前月・翌月のグレーアウト） --- */
+.ui-datepicker .ui-datepicker-other-month .ui-state-default {
+  color: var(--color-text-soft);
+  opacity: 0.5;
+  border-color: transparent;
+  background: transparent;
+}
+
+/* --- jQuery UI ウィジェット共通上書き --- */
+.ui-datepicker.ui-widget.ui-widget-content {
+  border: none;
+}
+
+/* jQuery UI アイコン非表示（テキスト矢印で代替済み） */
+.ui-datepicker .ui-icon {
+  display: none;
+}

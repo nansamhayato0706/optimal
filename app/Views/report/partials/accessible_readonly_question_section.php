@@ -1,0 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
+// Share the accessible readonly question section while keeping multiline output readable.
+?>
+<section class="accessible-card"<?= isset($sectionId) ? ' tabindex="0" aria-labelledby="' . $h($sectionId('question')) . '"' : '' ?>><h4 class="accessible-card-title"<?= isset($sectionId) ? ' id="' . $h($sectionId('question')) . '"' : '' ?>><?= $h($sectionLabel('question')) ?></h4><div class="accessible-stack"><div class="accessible-field"><span class="rf-label"><?= $h($fieldLabel('remark')) ?></span><?= isset($renderMultiline) && $renderMultiline ? '<div class="accessible-value accessible-value--multiline">' . nl2br($h($reportData['remark'])) . '</div>' : '<textarea rows="5" name="remark" readonly>' . $h($reportData['remark']) . '</textarea>' ?></div><?php if ($showReadonlyAdminComment): ?><div class="accessible-field"><span class="rf-label"><?= $h($fieldLabel('charge_comment')) ?></span><?= isset($renderMultiline) && $renderMultiline ? '<div class="accessible-value accessible-value--multiline">' . nl2br($h($reportData['charge_comment'])) . '</div>' : '<textarea rows="5" name="charge_comment" readonly>' . $h($reportData['charge_comment']) . '</textarea>' ?></div><?php endif; ?></div></section>

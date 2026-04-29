@@ -1,0 +1,596 @@
+/* ============================================================
+   components.css — 共通UIコンポーネント
+   ボタン・テーブル・バッジ・ステータス色
+   ============================================================ */
+
+/* ============================================================
+   ボタン（h_link / btn）
+   ============================================================ */
+
+.h_link,
+.btn,
+input[type="submit"].h_link,
+input[type="button"].h_link,
+input[type="submit"].btn,
+input[type="button"].btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 0 var(--sp-5);
+  min-height: 36px;
+  border: 1px solid var(--color-accent-strong);
+  border-radius: var(--r-md);
+  background: linear-gradient(
+    180deg,
+    var(--color-accent) 0%,
+    var(--color-accent-strong) 100%
+  );
+  color: #ffffff;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    filter 0.15s,
+    transform 0.1s;
+  box-shadow: var(--shadow-sm);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.h_link:hover,
+.btn:hover,
+input[type="submit"].h_link:hover,
+input[type="button"].h_link:hover {
+  filter: brightness(1.1);
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.h_link:active,
+.btn:active {
+  transform: translateY(1px);
+  filter: brightness(0.96);
+}
+
+/* キーボード操作時のフォーカスリング */
+.h_link:focus-visible,
+.btn:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="button"]:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+.btn-secondary:focus-visible,
+input[type="submit"].btn-secondary:focus-visible,
+input[type="button"].btn-secondary:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+/* セカンダリボタン */
+.btn-secondary,
+input[type="submit"].btn-secondary,
+input[type="button"].btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-accent);
+  border-color: var(--color-accent-border);
+  box-shadow: none;
+}
+
+.btn-secondary:hover,
+input[type="submit"].btn-secondary:hover,
+input[type="button"].btn-secondary:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  filter: none;
+}
+
+/* 危険ボタン */
+.btn-danger,
+input[type="submit"].btn-danger {
+  background: linear-gradient(180deg, #e74c3c, #c0392b);
+  border-color: #c0392b;
+}
+
+/* ============================================================
+   テーブル（一覧系）
+   ============================================================ */
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: var(--color-surface);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.data-table th {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-soft),
+    var(--color-surface-alt)
+  );
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--color-border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--color-border);
+  vertical-align: middle;
+  transition: background-color 0.15s;
+}
+
+.data-table tbody tr:hover td:not([class*="user_"]) {
+  background-color: var(--color-accent-soft);
+}
+
+/* ============================================================
+   ステータスバッジ（ユーザー一覧セル色）
+   ============================================================ */
+
+/* 作業状況セル */
+[class^="user_"] {
+  transition: background-color 0.3s;
+}
+
+/* 各種ステータス色 */
+.status-working,
+td.status-working {
+  background-color: #d1fae5;
+}
+
+.status-break,
+td.status-break {
+  background-color: #fef3c7;
+}
+
+.status-done,
+td.status-done {
+  background-color: #dbeafe;
+}
+
+.status-absent,
+td.status-absent {
+  background-color: #f3f4f6;
+}
+
+.status-chat,
+td.status-chat {
+  background-color: #ede9fe;
+}
+
+.status-report,
+td.status-report {
+  background-color: #fce7f3;
+}
+
+/* ユーザー一覧のステータス色（既存クラス後方互換） */
+
+/* 勤務状況 */
+td.user_start {
+  background-color: #d1fae5; /* 勤務中：緑 */
+}
+td.user_end {
+  background-color: #e2e8f0; /* 勤務終了：薄グレー */
+}
+
+/* チャット */
+td.user_chat_off {
+  background-color: #f3f4f6;
+}
+td.user_chat_on {
+  background-color: #ede9fe; /* 新着あり：薄紫 */
+}
+
+/* 日報 */
+td.user_report_off {
+  background-color: #f3f4f6;
+}
+td.user_report_on {
+  background-color: #fef9c3; /* 提出あり：薄アンバー */
+}
+
+/* 確認列：連絡区分1（開始連絡） */
+td.user_contact_1 {
+  background-color: #bbf7d0; /* 未対応：薄緑 */
+}
+td.user_contact_f_1 {
+  background-color: #4ade80; /* 確認済：中緑 */
+}
+
+/* 確認列：連絡区分2（終了連絡） */
+td.user_contact_2 {
+  background-color: #bfdbfe; /* 未対応：薄青 */
+}
+td.user_contact_f_2 {
+  background-color: #60a5fa; /* 確認済：中青 */
+}
+
+/* 確認列：連絡区分3（問い合わせ） */
+td.user_contact_3 {
+  background-color: #fde68a; /* 未対応：薄黄（要注意） */
+}
+td.user_contact_f_3 {
+  background-color: #fdba74; /* 確認済：オレンジ */
+}
+
+/* ============================================================
+   ページ内のユーザー名表示
+   ============================================================ */
+
+.page-username {
+  font-size: 1.1rem;
+  color: var(--color-text-soft);
+  font-weight: bold;
+  margin-left: var(--sp-3);
+}
+
+/* ============================================================
+   ページ送信ボタン領域
+   ============================================================ */
+
+#frm_button {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) 0;
+}
+
+/* ============================================================
+   セレクト共通（page-toolbar 内）
+   ============================================================ */
+
+.page-toolbar select {
+  border-radius: var(--r-md);
+}
+
+/* ============================================================
+   タブレット（1024px 以下）
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .data-table th {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: 0.82rem;
+  }
+
+  .data-table td {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: 0.85rem;
+  }
+}
+
+/* ============================================================
+   rf-* カードベースフォーム（共通）
+   ============================================================ */
+
+.rf-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-3);
+}
+
+.rf-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.rf-title {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-soft),
+    var(--color-surface-alt)
+  );
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.rf-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-5);
+  padding: var(--sp-3) var(--sp-4);
+  align-items: flex-start;
+}
+
+.rf-body--basic-info .rf-value {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.rf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rf-field-xs {
+  width: 90px;
+  flex-shrink: 0;
+}
+.rf-field-sm {
+  width: 200px;
+  flex-shrink: 0;
+}
+.rf-field-md {
+  flex: 1 1 180px;
+}
+.rf-field-lg {
+  flex: 1 1 240px;
+}
+.rf-field-xl {
+  flex: 1 1 100%;
+}
+
+.rf-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--color-accent-strong);
+  white-space: nowrap;
+}
+
+.rf-help {
+  font-size: 0.75rem;
+  color: var(--color-text-soft);
+}
+
+.rf-value {
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  font-size: 0.9rem;
+}
+
+.rf-value--multiline {
+  display: block;
+  min-height: 120px;
+  padding: 8px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.rf-field input[type="text"],
+.rf-field input[type="time"],
+.rf-field input[type="number"],
+.rf-field input[type="tel"],
+.rf-field input[type="email"],
+.rf-field select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rf-check-body {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4) var(--sp-3);
+  border: 0;
+  min-inline-size: 0;
+}
+
+.rf-check-body > .rf-title {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 calc(var(--sp-4) * -1) var(--sp-3);
+}
+
+.rf-check-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-1) var(--sp-3);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  transition:
+    border-color 0.12s,
+    background 0.12s;
+  user-select: none;
+}
+
+.rf-check-item:has(input:checked) {
+  border-color: var(--color-accent);
+  background: var(--color-accent-soft);
+  color: var(--color-accent-strong);
+  font-weight: 700;
+}
+
+.rf-check-item:has(input:disabled) {
+  cursor: default;
+}
+
+.rf-check-item input[type="checkbox"] {
+  margin: 0;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.rf-body-split {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding: 0;
+  gap: 0;
+  align-items: stretch;
+}
+
+.rf-split-col {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  min-width: 0;
+}
+
+.rf-split-col + .rf-split-col {
+  border-left: none;
+  border-top: 1px solid var(--color-border);
+}
+
+.rf-split-col textarea {
+  width: 100%;
+  flex: 1;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+.rf-section-err {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-error);
+  background: var(--color-error-light);
+  border-left: 3px solid var(--color-error);
+  padding: var(--sp-2) var(--sp-4);
+  margin: 0;
+}
+
+.rf-section-err::before {
+  content: "!";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 50%;
+  background: var(--color-error);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rf-field input[aria-invalid="true"],
+.rf-field select[aria-invalid="true"] {
+  border-color: var(--color-error);
+  background: var(--color-error-light);
+  outline: none;
+}
+
+.rf-field input[aria-invalid="true"]:focus,
+.rf-field select[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-error) 20%, transparent);
+}
+
+.rf-field .err {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-error);
+  background: var(--color-error-light);
+  border-left: 3px solid var(--color-error);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  padding: 3px var(--sp-2);
+  margin-top: 2px;
+  line-height: 1.4;
+}
+
+.rf-field .err::before {
+  content: "!";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 50%;
+  background: var(--color-error);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.rf-actions {
+  display: flex;
+  justify-content: flex-start;
+  padding: var(--sp-3) 0;
+}
+
+.rf-break {
+  flex-basis: 100%;
+  height: 0;
+}
+
+.rf-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  width: 100%;
+  gap: var(--sp-1) var(--sp-5);
+}
+
+.rf-row-3 .rf-field-lg {
+  min-width: 0;
+}
+
+@media (min-width: 641px) {
+  .rf-body--compact {
+    gap: var(--sp-1) var(--sp-5);
+  }
+}
+
+@media (max-width: 1024px) {
+  .rf-body {
+    gap: var(--sp-3) var(--sp-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .rf-field-xs,
+  .rf-field-sm {
+    width: 100%;
+    flex-shrink: 1;
+  }
+
+  .rf-body--compact .rf-field-lg {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .rf-row-3 {
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+  }
+}

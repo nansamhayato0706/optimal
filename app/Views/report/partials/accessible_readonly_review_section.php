@@ -1,0 +1,7 @@
+<?php
+
+declare(strict_types=1);
+
+// Share the accessible readonly review summary between confirm and detail screens.
+?>
+<section class="accessible-card"<?= isset($sectionId) ? ' tabindex="0" aria-labelledby="' . $h($sectionId('review')) . '"' : '' ?>><h4 class="accessible-card-title"<?= isset($sectionId) ? ' id="' . $h($sectionId('review')) . '"' : '' ?>><?= $h($sectionLabel('review')) ?></h4><div class="accessible-summary-list"><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('rethink_am')) ?></span><?= $h($reportData['rethink_am']) ?></div><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('achieve_am')) ?></span><?= $h($reportData['achieve_am']) ?>％</div><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('fatigue_am')) ?></span><?= $h($reportData['fatigue_am']) ?>％</div><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('rethink_pm')) ?></span><?= $h($reportData['rethink_pm']) ?></div><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('achieve_pm')) ?></span><?= $h($reportData['achieve_pm']) ?>％</div><div class="accessible-summary-item"><span class="accessible-summary-label"><?= $h($fieldLabel('fatigue_pm')) ?></span><?= $h($reportData['fatigue_pm']) ?>％</div></div></section>

@@ -1,0 +1,83 @@
+/* ============================================================
+   chat.css — チャット画面
+   ============================================================ */
+
+/* チャット全体コンテナ */
+#chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* 送信フォーム */
+.chat-send-form {
+  display: flex;
+  gap: var(--sp-3);
+  align-items: center;
+  padding: var(--sp-4);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  margin-bottom: var(--sp-4);
+}
+
+.chat-send-form input[type="text"] {
+  flex: 1;
+  height: 40px;
+  border-radius: var(--r-md);
+  padding: 0 var(--sp-4);
+  font-size: 0.95rem;
+}
+
+/* メッセージ */
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: var(--sp-3);
+  max-width: 72%;
+}
+
+.chat-from-admin {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.chat-from-user {
+  align-self: flex-start;
+  align-items: flex-start;
+}
+
+.chat-meta {
+  font-size: 0.75rem;
+  color: var(--color-text-soft);
+  margin-bottom: var(--sp-1);
+}
+
+.chat-bubble {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  word-break: break-word;
+  box-shadow: var(--shadow-sm);
+}
+
+.chat-from-admin .chat-bubble {
+  background: var(--color-accent);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-from-user .chat-bubble {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: 4px;
+}
+
+/* 履歴取得エリア */
+.chat-history-area {
+  display: flex;
+  justify-content: center;
+  padding: var(--sp-4) 0;
+  margin-top: var(--sp-2);
+}

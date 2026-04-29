@@ -1,0 +1,29 @@
+<?php
+declare(strict_types=1);
+
+$h = static function ($v): string {
+	return htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+};
+
+$divName = static function (string $parent, $id) use ($divMap): string {
+	return (string) ($divMap[$parent][(int) $id] ?? '');
+};
+$booleanName = static function ($value): string {
+	return (string) ((int) $value === 1 ? 'あり' : 'なし');
+};
+?>
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title><?= $h($title) ?>｜在宅就労管理システム</title><link rel="stylesheet" href="<?= $h($cssBase) ?>base.css"><link rel="stylesheet" href="<?= $h($cssBase) ?>components.css"><link rel="stylesheet" href="<?= $h($cssBase) ?>common.css"><link rel="stylesheet" href="<?= $h($cssBase) ?>user.css"></head><body><div id="wrapper"><div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div><div id="main"><div class="page-card panel-stack"><div class="page-header"><h3 class="page-title"><?= $h($title) ?><?php if (($form['user_name'] ?? '') !== ''): ?><span class="page-username"><?= $h($form['user_name']) ?></span><?php endif; ?></h3></div><div class="user-edit-form-body">
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">ユーザーID</div><div class="frm_input"><input type="text" value="<?= $h($form['user_id']) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">パスワード</div><div class="frm_input"><input type="text" value="<?= $h($form['user_password']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">ユーザー区分</div><div class="frm_input"><input type="text" value="<?= $h($divName('user', $form['user_div'])) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">就労形態</div><div class="frm_input"><input type="text" value="<?= $h($divName('work_style', $form['work_style_div'])) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">削除フラグ</div><div class="frm_input"><input type="text" value="<?= $h($divName('delete_flg', $form['delete_flg'])) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">視覚障害</div><div class="frm_input"><input type="text" value="<?= $h($booleanName($form['visual_impairment_flg'] ?? 0)) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">名前</div><div class="frm_input"><input type="text" value="<?= $h($form['user_name']) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">フリガナ</div><div class="frm_input"><input type="text" value="<?= $h($form['user_name_kana']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">性別</div><div class="frm_input"><input type="text" value="<?= $h($divName('sex', $form['sex_div'])) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">生年月日</div><div class="frm_input"><input type="date" value="<?= $h($form['birthday']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">郵便番号</div><div class="frm_input"><input type="text" value="<?= $h($form['user_zip_code']) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">都道府県</div><div class="frm_input"><input type="text" value="<?= $h($divName('prefecture', $form['user_prefecture_div'])) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">住所</div><div class="frm_input_xl"><input type="text" value="<?= $h($form['user_address']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">電話番号</div><div class="frm_input"><input type="text" value="<?= $h($form['user_tel']) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">e-mail</div><div class="frm_input"><input type="text" value="<?= $h($form['user_email']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_mm"><div class="frm_title">シリアル番号</div><div class="frm_input"><input type="text" value="<?= $h($form['serial_no']) ?>" readonly></div></div><div class="frm_parts_mm"><div class="frm_title">ボリューム番号</div><div class="frm_input"><input type="text" value="<?= $h($form['volume_no']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_ms"><div class="frm_title">連絡（分）</div><div class="frm_input_s"><input type="number" value="<?= $h($form['send_interval']) ?>" readonly></div></div><div class="frm_parts_ms"><div class="frm_title">キーボード（分）</div><div class="frm_input_s"><input type="number" value="<?= $h($form['keyboard_interval']) ?>" readonly></div></div><div class="frm_parts_ms"><div class="frm_title">マウス（分）</div><div class="frm_input_s"><input type="number" value="<?= $h($form['mouse_interval']) ?>" readonly></div></div></div>
+<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">備考</div><div class="frm_input_xl2"><input type="text" value="<?= $h($form['remark']) ?>" readonly></div></div></div>
+<?php if ($assignableAdmins !== array()): ?><div class="frm_row_title">管理者の設定</div><div class="frm_row frm_row_check"><?php foreach ($assignableAdmins as $admin): ?><?php if (in_array($admin['admin_uuid'], $form['admin_uuid'], true)): ?><div class="frm_mxs"><div class="frm_input_xs_n"><input type="checkbox" checked disabled></div><label class="frm_title_n"><?= $h($admin['admin_name']) ?></label></div><?php endif; ?><?php endforeach; ?></div><?php endif; ?>
+</div><div class="frm_row user-edit-btn-row"><div id="frm_button"><a class="h_link btn-secondary" href="user_edit.php">戻る</a><a class="h_link" href="user_complete.php">登録</a></div></div></div></div></body></html>
+

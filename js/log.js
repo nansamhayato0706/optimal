@@ -1,0 +1,9 @@
+$(function(){
+	$('.date').datepicker({
+		yearRange:'2016:+1',
+		dateFormat:'yy-mm-dd',
+		showButtonPanel:false,
+		changeMonth:true,
+		changeYear:true
+	});
+});

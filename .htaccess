@@ -1,0 +1,18 @@
+RewriteEngine On
+RewriteBase /zaitakukanri_honbu_optimal/
+
+# 実在するファイル・ディレクトリはそのまま配信
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# それ以外はすべて index.php へ
+RewriteRule ^ index.php [L,QSA]
+
+# システムフォルダへの直接アクセス禁止
+<FilesMatch "\.(local|example|md|production|sql|gitignore|codex)$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "^\.env">
+    Require all denied
+</FilesMatch>

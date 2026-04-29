@@ -1,0 +1,592 @@
+/* ============================================================
+   report.css — 日報関連ページ
+   ============================================================ */
+
+/* ============================================================
+   日報一覧（report.php）
+   ============================================================ */
+
+/* 一覧ヘッダー */
+.report_index_header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.report_index_title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+/* ツールバー行：検索・追加・PDF を横並び */
+.report_index_toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-4);
+  width: 100%;
+}
+
+/* フォームグループ間の縦区切り線 */
+.report_index_toolbar-sep {
+  display: block;
+  width: 1px;
+  height: 24px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+.report_index_search_form,
+.report_index_create_form {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+/* フォームのラベル（「日報追加」「期間PDF」） */
+.report_index_create_label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-text-soft);
+  white-space: nowrap;
+}
+
+.report_index_separator {
+  color: var(--color-text-soft);
+  font-size: 0.85rem;
+}
+
+/* 月入力・日付入力 */
+input.month-picker,
+input.date {
+  border-radius: var(--r-md);
+  width: var(--calendar-month-width);
+  height: 36px;
+  padding: 0 var(--sp-3);
+}
+
+input.month-picker-end {
+  width: var(--calendar-month-width);
+}
+
+input.date {
+  width: var(--calendar-date-width);
+}
+
+.report_index_button {
+  height: 36px;
+  padding: 0 var(--sp-4);
+  min-height: 36px;
+}
+
+/* 一覧テーブル */
+.report_index_table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.report_index_table th {
+  background: linear-gradient(90deg, var(--color-accent-soft), var(--color-surface-alt));
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.report_index_table td {
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--color-border);
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.report_index_table tbody tr:hover {
+  background: var(--color-accent-soft);
+}
+
+/* ============================================================
+   日報フォームボディ（edit / confirm / lock / comment）
+   ============================================================ */
+
+.report-form-body {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+  margin-bottom: var(--sp-4);
+}
+
+/* frm_row_title のセクション見出し */
+.report-form-body .frm_row_title {
+  background: linear-gradient(90deg, var(--color-accent-soft), var(--color-surface-alt));
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* 備考欄・支援記録の横並びセクション（左罫線は frm_parts_xlm の border-right に任せる） */
+.report_edit_multiline_gap {
+}
+
+/* ============================================================
+   日報詳細ヘッダー（report_edit.php の上部）
+   ============================================================ */
+
+.report_detail_header,
+.report_confirm_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-3) var(--sp-5);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.report_detail_title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.report_detail_form {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.report_detail_period {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  font-weight: 700;
+}
+
+/* ============================================================
+   lock.tpl / comment.tpl 用
+   ============================================================ */
+
+.report_lock_multiline_gap {
+}
+
+.report_comment_multiline_gap {
+}
+
+/* ============================================================
+   日報登録完了（report_complete.php）
+   ============================================================ */
+
+.report_complete_message {
+  text-align: center;
+  padding: var(--sp-8) var(--sp-5);
+  color: var(--color-text-soft);
+  font-size: 1rem;
+}
+
+/* report_edit.php の読取項目を明確に見せる */
+.report_edit_form input[readonly]:not([type="submit"]):not([type="button"]):not([type="hidden"]),
+.report_edit_form textarea[readonly],
+.report_edit_form select:disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  border-color: #d1d5db;
+  cursor: default;
+  opacity: 1;
+}
+
+/* ============================================================
+   report_confirm.css を内包
+   ============================================================ */
+
+/* 確認ボタン配置 */
+.report_confirm_buttons {
+  display: flex;
+  justify-content: center;
+  gap: var(--sp-3);
+  padding: var(--sp-4) 0;
+}
+
+/* ============================================================
+   ユーティリティ（一覧テーブル用）
+   ============================================================ */
+
+/* 一覧テーブルの横スクロールラッパー */
+.report-table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 折り返し禁止 */
+.text-nowrap,
+.report_nowrap {
+  white-space: nowrap;
+}
+
+/* データなし表示 */
+.empty-state {
+  text-align: center;
+  padding: var(--sp-8) var(--sp-5);
+  color: var(--color-text-soft);
+  font-size: 1rem;
+  font-weight: normal;
+  margin: 0;
+}
+
+/* ============================================================
+   lock.tpl ビュー
+   ============================================================ */
+
+.report_lock_view {
+  /* lock.tpl の id="main" 追加クラス（現状は特別なスタイルなし） */
+}
+
+.report_lock_view .rf-value {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  background: var(--color-surface-alt);
+  padding: 4px 8px;
+  min-height: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.report_lock_view .rf-field-xs {
+  width: 112px;
+}
+
+.report_lock_view .rf-field-xs .rf-value {
+  white-space: nowrap;
+}
+
+.report_lock_view .rf-value--multiline {
+  background: var(--color-surface-alt);
+  border-color: var(--color-border);
+}
+
+.report_lock_view .rf-body-split .rf-value--multiline {
+  min-height: 24px;
+}
+
+/* ============================================================
+   data-table（report.php の一覧テーブルクラス変更対応）
+   ============================================================ */
+
+/* report/index.tpl は data-table クラスを使用 */
+.data-table.report_list th {
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+.data-table.report_list td {
+  font-size: 0.88rem;
+  padding: var(--sp-2) var(--sp-3);
+}
+
+.data-table.report_list a {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+/* ============================================================
+   frm_row_title の後方互換（report-form-body 外でも機能させる）
+   ============================================================ */
+
+.frm_row_title + .frm_row_check {
+  border-top: 0;
+}
+
+/* --- タブレット（1024px以下）--- */
+@media (max-width: 1024px) {
+  .report_index_table th {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: 0.82rem;
+  }
+
+  .report_index_table td {
+    padding: var(--sp-2) var(--sp-3);
+    font-size: 0.85rem;
+  }
+}
+.accessible-page-header {
+  margin-bottom: var(--sp-4);
+}
+
+.accessible-intro {
+  margin-bottom: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  background: #fffbea;
+  border: 2px solid #b45309;
+  border-radius: var(--r-md);
+  color: #3f2b14;
+}
+
+.accessible-intro p {
+  margin: 0 0 var(--sp-2);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+
+.accessible-intro p:last-child {
+  margin-bottom: 0;
+}
+
+.accessible-form {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.accessible-card {
+  background: var(--color-surface);
+  border: 2px solid #1f2937;
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  padding: var(--sp-5);
+}
+
+.accessible-card-title {
+  margin: 0 0 var(--sp-4);
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.accessible-stack {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.accessible-field {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.accessible-field-inline {
+  display: grid;
+  gap: var(--sp-3);
+  grid-template-columns: 1fr;
+}
+
+.accessible-field .rf-label,
+.accessible-group-legend {
+  display: block;
+  margin: 0;
+  color: #111827;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.accessible-help {
+  color: #374151;
+  font-size: 0.98rem;
+  line-height: 1.8;
+}
+
+.accessible-value {
+  min-height: 48px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 2px solid #4b5563;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.accessible-value-strong {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.accessible-value--multiline {
+  min-height: 160px;
+  white-space: pre-wrap;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -48px;
+  z-index: 1000;
+  padding: 10px 14px;
+  background: #111827;
+  color: #ffffff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+.accessible-choice-group {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.accessible-choice-list {
+  display: grid;
+  gap: 10px;
+}
+
+.accessible-choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 2px solid #6b7280;
+  border-radius: 10px;
+  line-height: 1.7;
+}
+
+.accessible-choice input {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.accessible-choice-text {
+  display: inline-block;
+  font-size: 1rem;
+}
+
+.accessible-choice-list--readonly .accessible-choice {
+  cursor: default;
+  pointer-events: none;
+  background: #f3f4f6;
+  border-color: #d1d5db;
+  color: #6b7280;
+}
+
+.accessible-choice-list--readonly .accessible-choice--checked {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1e40af;
+}
+
+.accessible-choice-list--readonly .accessible-choice input {
+  pointer-events: none;
+}
+
+.accessible-summary-list {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.accessible-summary-item {
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 2px solid #6b7280;
+  border-radius: 10px;
+}
+
+.accessible-summary-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 800;
+}
+
+.accessible-action-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: var(--sp-4);
+}
+
+.accessible-action-bar .h_link,
+.accessible-action-bar input[type="submit"] {
+  min-width: 180px;
+  min-height: 48px;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.accessible-form input[type="text"],
+.accessible-form input[type="time"],
+.accessible-form input[type="number"],
+.accessible-form textarea,
+.accessible-form select {
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 2px solid #4b5563;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #111827;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.accessible-form input::placeholder,
+.accessible-form textarea::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+.accessible-form textarea {
+  min-height: 160px;
+}
+
+.accessible-form input:focus,
+.accessible-form textarea:focus,
+.accessible-form select:focus {
+  outline: 4px solid #f59e0b;
+  outline-offset: 2px;
+}
+
+.accessible-form a:focus,
+.accessible-form .h_link:focus,
+.accessible-form input[type="submit"]:focus,
+.accessible-form input[type="button"]:focus,
+.accessible-card:focus {
+  outline: 3px solid #005fcc;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .accessible-card {
+    padding: var(--sp-4);
+  }
+
+  .accessible-action-bar {
+    flex-direction: column;
+  }
+
+  .accessible-action-bar .h_link,
+  .accessible-action-bar input[type="submit"] {
+    width: 100%;
+  }
+}

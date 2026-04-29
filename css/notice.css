@@ -1,0 +1,29 @@
+/* ============================================================
+   notice.css — お知らせ管理ページ
+   ============================================================ */
+
+/* frm_parts_xlm の min-width を page-card 内で解除 */
+.page-card .frm_parts_xlm {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+/* textarea 全高 */
+.page-card .frm_height_xl textarea {
+  height: 100%;
+  min-height: 280px;
+  resize: vertical;
+}
+
+/* 送信ボタン上の余白 */
+.page-card form > input[type="submit"].h_link {
+  margin-top: var(--sp-5);
+}
+
+/* モバイルで frm_title の高さを auto に */
+@media (max-width: 640px) {
+  .frm_title.frm_height_xl {
+    height: auto;
+    min-height: auto;
+  }
+}

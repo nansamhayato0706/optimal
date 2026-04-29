@@ -1,0 +1,589 @@
+/* ============================================================
+   common.css — フォームシステム・共通コントロール
+
+   【フォーム構造】
+   .form-body（またはページ別ラッパー）
+     └ .frm_row_title        … セクション見出し行
+     └ .frm_row              … 1行（複数 frm_parts を横並び）
+         └ .frm_parts_*      … 列ブロック（min-width で自動折り返し）
+             └ .frm_title    … ラベルセル
+             └ .frm_input_*  … 入力セル
+     └ .frm_row.frm_row_check … チェックボックスグリッド行
+
+   【二重罫線の解消】
+   frm_row が border-bottom のみ持つ。
+   frm_parts_* が border-right のみ持つ。
+   セルには上下罫線なし。
+   ============================================================ */
+
+/* ============================================================
+   フォームコントロール
+   ============================================================ */
+
+textarea,
+input[type="text"],
+input[type="time"],
+input[type="number"],
+input[type="password"],
+input[type="tel"],
+input[type="email"] {
+  background-color: var(--ctrl-bg);
+  border: var(--ctrl-border);
+  border-radius: var(--form-control-radius);
+  padding: var(--form-control-padding);
+  font-size: 100%;
+  font-weight: bold;
+  outline: none;
+  box-shadow: none;
+  font-family: inherit;
+  color: var(--color-text);
+}
+
+textarea:focus,
+input[type="text"]:focus,
+input[type="time"]:focus,
+input[type="number"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus {
+  background-color: #e8f1ff;
+  border-color: #4a90d9;
+}
+
+/* キーボード操作時のフォーカスリング */
+textarea:focus-visible,
+input[type="text"]:focus-visible,
+input[type="time"]:focus-visible,
+input[type="number"]:focus-visible,
+input[type="password"]:focus-visible,
+input[type="tel"]:focus-visible,
+input[type="email"]:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+input[readonly],
+textarea[readonly] {
+  background-color: var(--ctrl-bg-ro);
+  color: var(--color-text-soft);
+  cursor: default;
+}
+
+select {
+  background-color: var(--ctrl-bg);
+  border: var(--ctrl-border);
+  border-radius: var(--form-control-radius);
+  padding: var(--select-control-padding);
+  font-size: 100%;
+  font-weight: bold;
+  outline: none;
+  font-family: inherit;
+  cursor: pointer;
+  color: var(--color-text);
+}
+
+select:focus {
+  border-color: #4a90d9;
+}
+
+/* ============================================================
+   フォームボディ（罫線管理の親コンテナ）
+   ============================================================ */
+
+.form-body {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* ============================================================
+   frm_row_title — セクション見出し行
+   ============================================================ */
+
+.frm_row_title {
+  background: linear-gradient(90deg, var(--color-accent-soft), var(--color-surface-alt));
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--color-border);
+  width: 100%;
+  clear: both;
+  box-sizing: border-box;
+}
+
+/* ============================================================
+   frm_row — フォーム行（Flexbox）
+   ============================================================ */
+
+.frm_row {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border-bottom: 1px solid var(--color-border);
+  clear: both;
+  box-sizing: border-box;
+}
+
+.frm_row:last-child {
+  border-bottom: 0;
+}
+
+.frm_row::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+/* frm_row 間の隙間なし */
+.frm_row + .frm_row  { margin-top: 0; }
+.frm_row + .frm_row_title { margin-top: 0; }
+.frm_row_title + .frm_row { margin-top: 0; }
+
+/* ============================================================
+   frm_parts_* — 列ブロック
+   ============================================================ */
+
+.frm_parts_xlm,
+.frm_parts_llm,
+.frm_parts_lm,
+.frm_parts_mm,
+.frm_parts_ms,
+.frm_parts_l,
+.frm_parts_ss,
+.frm_parts_m {
+  display: flex;
+  flex: 1 1 auto;
+  border-right: 1px solid var(--color-border);
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.frm_parts_xlm:last-child,
+.frm_parts_llm:last-child,
+.frm_parts_lm:last-child,
+.frm_parts_mm:last-child,
+.frm_parts_ms:last-child,
+.frm_parts_l:last-child,
+.frm_parts_ss:last-child,
+.frm_parts_m:last-child {
+  border-right: 0;
+}
+
+/* 最小幅（これ以下になると次の行に折り返す） */
+.frm_parts_xlm { min-width: 480px; flex: 4 1 480px; }
+.frm_parts_llm { min-width: 340px; flex: 3 1 340px; }
+.frm_parts_lm  { min-width: 280px; flex: 2 1 280px; }
+.frm_parts_mm  { min-width: 240px; flex: 2 1 240px; }
+.frm_parts_ms  { min-width: 200px; flex: 2 1 200px; }
+.frm_parts_l   { min-width: 200px; flex: 2 1 200px; }
+.frm_parts_ss  { min-width: 140px; flex: 1 1 140px; }
+.frm_parts_m   { min-width: 140px; flex: 1 1 140px; }
+
+/* ============================================================
+   frm_title / frm_title_s — ラベルセル
+   ============================================================ */
+
+.frm_title,
+.frm_title_s {
+  display: flex;
+  align-items: center;
+  flex: 0 0 var(--form-label-w);
+  width: var(--form-label-w);
+  min-width: 0;
+  min-height: var(--form-cell-height);
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--color-accent-soft);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--color-accent-strong);
+  border-right: 1px solid var(--color-border);
+  word-break: break-all;
+  box-sizing: border-box;
+}
+
+.frm_title_s {
+  flex: 0 0 90px;
+  width: 90px;
+}
+
+/* 複数行高さ */
+.frm_title.frm_height_6rows,
+.frm_title_s.frm_height_6rows,
+.frm_title_n.frm_height_6rows,
+.frm_title_s_n.frm_height_6rows {
+  align-items: flex-start;
+  padding-top: var(--sp-3);
+}
+
+.frm_title.frm_height_xl,
+.frm_title_s.frm_height_xl {
+  align-items: flex-start;
+  padding-top: var(--sp-3);
+}
+
+/* ============================================================
+   frm_input_* — 入力セル
+   ============================================================ */
+
+.frm_input_xl,
+.frm_input_xl2,
+.frm_input_ll,
+.frm_input_l,
+.frm_input,
+.frm_input_s,
+.frm_input_ss,
+.frm_input_xs {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: stretch;
+  min-width: 0;
+  min-height: var(--form-cell-height);
+  overflow: hidden;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 入力セル内コントロール */
+.frm_input_xl > input,  .frm_input_xl2 > input,
+.frm_input_ll > input,  .frm_input_l > input,
+.frm_input > input,     .frm_input_s > input,
+.frm_input_ss > input,  .frm_input_xs > input,
+.frm_input_xl > select,  .frm_input_xl2 > select,
+.frm_input_ll > select,  .frm_input_l > select,
+.frm_input > select,     .frm_input_s > select,
+.frm_input_ss > select,  .frm_input_xs > select,
+.frm_input_xl > textarea,
+.frm_input_xl2 > textarea {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  box-sizing: border-box;
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  padding: var(--form-control-padding);
+  background-color: var(--ctrl-bg);
+  font-weight: bold;
+  font-size: 100%;
+  font-family: inherit;
+  color: var(--color-text);
+}
+
+/* readonly / disabled */
+.frm_input_xl > input[readonly],  .frm_input_xl2 > input[readonly],
+.frm_input_ll > input[readonly],  .frm_input_l > input[readonly],
+.frm_input > input[readonly],     .frm_input_s > input[readonly],
+.frm_input_ss > input[readonly],  .frm_input_xs > input[readonly],
+.frm_input_xl > textarea[readonly],
+.frm_input_xl2 > textarea[readonly] {
+  background-color: var(--ctrl-bg-ro);
+  color: var(--color-text-soft);
+}
+
+/* select は高さを auto 調整 */
+.frm_input_xl > select,  .frm_input_xl2 > select,
+.frm_input_ll > select,  .frm_input_l > select,
+.frm_input > select,     .frm_input_s > select,
+.frm_input_ss > select,  .frm_input_xs > select {
+  height: auto;
+  align-self: center;
+  margin: 0 var(--sp-2);
+  width: calc(100% - var(--sp-4));
+  border: var(--ctrl-border);
+  border-radius: var(--form-control-radius);
+  padding: var(--select-control-padding);
+}
+
+/* frm_row 内ではパディング拡大 */
+.frm_row textarea,
+.frm_row input[type="text"],
+.frm_row input[type="time"],
+.frm_row input[type="number"],
+.frm_row input[type="password"],
+.frm_row input[type="tel"],
+.frm_row input[type="email"] {
+  padding: var(--form-row-control-padding);
+}
+
+.frm_row textarea {
+  line-height: 1.5;
+}
+
+/* ============================================================
+   frm_label_* — 表示用ラベルセル（計算結果等）
+   ============================================================ */
+
+.frm_label_l,
+.frm_label,
+.frm_label_s,
+.frm_label_ss {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-height: var(--form-cell-height);
+  padding: var(--sp-2) var(--sp-3);
+  font-weight: bold;
+}
+
+/* ============================================================
+   高さ拡張クラス
+   ============================================================ */
+
+.frm_height_6rows {
+  min-height: var(--form-multiline-height);
+  height: var(--form-multiline-height);
+}
+
+.frm_input_xl2.frm_height_6rows {
+  height: var(--form-multiline-height);
+}
+
+.frm_height_xl,
+.frm_height_xll {
+  min-height: 300px;
+  height: 300px;
+}
+
+.frm_height_6rows textarea,
+.frm_height_6rows > .frm_input_xl > textarea,
+.frm_height_6rows > .frm_input_xl2 > textarea {
+  min-height: var(--form-multiline-height);
+  height: 100%;
+  resize: vertical;
+}
+
+.frm_height_xl textarea,
+.frm_height_xll textarea {
+  min-height: 300px;
+  height: 100%;
+  resize: vertical;
+}
+
+/* ============================================================
+   インライン複合セル（_n サフィックス系）
+   ============================================================ */
+
+.frm_title_n,
+.frm_title_s_n {
+  display: flex;
+  align-items: center;
+  padding: var(--sp-2) var(--sp-3);
+  background: var(--color-accent-soft);
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--color-accent-strong);
+  min-height: var(--form-cell-height);
+  border-right: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+.frm_input_ll_n,
+.frm_input_l_n,
+.frm_input_n,
+.frm_input_s_n,
+.frm_input_ss_n,
+.frm_input_xs_n {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--form-cell-height);
+  padding: 0;
+}
+
+.frm_input_xs_n {
+  flex: 0 0 36px;
+  width: 36px;
+}
+
+/* ============================================================
+   frm_mxs — チェックボックス用ミニコンテナ
+   ============================================================ */
+
+.frm_mxs {
+  display: flex;
+  align-items: stretch;
+  min-height: var(--form-cell-height);
+  box-sizing: border-box;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.frm_mxs .frm_input_xs_n {
+  flex: 0 0 36px;
+  width: 36px;
+  justify-content: center;
+}
+
+.frm_mxs .frm_title_n {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ============================================================
+   frm_row_check — チェックボックスグリッド行
+   ============================================================ */
+
+.frm_row_check {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  width: 100%;
+  box-sizing: border-box;
+  /* border-bottom は .frm_row から継承 */
+  background: var(--color-surface-alt);
+}
+
+/* ::after は不要（frm_row::after の clear:both も flex/grid コンテキストでは無効） */
+.frm_row_check::after {
+  content: none;
+}
+
+.frm_row_title + .frm_row_check {
+  /* border-top は frm_row_title の border-bottom が視覚的に担う */
+}
+
+/* 各チェックボックス項目：境界線なし・角丸カード風 */
+.frm_row_check > .frm_mxs {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 var(--sp-2) 0 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  box-shadow: none;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+.frm_row_check > .frm_mxs > .frm_input_xs_n {
+  flex: 0 0 32px;
+  width: 32px;
+  border: 0;
+  background: transparent;
+  justify-content: center;
+}
+
+.frm_row_check > .frm_mxs > .frm_title_n,
+.frm_row_check > .frm_mxs > label.frm_title_n {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--sp-2) 0 0;
+  font-size: 0.88rem;
+  white-space: nowrap;
+  cursor: default;
+  background: transparent;
+  color: var(--color-text);
+  font-weight: normal;
+}
+
+.frm_row_check > .frm_mxs > label.frm_title_n {
+  cursor: pointer;
+}
+
+/* frm_row_check 以外で frm_row 直下の frm_mxs */
+.frm_row > .frm_mxs {
+  border-right: 1px solid var(--color-border);
+  border-bottom: 0;
+}
+
+/* ============================================================
+   旧 float レイアウト用 br.clear → 非表示
+   ============================================================ */
+
+.frm_row       > br.clear,
+.frm_parts_xlm > br.clear,
+.frm_parts_llm > br.clear,
+.frm_parts_lm  > br.clear,
+.frm_parts_mm  > br.clear,
+.frm_parts_ms  > br.clear,
+.frm_parts_l   > br.clear,
+.frm_parts_ss  > br.clear,
+.frm_parts_m   > br.clear {
+  display: none;
+}
+
+/* ============================================================
+   タブレット（1024px 以下）
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .frm_parts_xlm { min-width: 320px; }
+  .frm_parts_llm { min-width: 260px; }
+
+  .frm_title,
+  .frm_title_s {
+    flex: 0 0 120px;
+    width: 120px;
+  }
+}
+
+/* ============================================================
+   モバイル（640px 以下）
+   ============================================================ */
+
+@media (max-width: 640px) {
+  .frm_row {
+    flex-direction: column;
+  }
+
+  .frm_parts_xlm,
+  .frm_parts_llm,
+  .frm_parts_lm,
+  .frm_parts_mm,
+  .frm_parts_ms,
+  .frm_parts_l,
+  .frm_parts_ss,
+  .frm_parts_m {
+    flex: 1 1 auto;
+    flex-direction: column; /* ラベルの上に入力を縦積み */
+    min-width: 0;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .frm_parts_xlm:last-child,
+  .frm_parts_llm:last-child,
+  .frm_parts_lm:last-child,
+  .frm_parts_mm:last-child,
+  .frm_parts_ms:last-child,
+  .frm_parts_l:last-child,
+  .frm_parts_ss:last-child,
+  .frm_parts_m:last-child {
+    border-bottom: 0;
+  }
+
+  .frm_title,
+  .frm_title_s {
+    flex: 0 0 auto;
+    width: 100%;
+    border-right: 0;
+    border-bottom: 1px solid var(--color-border);
+    min-height: auto;
+  }
+
+  .frm_row_check {
+    gap: var(--sp-1);
+    padding: var(--sp-2);
+  }
+
+  .frm_height_6rows {
+    height: auto;
+    min-height: var(--form-multiline-height);
+  }
+
+  .frm_height_6rows textarea {
+    height: auto;
+    min-height: var(--form-multiline-height);
+  }
+}

@@ -1,0 +1,423 @@
+/* ============================================================
+   user.css — ユーザー管理ページ
+   ============================================================ */
+
+/* ============================================================
+   ステータスサマリーカード（user.php）
+   ============================================================ */
+
+.summary-cards {
+  display: flex;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+}
+
+.summary-card {
+  flex: 1 1 160px;
+  min-width: 140px;
+  background: var(--color-surface);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+}
+
+.summary-card__label {
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+.summary-card__value {
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-text);
+}
+
+.summary-card__unit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--color-text-soft);
+  margin-left: 2px;
+}
+
+/* カラーバリエーション */
+.summary-card--working {
+  border-color: #22c55e;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+}
+.summary-card--working .summary-card__value {
+  color: #15803d;
+}
+
+.summary-card--done {
+  border-color: #60a5fa;
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+}
+.summary-card--done .summary-card__value {
+  color: #1d4ed8;
+}
+
+.summary-card--report {
+  border-color: #f472b6;
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+}
+.summary-card--report .summary-card__value {
+  color: #be185d;
+}
+
+.summary-card--chat {
+  border-color: #a78bfa;
+  background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+}
+.summary-card--chat .summary-card__value {
+  color: #6d28d9;
+}
+
+.summary-card--refresh {
+  border-color: #94a3b8;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+}
+.summary-card--refresh .summary-card__value {
+  color: #475569;
+}
+
+@media (max-width: 640px) {
+  .summary-cards {
+    gap: var(--sp-2);
+  }
+  .summary-card {
+    flex: 1 1 120px;
+    min-width: 110px;
+    padding: var(--sp-2) var(--sp-3);
+  }
+  .summary-card__value {
+    font-size: 1.5rem;
+  }
+}
+
+/* ============================================================
+   ユーザー一覧テーブル（user.php）
+   ============================================================ */
+
+/* ステータスセル色（詳細度を .data-table td より高くするため td を明示） */
+.data-table td.user_report {
+  background-color: #fce7f3;
+}
+.data-table td.user_chat {
+  background-color: #ede9fe;
+}
+.data-table td.user_start {
+  background-color: #d1fae5;
+}
+.data-table td.user_end {
+  background-color: #93c5fd;
+}
+.data-table td.user_rest {
+  background-color: #fef3c7;
+}
+.data-table td.user_contact_1 {
+  background-color: #d1fae5;
+}
+.data-table td.user_contact_f_1 {
+  background-color: #86efac;
+}
+.data-table td.user_contact_2 {
+  background-color: #93c5fd;
+}
+.data-table td.user_contact_f_2 {
+  background-color: #60a5fa;
+}
+.data-table td.user_contact_3 {
+  background-color: #fed7aa;
+}
+.data-table td.user_contact_f_3 {
+  background-color: #fdba74;
+}
+
+/* ユーザー一覧テーブル */
+.user_list {
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.user_list th {
+  white-space: nowrap;
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.user_list td {
+  padding: var(--sp-2) var(--sp-3);
+  font-size: 0.85rem;
+}
+
+.user_list td.text-center {
+  text-align: center;
+}
+
+.user_list td.text-right {
+  text-align: right;
+}
+
+.birthday-icon {
+  display: inline-block;
+  margin-left: 0.35rem;
+  line-height: 1;
+}
+
+.user_list td.birthday-near {
+  background-color: #fed7aa;
+}
+
+.user_list td.birthday-today {
+  background-color: #fbcfe8;
+}
+
+/* 確認ボタン（作業開始通知等） */
+.user_list input[type="button"] {
+  padding: 2px var(--sp-3);
+  min-height: 28px;
+  font-size: 0.8rem;
+  border: 1px solid var(--color-accent-strong);
+  border-radius: var(--r-md);
+  background: linear-gradient(
+    180deg,
+    var(--color-accent),
+    var(--color-accent-strong)
+  );
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter 0.15s;
+}
+
+.user_list input[type="button"]:hover {
+  filter: brightness(1.1);
+}
+
+.user_list .user-status-link {
+  padding: 1px 10px;
+  min-height: 24px;
+  margin-left: 6px;
+  font-size: 0.76rem;
+  border-radius: 999px;
+}
+
+/* ============================================================
+   連絡確認モーダル（user.php）
+   ============================================================ */
+
+.contact-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+}
+
+.contact-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100vw - 32px);
+  max-width: 860px;
+  max-height: calc(100vh - 48px);
+  overflow: auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.28);
+  z-index: 9999;
+  animation: contact-modal-in 0.22s ease-out;
+}
+
+@keyframes contact-modal-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -47%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.contact-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-strong),
+    var(--color-accent)
+  );
+  border-radius: 16px 16px 0 0;
+}
+
+.contact-modal-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.contact-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.contact-modal-close:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.contact-modal-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 24px;
+}
+
+.contact-modal-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-accent-strong);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-accent-soft);
+}
+
+.contact-modal-sent-text {
+  font-size: 0.92rem;
+  color: var(--color-text);
+  margin-bottom: 12px;
+  min-height: 1.4em;
+}
+
+.contact-modal-image-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-alt);
+}
+
+.contact-modal-image-wrap img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.contact-modal-field {
+  margin-bottom: 14px;
+}
+
+.contact-modal-field label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-soft);
+  margin-bottom: 5px;
+}
+
+.contact-modal select,
+.contact-modal textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: #fff;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+
+.contact-modal select:focus,
+.contact-modal textarea:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-accent-soft);
+}
+
+.contact-modal select {
+  height: 40px;
+}
+
+.contact-modal textarea {
+  resize: vertical;
+  min-height: 230px;
+}
+
+.contact-modal .err {
+  color: var(--color-error);
+  font-size: 0.8rem;
+  margin: 4px 0 0;
+}
+
+.contact-modal-error:not(:empty) {
+  color: var(--color-error);
+  background: var(--color-error-light);
+  border-radius: var(--r-sm);
+  padding: 8px 12px;
+  font-size: 0.85rem;
+  margin: 0 24px 8px;
+}
+
+.contact-modal-footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--color-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: var(--color-surface-alt);
+  border-radius: 0 0 16px 16px;
+}
+
+/* ============================================================
+   ユーザー編集フォーム（user_edit.php）
+   ============================================================ */
+
+.user-edit-form-body {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--color-surface);
+  margin-bottom: var(--sp-4);
+}
+
+
+/* ============================================================
+   page-toolbar 内セレクト
+   ============================================================ */
+
+.page-toolbar select {
+  border-radius: var(--r-md);
+  height: 36px;
+}

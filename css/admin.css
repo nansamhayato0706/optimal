@@ -1,0 +1,27 @@
+/* ============================================================
+   admin.css — 管理者管理ページ
+   ============================================================ */
+
+/* 管理者一覧テーブル */
+.data-table td,
+.data-table th,
+table td,
+table th {
+  font-size: 0.9rem;
+}
+
+/* 管理者区分セレクト幅制限 */
+@media (min-width: 600px) {
+  .admin-div-select {
+    max-width: 300px;
+  }
+}
+
+/* 管理者編集フォーム */
+.admin-edit-form-body {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--color-surface);
+  margin-bottom: var(--sp-4);
+}

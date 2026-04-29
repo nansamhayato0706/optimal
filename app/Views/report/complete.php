@@ -1,0 +1,28 @@
+<?php
+
+declare(strict_types=1);
+
+$h = static function ($value): string {
+	return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
+};
+?>
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title><?= $h($title) ?>｜在宅就労管理システム</title>
+		<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css" type="text/css" media="screen">
+		<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css" type="text/css" media="screen">
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+			<div id="main"><div class="page-card"><div class="page-header"><h3 class="page-title"><?= $h($title) ?></h3></div><div class="frm_row">訓練日報の登録が<?= $result ? '完了' : '失敗' ?>しました。</div></div></div>
+			<div id="footer"></div>
+		</div>
+	</body>
+</html>
+
+

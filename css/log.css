@@ -1,0 +1,27 @@
+/* ============================================================
+   log.css — ログ画面
+   ============================================================ */
+
+/* 日付フィルター input */
+input.log_date {
+  border-radius: var(--r-md);
+  width: var(--calendar-date-width);
+  height: 36px;
+  padding: 0 var(--sp-3);
+}
+
+/* ログテーブル */
+.log-table {
+  width: 100%;
+  font-size: 0.88rem;
+}
+
+.log-table th {
+  white-space: nowrap;
+  font-size: 0.82rem;
+}
+
+.log-table td {
+  padding: var(--sp-2) var(--sp-3);
+  word-break: break-all;
+}

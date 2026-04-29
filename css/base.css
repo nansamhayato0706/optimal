@@ -1,0 +1,391 @@
+/* ============================================================
+   base.css — 在宅就労管理システム
+   デザイントークン・レイアウト・ヘッダー・共通要素
+
+   【配色変更方法】
+   --hue を変えるだけでブランドカラーが全体に適用されます。
+   例: 緑 → 青にする場合は --hue: 210; に変更
+   ============================================================ */
+
+/* --- デザイントークン ---------------------------------------- */
+:root {
+  /* ブランドカラー（この1変数で全体の色合いが変わる） */
+  --hue: 158;
+  --sat: 62%;
+
+  --color-accent: hsl(var(--hue) var(--sat) 34%);
+  --color-accent-strong: hsl(var(--hue) var(--sat) 25%);
+  --color-accent-soft: hsl(var(--hue) 45% 94%);
+  --color-accent-border: hsl(var(--hue) 30% 74%);
+
+  /* ヘッダーグラデーション */
+  --color-header-grad-start: hsl(var(--hue) var(--sat) 30%);
+  --color-header-grad-end: hsl(var(--hue) var(--sat) 21%);
+  --shadow-header: 0 2px 10px hsl(var(--hue) var(--sat) 20% / 0.22);
+
+  /* ログイン画面背景 */
+  --color-login-bg-start: hsl(var(--hue) var(--sat) 21%);
+  --color-login-bg-end: hsl(220 40% 28%);
+
+  /* サーフェス */
+  --color-bg: #f0f4f8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f8fafb;
+
+  /* テキスト */
+  --color-text: #1a2332;
+  --color-text-soft: #5a6a7a;
+
+  /* 罫線 */
+  --color-border: #d0d9e3;
+
+  /* ステータス */
+  --color-error: #c0392b;
+  --color-error-light: #fdf2f2;
+  --color-warn: #d97706;
+
+  /* スペーシング */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+
+  /* 旧スペーシング変数（後方互換） */
+  --space-3: var(--sp-3);
+  --space-4: var(--sp-4);
+  --space-5: var(--sp-5);
+
+  /* 角丸 */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 16px;
+
+  /* 旧角丸変数（後方互換） */
+  --radius-control: var(--r-md);
+  --radius-panel: var(--r-lg);
+
+  /* 影 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-panel: var(--shadow-md);
+
+  /* ヘッダー高さ */
+  --header-h: 52px;
+
+  /* フォームコントロール */
+  --ctrl-h: 40px;
+  --ctrl-radius: var(--r-md);
+  --ctrl-border: 1px solid var(--color-border);
+  --ctrl-bg: #f0f7ff;
+  --ctrl-bg-ro: #f0f0f0;
+  --ctrl-pad: 8px 12px;
+
+  /* 旧フォーム変数（後方互換） */
+  --form-control-radius: var(--r-sm);
+  --form-control-border: var(--ctrl-border);
+  --form-control-padding: 6px 10px;
+  --form-row-control-padding: 10px;
+  --select-control-padding: 8px 10px;
+  --form-item-left-padding: 12px;
+  --form-cell-side-padding: 10px;
+  --form-cell-height: 44px;
+  --form-multiline-height: 100px;
+  --report-multiline-height: 120px;
+  --calendar-date-width: 8.5em;
+  --calendar-month-width: 8em;
+
+  /* フォームラベル幅 */
+  --form-label-w: 150px;
+
+  /* 月ピッカー */
+  --shadow-mp-focus: hsl(var(--hue) var(--sat) 34% / 0.18);
+  --shadow-mp-popup: var(--shadow-md);
+  --shadow-mp-selected: 0 2px 6px hsl(var(--hue) var(--sat) 34% / 0.3);
+  --shadow-mp-selected-hover: 0 4px 10px hsl(var(--hue) var(--sat) 34% / 0.35);
+}
+
+/* --- リセット / ベース --------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-bg);
+}
+
+body {
+  margin: 0;
+  font-family:
+    "Yu Gothic UI", "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro",
+    "メイリオ", Meiryo, "Noto Sans JP", sans-serif;
+  font-size: 14px;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  line-height: 1.6;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+table {
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid var(--color-border);
+  padding: 10px;
+}
+
+/* --- ページ骨格 ---------------------------------------------- */
+#wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#main {
+  flex: 1;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--sp-5);
+}
+
+/* --- ヘッダー ----------------------------------------------- */
+#header {
+  background: linear-gradient(
+    135deg,
+    var(--color-header-grad-start),
+    var(--color-header-grad-end)
+  );
+  box-shadow: var(--shadow-header);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+#header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: var(--header-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--sp-5);
+  gap: var(--sp-4);
+}
+
+#header-brand {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+#h_link_area {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  flex-wrap: wrap;
+}
+
+/* --- フッター ----------------------------------------------- */
+#footer {
+  padding: var(--sp-3) var(--sp-5);
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+}
+
+/* --- カード ------------------------------------------------- */
+.page-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--sp-5);
+}
+
+/* --- ページヘッダー ----------------------------------------- */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--sp-4);
+}
+
+.page-card > .page-header {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-3) var(--sp-5);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--sp-4);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.page-username {
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  font-weight: 400;
+  margin-left: var(--sp-3);
+}
+
+.page-result {
+  font-size: 0.88rem;
+  color: var(--color-accent);
+  font-weight: 600;
+  margin-left: var(--sp-3);
+}
+
+/* --- ツールバー --------------------------------------------- */
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+}
+
+.toolbar-form {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.toolbar-label {
+  font-weight: 700;
+  font-size: 0.88rem;
+  white-space: nowrap;
+}
+
+.toolbar-separator {
+  color: var(--color-text-soft);
+}
+
+/* --- パネルスタック ----------------------------------------- */
+.panel-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+.panel-stack > hr {
+  margin: 0;
+}
+
+/* --- hr ---------------------------------------------------- */
+hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: var(--sp-4) 0;
+}
+
+/* --- エラー ------------------------------------------------- */
+.err {
+  color: var(--color-error);
+  font-size: 0.82rem;
+  margin: var(--sp-1) 0 0;
+  padding: 0;
+  min-height: 0;
+}
+
+.err:empty {
+  display: none;
+}
+
+.err-box {
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  border-radius: var(--r-sm);
+  padding: var(--sp-3) var(--sp-4);
+  color: var(--color-error);
+  font-size: 0.88rem;
+  margin-bottom: var(--sp-4);
+}
+
+/* フィールド直下のインラインエラー */
+.err-inline {
+  color: var(--color-error);
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: var(--sp-1) 0 0;
+  padding: 0 var(--sp-1);
+  line-height: 1.4;
+}
+
+.err-inline:empty {
+  display: none;
+}
+
+/* --- ボタン送信領域 ----------------------------------------- */
+#frm_button {
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--sp-3);
+  padding: var(--sp-4) 0;
+}
+
+/* --- レスポンシブ：タブレット（1024px以下） ------------------- */
+@media (max-width: 1024px) {
+  #main {
+    padding: var(--sp-4);
+  }
+
+  #header-inner {
+    padding: 0 var(--sp-4);
+  }
+}
+
+/* --- レスポンシブ：モバイル（640px以下） ---------------------- */
+@media (max-width: 640px) {
+  #main {
+    padding: var(--sp-3);
+  }
+
+  #header-inner {
+    padding: 0 var(--sp-3);
+    height: auto;
+    min-height: var(--header-h);
+    flex-wrap: wrap;
+    padding-top: var(--sp-2);
+    padding-bottom: var(--sp-2);
+  }
+
+  #h_link_area {
+    gap: var(--sp-1);
+  }
+
+  .page-card {
+    padding: var(--sp-3);
+    border-radius: var(--r-md);
+  }
+
+  .page-card > .page-header {
+    padding: var(--sp-3);
+  }
+}
