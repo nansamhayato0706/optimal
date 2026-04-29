@@ -93,15 +93,12 @@ if ($isCli) {
         $rootDir . '/.env.local',
         $rootDir . '/env.local',
         $grandParentDir . '/.env.production',
-        $grandParentDir . '/env.production',
-        $parentDir . '/env.production',
         $rootDir . '/.env.production',
-        $rootDir . '/env.production',
     ];
 } elseif ($isLocal) {
     $envFiles = [$rootDir . '/.env.local', $rootDir . '/env.local'];
 } else {
-    $envFiles = [$grandParentDir . '/.env.production', $grandParentDir . '/env.production', $parentDir . '/env.production', $rootDir . '/.env.production', $rootDir . '/env.production'];
+    $envFiles = [$grandParentDir . '/.env.production', $rootDir . '/.env.production'];
 }
 $configCandidates = $envFiles;
 
