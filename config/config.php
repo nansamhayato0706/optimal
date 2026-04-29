@@ -120,7 +120,19 @@ define('CONFIG_SOURCE', $configSource);
 define('CONFIG_CANDIDATES', implode(',', $configCandidates));
 
 // アプリ
-define('APP_URL',     $localConfig['app_url']     ?? '');
+if (isset($localConfig['app_url']) && $localConfig['app_url'] !== '') {
+    $appUrl = $localConfig['app_url'];
+} elseif (PHP_SAPI !== 'cli') {
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '');
+    $scriptDir = str_replace('\\', '/', dirname((string) ($_SERVER['SCRIPT_NAME'] ?? '')));
+    $basePath = $scriptDir === '/' || $scriptDir === '.' ? '' : $scriptDir;
+    $appUrl = $host === '' ? '' : $scheme . '://' . $host . $basePath;
+} else {
+    $appUrl = '';
+}
+
+define('APP_URL',     $appUrl);
 define('GROUP_LABEL', $localConfig['group_label'] ?? '事業団');
 define('STATUS_SUMMARY_REBUILD_ENABLED', !empty($localConfig['enable_status_summary_rebuild_button']));
 
