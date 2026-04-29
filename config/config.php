@@ -10,6 +10,7 @@ $configSource = '';
 $configCandidates = [];
 $rootDir     = dirname(__DIR__);
 $parentDir   = dirname($rootDir);
+$grandParentDir = dirname($parentDir);
 
 $loadEnvFile = static function (string $file): array {
     if (!is_file($file) || !is_readable($file)) {
@@ -91,6 +92,7 @@ if ($isCli) {
     $envFiles = [
         $rootDir . '/.env.local',
         $rootDir . '/env.local',
+        $grandParentDir . '/env.production',
         $parentDir . '/env.production',
         $rootDir . '/.env.production',
         $rootDir . '/env.production',
@@ -98,7 +100,7 @@ if ($isCli) {
 } elseif ($isLocal) {
     $envFiles = [$rootDir . '/.env.local', $rootDir . '/env.local'];
 } else {
-    $envFiles = [$parentDir . '/env.production', $rootDir . '/.env.production', $rootDir . '/env.production'];
+    $envFiles = [$grandParentDir . '/env.production', $parentDir . '/env.production', $rootDir . '/.env.production', $rootDir . '/env.production'];
 }
 $configCandidates = $envFiles;
 
