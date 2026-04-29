@@ -19,6 +19,7 @@ try {
         'file' => $e->getFile(),
         'line' => $e->getLine(),
         'config_source' => defined('CONFIG_SOURCE') ? CONFIG_SOURCE : '',
+        'config_candidates' => defined('CONFIG_CANDIDATES') ? CONFIG_CANDIDATES : '',
         'db_host' => defined('DB_HOST') ? DB_HOST : '',
         'db_name' => defined('DB_NAME') ? DB_NAME : '',
         'request_uri' => $_SERVER['REQUEST_URI'] ?? '',

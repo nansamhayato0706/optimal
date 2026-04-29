@@ -7,6 +7,7 @@ date_default_timezone_set('Asia/Tokyo');
 // 環境変数ファイルをロード
 $localConfig = [];
 $configSource = '';
+$configCandidates = [];
 $rootDir     = dirname(__DIR__);
 $parentDir   = dirname($rootDir);
 
@@ -99,6 +100,7 @@ if ($isCli) {
 } else {
     $envFiles = [$parentDir . '/env.production', $rootDir . '/.env.production', $rootDir . '/env.production'];
 }
+$configCandidates = $envFiles;
 
 foreach ($envFiles as $envFile) {
     $envConfig = $envToConfig($loadEnvFile($envFile));
@@ -115,6 +117,7 @@ define('DB_NAME', $localConfig['db_name'] ?? 'jigyodan_zk_honbu');
 define('DB_USER', $localConfig['db_user'] ?? 'root');
 define('DB_PASS', $localConfig['db_pass'] ?? '');
 define('CONFIG_SOURCE', $configSource);
+define('CONFIG_CANDIDATES', implode(',', $configCandidates));
 
 // アプリ
 define('APP_URL',     $localConfig['app_url']     ?? '');
