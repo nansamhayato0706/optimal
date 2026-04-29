@@ -10,7 +10,7 @@ RewriteRule ^ - [L]
 RewriteRule ^ index.php [L,QSA]
 
 # システムフォルダへの直接アクセス禁止
-<FilesMatch "\.(local|example|md|production|sql|gitignore|codex)$">
+<FilesMatch "\.(local|example|md|production|sql|gitignore|codex|log)$">
     Require all denied
 </FilesMatch>
 <FilesMatch "^\.env">

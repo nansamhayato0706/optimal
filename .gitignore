@@ -4,3 +4,4 @@ env.local
 env.production
 !.env.local.example
 .codex
+logs/*.log
