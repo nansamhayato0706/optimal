@@ -27,6 +27,7 @@ use App\Controllers\ReportConfirmController;
 use App\Controllers\ReportDetailController;
 use App\Controllers\ReportEditController;
 use App\Controllers\ReportIndexController;
+use App\Controllers\ReportPdfController;
 use App\Controllers\UserIndexController;
 use App\Controllers\UserCompleteController;
 use App\Controllers\UserConfirmController;
@@ -71,6 +72,7 @@ $routes->add(['GET', 'POST'], '/report_edit.php', static function (): void { app
 $routes->add(['GET'], '/report_confirm.php', static function (): void { app_container()->get(ReportConfirmController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/report_complete.php', static function (): void { app_container()->get(ReportCompleteController::class)->handle(); });
 $routes->add(['GET'], '/report_detail.php', static function (): void { app_container()->get(ReportDetailController::class)->handle(); });
+$routes->add(['GET'], '/report_pdf.php', static function (): void { app_container()->get(ReportPdfController::class)->handle(); });
 
 // --- WPF連携（Training） ---
 $routes->add(['POST'], '/training_login.php',    static function (): void { app_container()->get(TrainingController::class)->login(); });

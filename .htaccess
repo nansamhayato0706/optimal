@@ -1,6 +1,9 @@
 RewriteEngine On
 RewriteBase /zaitakukanri_honbu_optimal/
 
+# アプリ内部ディレクトリへの直接アクセス禁止
+RewriteRule ^(app|bootstrap|config|db|docs|lib|logs|skills|\.git|\.claude)(/|$) - [F,L]
+
 # 実在するファイル・ディレクトリはそのまま配信
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d

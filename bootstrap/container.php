@@ -30,6 +30,7 @@ use App\Controllers\ReportConfirmController;
 use App\Controllers\ReportDetailController;
 use App\Controllers\ReportEditController;
 use App\Controllers\ReportIndexController;
+use App\Controllers\ReportPdfController;
 use App\Controllers\UserIndexController;
 use App\Controllers\UserCompleteController;
 use App\Controllers\UserConfirmController;
@@ -73,6 +74,7 @@ use App\Support\RequestContext;
 use App\Support\SessionStore;
 use App\Support\UrlHelper;
 use App\Support\ReportAuth;
+use App\Support\ReportPdfGenerator;
 use App\Support\ViewRenderer;
 use App\Views\View;
 
@@ -88,6 +90,9 @@ $container->singleton(View::class,           static function (Container $c) {
 });
 $container->singleton(ViewRenderer::class, static function (Container $c) {
     return new ViewRenderer($c->get(UrlHelper::class), $c->get(AppConfig::class));
+});
+$container->singleton(ReportPdfGenerator::class, static function (Container $c) {
+    return new ReportPdfGenerator($c->get(AppConfig::class));
 });
 
 // --- Repositories ---
@@ -235,6 +240,9 @@ $container->bind(ReportIndexController::class, static function (Container $c) {
 });
 $container->bind(ReportDetailController::class, static function (Container $c) {
     return new ReportDetailController($c->get(ReportAuth::class), $c->get(ReportDetailService::class), $c->get(ReportRepository::class), $c->get(ViewRenderer::class), $c->get(RequestContext::class));
+});
+$container->bind(ReportPdfController::class, static function (Container $c) {
+    return new ReportPdfController($c->get(ReportAuth::class), $c->get(ReportDetailService::class), $c->get(ReportRepository::class), $c->get(ReportPdfGenerator::class), $c->get(RequestContext::class));
 });
 $container->bind(ReportEditController::class, static function (Container $c) {
     return new ReportEditController($c->get(ReportAuth::class), $c->get(ReportFormService::class), $c->get(ReportRepository::class), $c->get(ViewRenderer::class), $c->get(RequestContext::class));
