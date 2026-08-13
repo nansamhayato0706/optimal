@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AdminCompleteController;
+use App\Controllers\AzureSpeechTokenController;
 use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
@@ -80,7 +81,8 @@ $routes->add(['POST'], '/training_logout.php',   static function (): void { app_
 $routes->add(['POST'], '/training_start.php',    static function (): void { app_container()->get(TrainingController::class)->handleEvent(1); });
 $routes->add(['POST'], '/training_end.php',      static function (): void { app_container()->get(TrainingController::class)->handleEvent(2); });
 $routes->add(['POST'], '/training_inquiry.php',  static function (): void { app_container()->get(TrainingController::class)->handleEvent(3); });
-$routes->add(['POST'], '/training_middle.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(4); });
+$routes->add(['POST'], '/training_middle.php',    static function (): void { app_container()->get(TrainingController::class)->handleEvent(4); });
+$routes->add(['POST'], '/training_emergency.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(5); });
 $routes->add(['POST'], '/training_keyboard.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(7); });
 $routes->add(['POST'], '/training_mouse.php',    static function (): void { app_container()->get(TrainingController::class)->handleEvent(8); });
 $routes->add(['POST'], '/training_insert.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(11); });
@@ -88,6 +90,9 @@ $routes->add(['POST'], '/training_update.php',   static function (): void { app_
 
 // --- WPF初期データ ---
 $routes->add(['POST'], '/first.php', static function (): void { app_container()->get(FirstIndexController::class)->handle(); });
+
+// --- WPF音声認識（Azure Speech 短期トークン発行） ---
+$routes->add(['POST'], '/azure_speech_token.php', static function (): void { app_container()->get(AzureSpeechTokenController::class)->handle(); });
 
 // --- エラーページ ---
 $routes->add(['GET', 'POST'], '/error.php', static function (): void { app_container()->get(ErrorIndexController::class)->handle(); });

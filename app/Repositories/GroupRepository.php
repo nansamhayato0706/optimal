@@ -45,10 +45,10 @@ final class GroupRepository extends AbstractRepository implements GroupRepositor
     {
         $sql = 'INSERT INTO mst_group ('
             . ' group_uuid, group_name, group_name_kana, group_zip_code, group_prefecture_div, group_address,'
-            . ' group_tel, group_email, notification, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
+            . ' group_tel, group_email, notify_slack_webhook_url, notification, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
             . ' ) VALUES ('
             . ' :group_uuid, :group_name, :group_name_kana, :group_zip_code, :group_prefecture_div, :group_address,'
-            . ' :group_tel, :group_email, :notification, :remark, 0, NOW(), :actor_uuid, NOW(), :actor_uuid'
+            . ' :group_tel, :group_email, :notify_slack_webhook_url, :notification, :remark, 0, NOW(), :actor_uuid, NOW(), :actor_uuid'
             . ' )';
         $this->pdo->prepare($sql)->execute($this->normalizeParams($group, $actorUuid));
     }
@@ -58,7 +58,8 @@ final class GroupRepository extends AbstractRepository implements GroupRepositor
         $sql = 'UPDATE mst_group SET'
             . ' group_name = :group_name, group_name_kana = :group_name_kana, group_zip_code = :group_zip_code,'
             . ' group_prefecture_div = :group_prefecture_div, group_address = :group_address, group_tel = :group_tel,'
-            . ' group_email = :group_email, notification = :notification, remark = :remark,'
+            . ' group_email = :group_email, notify_slack_webhook_url = :notify_slack_webhook_url,'
+            . ' notification = :notification, remark = :remark,'
             . ' update_date = NOW(), update_uuid = :actor_uuid'
             . ' WHERE group_uuid = :group_uuid';
         $this->pdo->prepare($sql)->execute($this->normalizeParams($group, $actorUuid));
@@ -75,6 +76,7 @@ final class GroupRepository extends AbstractRepository implements GroupRepositor
             'group_address'        => (string) ($group['group_address'] ?? ''),
             'group_tel'            => (string) ($group['group_tel'] ?? ''),
             'group_email'          => (string) ($group['group_email'] ?? ''),
+            'notify_slack_webhook_url' => (string) ($group['notify_slack_webhook_url'] ?? ''),
             'notification'         => (string) ($group['notification'] ?? ''),
             'remark'               => (string) ($group['remark'] ?? ''),
             'actor_uuid'           => $actorUuid,

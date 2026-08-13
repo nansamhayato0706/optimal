@@ -47,7 +47,8 @@ abstract class AbstractRepository
              . '   SELECT contact_uuid, contact_div, confirm_div, contact_date,'
              . "          GREATEST(IFNULL(insert_date,'1000-01-01'),IFNULL(update_date,'1000-01-01'),"
              . "                   IFNULL(confirm_date,'1000-01-01'),IFNULL(comment_date,'1000-01-01')) AS contact_touch_at"
-             . '   FROM tbl_contact WHERE insert_uuid = :contact_user_uuid AND delete_flg = 0 AND contact_div < 4'
+             . '   FROM tbl_contact WHERE insert_uuid = :contact_user_uuid AND delete_flg = 0'
+             . '     AND (contact_div < 4 OR contact_div = 5)'
              . '   ORDER BY insert_date DESC, contact_uuid DESC LIMIT 1'
              . ' ) c ON 1=1'
              . ' LEFT JOIN ('

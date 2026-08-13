@@ -47,6 +47,7 @@ final class GroupFormService
             'group_address'        => '',
             'group_tel'            => '',
             'group_email'          => '',
+            'notify_slack_webhook_url' => '',
             'notification'         => '',
             'remark'               => '',
         ];
@@ -63,6 +64,7 @@ final class GroupFormService
             'group_address'        => trim((string) ($input['group_address'] ?? '')),
             'group_tel'            => trim((string) ($input['group_tel'] ?? '')),
             'group_email'          => trim((string) ($input['group_email'] ?? '')),
+            'notify_slack_webhook_url' => trim((string) ($input['notify_slack_webhook_url'] ?? '')),
             'notification'         => trim((string) ($input['notification'] ?? '')),
             'remark'               => trim((string) ($input['remark'] ?? '')),
         ];
@@ -88,7 +90,10 @@ final class GroupFormService
         if ((string) $form['group_email'] !== '' && filter_var((string) $form['group_email'], FILTER_VALIDATE_EMAIL) === false) {
             $errors['group_email'] = 'e-mailの形式が不正です。';
         }
-        foreach (['group_name', 'group_name_kana', 'group_address', 'group_email', 'notification', 'remark'] as $field) {
+        if ((string) $form['notify_slack_webhook_url'] !== '' && strpos((string) $form['notify_slack_webhook_url'], 'https://hooks.slack.com/') !== 0) {
+            $errors['notify_slack_webhook_url'] = 'Slack Webhook URLは https://hooks.slack.com/ で始まる必要があります。';
+        }
+        foreach (['group_name', 'group_name_kana', 'group_address', 'group_email', 'notify_slack_webhook_url', 'notification', 'remark'] as $field) {
             if (mb_strlen((string) $form[$field]) > 255) {
                 $errors[$field] = '255文字以内で入力してください。';
             }

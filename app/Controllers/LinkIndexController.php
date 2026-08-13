@@ -38,19 +38,29 @@ final class LinkIndexController
 
         $message = '';
         $errors = [];
+        $postedRows = null;
         if ($this->request->isPost()) {
             csrf_verify_or_abort($this->request);
             $rows = $this->linkService->normalizeRows($this->request->allPost());
+            $isDelete = (string) $this->request->post('act', '') === '選択した行を削除';
+            if ($isDelete) {
+                $deleteIndexes = $this->linkService->extractDeleteIndexes($this->request->allPost());
+                $rows = $this->linkService->removeRows($rows, $deleteIndexes);
+            }
+
             $errors = $this->linkService->validateRows($rows);
             if ($errors === []) {
                 $result = $this->linkService->save($groupUuid, $rows, $this->auth->getLoginAdminUuid());
-                $message = $result ? '外部リンクを更新しました。' : '外部リンクの更新に失敗しました。';
+                if ($isDelete) {
+                    $message = $result ? '選択した外部リンクを削除しました。' : '外部リンクの削除に失敗しました。';
+                } else {
+                    $message = $result ? '外部リンクを更新しました。' : '外部リンクの更新に失敗しました。';
+                }
             }
+            $postedRows = $rows;
         }
 
-        $links = $this->request->isPost()
-            ? $this->linkService->normalizeRows($this->request->allPost())
-            : $this->linkService->getPageData($groupUuid);
+        $links = $postedRows ?? $this->linkService->getPageData($groupUuid);
         $links[] = ['link_url' => '', 'link_name' => '', 'sort' => ''];
 
         $this->view->render('link/index', [

@@ -12,10 +12,11 @@ $options = static function (array $items, $selected) use ($h): string {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>">
 </head>
 <body>
 <div id="wrapper">
@@ -37,6 +38,7 @@ $options = static function (array $items, $selected) use ($h): string {
 			<div class="frm_parts_mm"><div class="frm_title">電話番号</div><div class="frm_input"><input type="tel" name="group_tel" value="<?= $h($form['group_tel']) ?>"></div><p class="err"><?= $h($errors['group_tel'] ?? '') ?></p></div>
 			<div class="frm_parts_mm"><div class="frm_title">e-mail</div><div class="frm_input"><input type="email" name="group_email" value="<?= $h($form['group_email']) ?>"></div><p class="err"><?= $h($errors['group_email'] ?? '') ?></p></div>
 		</div>
+		<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">Slack Webhook URL（問合せ通知先・未設定なら本部へ通知）</div><div class="frm_input_xl"><input type="url" name="notify_slack_webhook_url" value="<?= $h($form['notify_slack_webhook_url']) ?>" placeholder="https://hooks.slack.com/services/..."></div><p class="err"><?= $h($errors['notify_slack_webhook_url'] ?? '') ?></p></div></div>
 		<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">備考</div><div class="frm_input_xl2"><input type="text" name="remark" value="<?= $h($form['remark']) ?>"></div><p class="err"><?= $h($errors['remark'] ?? '') ?></p></div></div>
 		<div class="frm_row"><div id="frm_button"><input type="submit" name="act" value="登録"></div></div>
 	</form>

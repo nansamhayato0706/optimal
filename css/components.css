@@ -7,6 +7,10 @@
    ボタン（h_link / btn）
    ============================================================ */
 
+[hidden] {
+  display: none !important;
+}
+
 .h_link,
 .btn,
 input[type="submit"].h_link,

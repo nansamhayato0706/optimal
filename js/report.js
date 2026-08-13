@@ -11,6 +11,20 @@ $(function(){
 		$('#frm').submit();
 	});
 
+	$(document).on('click', '.mp-nav-btn', function(){
+		var delta = $(this).hasClass('mp-nav-prev') ? -1 : 1;
+		var $input = delta === -1
+			? $(this).next('input.month-picker')
+			: $(this).prev('input.month-picker');
+		var val = $input.val();
+		if (!val || !/^\d{4}-\d{2}/.test(val)) { return; }
+		var y = parseInt(val.substring(0, 4), 10);
+		var m = parseInt(val.substring(5, 7), 10) - 1 + delta;
+		y += Math.floor(m / 12);
+		m = ((m % 12) + 12) % 12;
+		$input.val(y + '-' + (m + 1 < 10 ? '0' : '') + (m + 1)).trigger('change');
+	});
+
 	$('.date').datepicker({
 		yearRange:'2016:+1',
 		dateFormat:'yy-mm-dd',

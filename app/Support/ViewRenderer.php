@@ -34,6 +34,7 @@ final class ViewRenderer
             'cssBase' => $cssBase,
             'jsBase' => $jsBase,
             'imgBase' => $imgBase,
+            'assetVer' => $this->urlHelper->assetVersion(),
             'dummyImage' => $this->config->dummyImage(),
             'appConfig' => $this->config,
             'groupLabel' => $this->config->groupLabel(),

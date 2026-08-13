@@ -1,0 +1,13 @@
+{
+  "name": "zaitakukanri-honbu-optimal-tests",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Browser-based verification scripts using Playwright. Not part of the PHP application.",
+  "type": "module",
+  "scripts": {
+    "verify:phase0": "node tests/playwright/verify-phase0.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}

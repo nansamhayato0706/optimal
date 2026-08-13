@@ -11,8 +11,8 @@ foreach ($users as $index => $user):
 						<td class="text-center"><?= $h($user['user_id']) ?></td>
 						<td class="text-center"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'work_style', $user['work_style_div'])) ?></td>
 						<td<?= $nameTitle !== '' ? ' title="' . $h($nameTitle) . '"' : '' ?>><?= $h($user['user_name']) ?></td>
-						<td class="text-center"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'sex', $user['sex_div'])) ?></td>
-						<td class="text-center"><?= $h(\App\Support\UserViewHelpers::age($user['birthday'])) ?></td>
+						<td class="text-center col-sex"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'sex', $user['sex_div'])) ?></td>
+						<td class="text-center col-age"><?= $h(\App\Support\UserViewHelpers::age($user['birthday'])) ?></td>
 <?php if ($confirmDiv === 1 || $confirmDiv === 2): ?>
 						<td class="user_contact_<?= $h($contactDiv) ?>" data-col="contact"><?= $h(\App\Support\UserViewHelpers::formatDateTime($user['contact_date'] ?? '', 'y/m/d H:i')) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'contact', $contactDiv)) ?> <a class="h_link user-status-link" href="contact.php?i=<?= $h($user['contact_uuid']) ?>">確認</a></td>
 <?php else: ?>

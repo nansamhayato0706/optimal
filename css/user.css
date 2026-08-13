@@ -137,9 +137,58 @@
 }
 .data-table td.user_contact_3 {
   background-color: #fed7aa;
+  animation: user-contact-inquiry-pulse 1.0s ease-in-out infinite;
 }
 .data-table td.user_contact_f_3 {
   background-color: #fdba74;
+}
+
+@keyframes user-contact-inquiry-pulse {
+  0%, 100% {
+    background-color: #fed7aa;
+  }
+  50% {
+    background-color: #f97316;
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .data-table td.user_contact_3 {
+    animation: none;
+    background-color: #fed7aa;
+  }
+}
+
+/* 緊急（contact_div=5）未確認: 赤/黄交互点滅 */
+.data-table td.user_contact_5 {
+  font-weight: 700;
+  animation: user-contact-emergency-pulse 0.6s ease-in-out infinite;
+}
+/* 緊急（contact_div=5）確認済: 点滅なし・暗い赤背景 */
+.data-table td.user_contact_f_5 {
+  background-color: #7f1d1d;
+  color: #fff;
+  font-weight: 700;
+}
+
+@keyframes user-contact-emergency-pulse {
+  0%, 100% {
+    background-color: #dc2626;
+    color: #fff;
+  }
+  50% {
+    background-color: #fde047;
+    color: #7f1d1d;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .data-table td.user_contact_5 {
+    animation: none;
+    background-color: #dc2626;
+    color: #fff;
+  }
 }
 
 /* ユーザー一覧テーブル */
@@ -420,4 +469,17 @@
 .page-toolbar select {
   border-radius: var(--r-md);
   height: 36px;
+}
+
+
+@media (max-width: 929px) {
+  .col-sex {
+    display: none;
+  }
+}
+
+@media (max-width: 899px) {
+  .col-age {
+    display: none;
+  }
 }

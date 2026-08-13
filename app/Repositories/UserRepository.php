@@ -275,10 +275,14 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
             . ' :visual_impairment_flg, :serial_no, :user_name, :user_name_kana, :sex_div, :birthday,'
             . ' :user_zip_code, :user_prefecture_div, :user_address, :user_tel, :user_email,'
             . ' :volume_no, :send_interval, :keyboard_interval, :mouse_interval, :login_uuid, :remark,'
-            . ' NOW(), :actor_uuid, NOW(), :actor_uuid'
+            . ' NOW(), :insert_uuid, NOW(), :update_uuid'
             . ' )';
+        $params = $this->normalizeUserParams($user, $actorUuid);
+        unset($params['actor_uuid']);
+        $params['insert_uuid'] = $actorUuid;
+        $params['update_uuid'] = $actorUuid;
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($this->normalizeUserParams($user, $actorUuid));
+        $stmt->execute($params);
     }
 
     private function updateUser(array $user, string $actorUuid): void

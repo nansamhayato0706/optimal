@@ -24,14 +24,15 @@ $fieldLabel = static function (string $key): string {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>report.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>report_confirm.css" type="text/css" media="screen">
-	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js"></script>
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>report.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>report_confirm.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
 </head>
 <body>
 	<a class="skip-link" href="#main-content">本文へ移動</a>

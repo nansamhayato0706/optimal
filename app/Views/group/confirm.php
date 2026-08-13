@@ -7,10 +7,11 @@ $divName = static function (string $parent, $id) use ($divMap): string {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>">
 </head>
 <body>
 <div id="wrapper">
@@ -29,6 +30,7 @@ $divName = static function (string $parent, $id) use ($divMap): string {
 		<div class="frm_parts_mm"><div class="frm_title">電話番号</div><div class="frm_input"><input type="text" value="<?= $h($form['group_tel']) ?>" readonly></div></div>
 		<div class="frm_parts_mm"><div class="frm_title">e-mail</div><div class="frm_input"><input type="text" value="<?= $h($form['group_email']) ?>" readonly></div></div>
 	</div>
+	<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">Slack Webhook URL</div><div class="frm_input_xl"><input type="text" value="<?= $h($form['notify_slack_webhook_url']) ?>" readonly></div></div></div>
 	<div class="frm_row"><div class="frm_parts_xlm"><div class="frm_title">備考</div><div class="frm_input_xl2"><input type="text" value="<?= $h($form['remark']) ?>" readonly></div></div></div>
 	<div class="frm_row"><div id="frm_button"><a class="h_link btn-secondary" href="group_edit.php">戻る</a><a class="h_link" href="group_complete.php">登録</a></div></div>
 	</div></div>

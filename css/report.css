@@ -20,6 +20,13 @@
   box-shadow: var(--shadow-sm);
 }
 
+.report_index_title_row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .report_index_title {
   margin: 0;
   font-size: 1.05rem;
@@ -87,6 +94,42 @@ input.date {
   height: 36px;
   padding: 0 var(--sp-4);
   min-height: 36px;
+}
+
+/* 月ナビ（前月・翌月）ボタングループ */
+.mp-nav-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mp-nav-wrap input.month-picker {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.mp-nav-btn {
+  height: 36px;
+  padding: 0 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.mp-nav-btn.mp-nav-prev {
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+
+.mp-nav-btn.mp-nav-next {
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+
+.mp-nav-btn:hover {
+  background: var(--color-surface-hover, #f0f0f0);
 }
 
 /* 一覧テーブル */

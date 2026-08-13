@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Repositories\UserRepository;
+use App\Repositories\UserStatusSummaryRepository;
 use App\Services\UserListService;
 use App\Support\JsonResponder;
 use App\Support\RequestContext;
@@ -15,14 +16,21 @@ final class UserStatusController
 	private $auth;
 	private $userRepository;
 	private $userListService;
+	private $summaryRepository;
 	private $request;
 
-	public function __construct(UserAdminAuth $auth, UserRepository $userRepository, UserListService $userListService, RequestContext $request)
-	{
-		$this->auth = $auth;
-		$this->userRepository = $userRepository;
-		$this->userListService = $userListService;
-		$this->request = $request;
+	public function __construct(
+		UserAdminAuth $auth,
+		UserRepository $userRepository,
+		UserListService $userListService,
+		UserStatusSummaryRepository $summaryRepository,
+		RequestContext $request
+	) {
+		$this->auth              = $auth;
+		$this->userRepository    = $userRepository;
+		$this->userListService   = $userListService;
+		$this->summaryRepository = $summaryRepository;
+		$this->request           = $request;
 	}
 
 	public function handle(): void
@@ -32,20 +40,27 @@ final class UserStatusController
 			return;
 		}
 
-		$payload = $this->userListService->buildStatusPayload(
-			$this->auth->getLoginGroupId(),
-			$this->auth->getLoginAdminUuid(),
-			$this->auth->getDeleteFlag() === '' ? '0' : $this->auth->getDeleteFlag(),
-			$this->userRepository->findDivMap()
-		);
+		$groupUuid  = $this->auth->getLoginGroupId();
+		$adminUuid  = $this->auth->getLoginAdminUuid();
+		$deleteFlag = $this->auth->getDeleteFlag() === '' ? '0' : $this->auth->getDeleteFlag();
 
-		$etag = '"' . md5(json_encode($payload)) . '"';
+		$statusSignature = $this->summaryRepository->fetchGroupStatusSignature($groupUuid, $adminUuid, $deleteFlag);
+		$etag = '"' . sha1($groupUuid . '|' . $adminUuid . '|' . $deleteFlag . '|' . $statusSignature) . '"';
+
+		header('ETag: ' . $etag);
 		$clientEtag = $this->request->header('If-None-Match');
 		if ($clientEtag === $etag) {
 			http_response_code(304);
 			return;
 		}
-		header('ETag: ' . $etag);
+
+		$payload = $this->userListService->buildStatusPayload(
+			$groupUuid,
+			$adminUuid,
+			$deleteFlag,
+			$this->userRepository->findDivMap()
+		);
+
 		header('Cache-Control: no-cache');
 		JsonResponder::send($payload);
 	}
