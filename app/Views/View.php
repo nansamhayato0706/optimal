@@ -36,6 +36,7 @@ final class View
         $data['cssBase']      = $cssBase;
         $data['jsBase']       = $jsBase;
         $data['imgBase']      = $imgBase;
+        $data['assetVer']     = $this->urlHelper->assetVersion();
         $data['dummyImage']   = $this->config->dummyImage();
         $data['assetBase']    = ['css' => $cssBase, 'js' => $jsBase, 'img' => $imgBase];
         $data['_config']      = $this->config;

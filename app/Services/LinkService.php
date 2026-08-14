@@ -39,6 +39,37 @@ final class LinkService
         return $rows;
     }
 
+    public function extractDeleteIndexes(array $input): array
+    {
+        $checked = $input['delete'] ?? [];
+        if (!is_array($checked)) {
+            return [];
+        }
+
+        $indexes = [];
+        foreach (array_keys($checked) as $index) {
+            if (ctype_digit((string) $index)) {
+                $indexes[] = (int) $index;
+            }
+        }
+
+        return $indexes;
+    }
+
+    public function removeRows(array $rows, array $indexes): array
+    {
+        $excluded = array_flip($indexes);
+        $remaining = [];
+        foreach ($rows as $index => $row) {
+            if (isset($excluded[$index])) {
+                continue;
+            }
+            $remaining[] = $row;
+        }
+
+        return $remaining;
+    }
+
     public function validateRows(array $rows): array
     {
         $errors = [];

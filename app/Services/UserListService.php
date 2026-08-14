@@ -69,18 +69,19 @@ final class UserListService
 		$today = date('Y-m-d');
 		foreach ($users as $user) {
 			$contactDate = (string) ($user['contact_date'] ?? '');
-			$contactDay = $contactDate !== '' ? date('Y-m-d', strtotime($contactDate)) : '';
+			$contactDay = $contactDate !== '' ? substr($contactDate, 0, 10) : '';
 			if ((int) ($user['contact_div'] ?? 0) === 1 && $contactDay === $today) {
 				$result['training_start_count']++;
 			}
 			if ((int) ($user['contact_div'] ?? 0) === 2 && $contactDay === $today) {
 				$result['training_end_today_count']++;
 			}
-			if (!empty($user['report_uuid']) && !$this->hasRegisteredReport($user)) {
-				$result['report_notice_count']++;
-			}
-			if (!empty($user['report_uuid']) && $this->hasRegisteredReport($user)) {
-				$result['report_confirmed_count']++;
+			if (!empty($user['report_uuid'])) {
+				if ($this->hasRegisteredReport($user)) {
+					$result['report_confirmed_count']++;
+				} else {
+					$result['report_notice_count']++;
+				}
 			}
 			if (!empty($user['chat_user_uuid'])) {
 				$result['chat_notice_count']++;

@@ -6,6 +6,16 @@ namespace App\Support;
 
 final class ReportPdfGenerator
 {
+	private const CELL_H     = 7.7;
+	private const FONT       = 'kozminproregular';
+	private const FONT_SIZE  = 8;
+
+	/** @var \TCPDF|null */
+	private $pdf = null;
+
+	/** @var array<string, array<int, string>> */
+	private $divMap = array();
+
 	private $config;
 
 	public function __construct(AppConfig $config)
@@ -21,127 +31,185 @@ final class ReportPdfGenerator
 		}
 		require_once $tcpdf;
 
+		$this->divMap = $divMap;
+
 		$pdf = new \TCPDF('P', 'mm', 'A4', true, 'UTF-8');
 		$pdf->setPrintHeader(false);
 		$pdf->setPrintFooter(false);
 		$pdf->SetMargins(10, 10, 10);
 		$pdf->SetAutoPageBreak(true, 10);
-		$pdf->SetFillColor(230, 230, 230);
-		$pdf->SetFont('kozminproregular', '', 8);
+		$pdf->SetFillColor(200, 200, 200);
+		$pdf->SetFont(self::FONT, '', self::FONT_SIZE);
+		$this->pdf = $pdf;
 
 		foreach ($reports as $report) {
 			$pdf->AddPage();
-			$pdf->writeHTML($this->buildHtml($report, $divMap), true, false, true, false, '');
+			$this->renderReport($report);
 		}
 
 		$pdf->Output(str_replace('.pdf', '', $fileName) . '.pdf', 'I');
 		exit;
 	}
 
-	private function buildHtml(array $report, array $divMap): string
+	private function renderReport(array $report): void
 	{
-		$title = $this->formatDate((string) ($report['report_date'] ?? ''), 'Y年m月d日') . '　訓練日報';
-		$objective = $this->pickedLabels($divMap['objective'] ?? array(), $report['objective_div'] ?? array());
-		$outing = $this->pickedLabels($divMap['outing'] ?? array(), $report['outing_div'] ?? array());
+		$ch = self::CELL_H;
 
-		return
-			'<style>'
-			. 'table{border-collapse:collapse;width:100%;}'
-			. 'td,th{border:1px solid #333;padding:4px;line-height:1.4;}'
-			. 'th{background-color:#e6e6e6;font-weight:bold;text-align:center;}'
-			. '.title{font-size:18px;font-weight:bold;text-align:center;}'
-			. '.right{text-align:right;}'
-			. '.center{text-align:center;}'
-			. '.label{background-color:#e6e6e6;}'
-			. '.section{background-color:#e6e6e6;font-weight:bold;}'
-			. '</style>'
-			. '<div class="right">出力日時：' . $this->h(date('Y-m-d H:i:s')) . '</div>'
-			. '<div class="title">' . $this->h($title) . '</div>'
-			. '<table cellpadding="3">'
-			. '<tr><td colspan="4" class="right">記入者：' . $this->h((string) ($report['user_name'] ?? '')) . '</td></tr>'
-			. '<tr>'
-			. '<th>昨日の就寝時間</th><td class="center">' . $this->h($this->formatTime((string) ($report['retiring_time'] ?? ''))) . '</td>'
-			. '<th>今日の起床時間</th><td class="center">' . $this->h($this->formatTime((string) ($report['rising_time'] ?? ''))) . '</td>'
-			. '</tr>'
-			. '<tr><th>睡眠時間</th><td colspan="3">' . $this->h((string) ($report['sleep_time'] ?? '')) . '</td></tr>'
-			. '<tr><td colspan="4" class="section">該当する内容を選んでください。</td></tr>'
-			. '<tr>'
-			. '<th>今日の気分</th><td>' . $this->h($this->divName($divMap, 'mood', $report['mood_div'] ?? '')) . '</td>'
-			. '<th>今日の体調</th><td>' . $this->h($this->divName($divMap, 'condition', $report['condition_div'] ?? '')) . '</td>'
-			. '</tr>'
-			. '<tr><th>今日の目標</th><td colspan="3">' . $this->h(implode('、', $objective)) . '</td></tr>'
-			. '<tr><td colspan="4" class="section">服薬</td></tr>'
-			. '<tr><th>決まった通りに飲みましたか？</th><td>' . $this->h($this->divName($divMap, 'medicine', $report['medicine_div'] ?? '')) . '</td>'
-			. '<th>薬を飲まなかった方の理由</th><td>' . $this->h((string) ($report['medicine_reason'] ?? '')) . '</td></tr>'
-			. '<tr><th>今日は外出しましたか？</th><td colspan="3">' . $this->h(implode('、', $outing)) . '</td></tr>'
-			. '<tr><th>家族以外の方と話した人数</th><td colspan="3">' . $this->h($this->divName($divMap, 'talk', $report['talk_div'] ?? '')) . '</td></tr>'
-			. '<tr><td colspan="4" class="section">今日の訓練状況</td></tr>'
-			. '<tr><th>訓練内容 午前</th><td colspan="3">' . $this->h($this->joinValues(array($report['training_am_1'] ?? '', $report['training_am_2'] ?? '', $report['training_am_3'] ?? ''))) . '</td></tr>'
-			. '<tr><th>訓練内容 午後</th><td colspan="3">' . $this->h($this->joinValues(array($report['training_pm_1'] ?? '', $report['training_pm_2'] ?? '', $report['training_pm_3'] ?? ''))) . '</td></tr>'
-			. '<tr><th>開始時間</th><td>' . $this->h($this->formatTime((string) ($report['training_start_time'] ?? ''))) . '</td>'
-			. '<th>終了時間</th><td>' . $this->h($this->formatTime((string) ($report['training_end_time'] ?? ''))) . '</td></tr>'
-			. '<tr><th>訓練時間</th><td>' . $this->h((string) ($report['training_time'] ?? '')) . '</td>'
-			. '<th>実働</th><td>' . $this->h((string) ($report['work_time'] ?? '')) . '</td></tr>'
-			. '<tr><th>昼休憩(分)</th><td>' . $this->h((string) ($report['lunch_time'] ?? '')) . '</td>'
-			. '<th>途中休憩(分)</th><td>' . $this->h((string) ($report['break_time'] ?? '')) . '</td></tr>'
-			. '<tr><td colspan="4" class="section">今日一日の訓練を振り返り</td></tr>'
-			. '<tr><th>午前の振り返り</th><td colspan="3">' . nl2br($this->h((string) ($report['rethink_am'] ?? ''))) . '</td></tr>'
-			. '<tr><th>午前 達成度</th><td>' . $this->h((string) ($report['achieve_am'] ?? '')) . '</td>'
-			. '<th>午前 疲労度</th><td>' . $this->h((string) ($report['fatigue_am'] ?? '')) . '</td></tr>'
-			. '<tr><th>午後の振り返り</th><td colspan="3">' . nl2br($this->h((string) ($report['rethink_pm'] ?? ''))) . '</td></tr>'
-			. '<tr><th>午後 達成度</th><td>' . $this->h((string) ($report['achieve_pm'] ?? '')) . '</td>'
-			. '<th>午後 疲労度</th><td>' . $this->h((string) ($report['fatigue_pm'] ?? '')) . '</td></tr>'
-			. '<tr><td colspan="4" class="section">疑問や質問の欄</td></tr>'
-			. '<tr><th>備考欄</th><td colspan="3">' . nl2br($this->h((string) ($report['remark'] ?? ''))) . '</td></tr>'
-			. '<tr><th>支援記録及び評価</th><td colspan="3">' . nl2br($this->h((string) ($report['charge_comment'] ?? ''))) . '</td></tr>'
-			. '</table>';
-	}
+		$this->setFont(self::FONT_SIZE);
+		$this->cell('出力日時：' . date('Y-m-d H:i:s'), 190, 0, 1, 'R');
 
-	private function h(string $value): string
-	{
-		return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-	}
+		$this->setFont(self::FONT_SIZE + 10, 'B');
+		$this->cell($this->formatDate((string) ($report['report_date'] ?? ''), 'Y年m月d日') . '　訓練日報', 190, 0, 1, 'C');
 
-	private function divName(array $divMap, string $parent, $id): string
-	{
-		return (string) ($divMap[$parent][(int) $id] ?? '');
-	}
+		$this->setFont(self::FONT_SIZE);
+		$this->cell('記入者：' . (string) ($report['user_name'] ?? ''), 190, $ch, 1, 'R');
 
-	private function pickedLabels(array $map, $values): array
-	{
-		$result = array();
-		foreach ((array) $values as $value) {
-			$key = (int) $value;
-			if (isset($map[$key])) {
-				$result[] = (string) $map[$key];
+		// 睡眠
+		$this->cell('昨日の就寝時間(時分)', 40, $ch, 0, 'C', 1, 1);
+		$this->cell($this->formatTime((string) ($report['retiring_time'] ?? '')), 20, $ch, 0, 'C', 1);
+		$this->cell('今日の起床時間(時分)', 40, $ch, 0, 'C', 1, 1);
+		$this->cell($this->formatTime((string) ($report['rising_time'] ?? '')), 20, $ch, 0, 'C', 1);
+		$this->cell('睡眠時間(時分)', 40, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['sleep_time'] ?? ''), 30, $ch, 1, 'C', 1);
+
+		// 気分・体調
+		$this->cell('該当する内容を選んでください。', 190, $ch, 1, 'L');
+		$this->cell('今日の気分', 55, $ch, 0, 'C', 1, 1);
+		$this->cell($this->getKeyValue('mood', (string) ($report['mood_div'] ?? '')), 40, $ch, 0, 'C', 1);
+		$this->cell('今日の体調', 55, $ch, 0, 'C', 1, 1);
+		$this->cell($this->getKeyValue('condition', (string) ($report['condition_div'] ?? '')), 40, $ch, 1, 'C', 1);
+
+		// 目標（チェックボックス）
+		$this->cell('★今日の目標(今日頑張る事・頑張った事)　(空欄にチェックを入れてください。何個でもＯＫ)', 190, $ch, 1, 'L');
+		$objective = $this->getKeyValueList('objective');
+		$cnt = 1;
+		$max = 4;
+		foreach ($objective as $key => $value) {
+			$chk = in_array((string) $key, array_map('strval', (array) ($report['objective_div'] ?? array())), true) ? '●' : '';
+			$ln  = intdiv($cnt, $max);
+			$this->cell($chk, 7.5, $ch, 0, 'C', 1);
+			$this->cell($value, 40, $ch, $ln, 'C', 1, 1);
+			$cnt++;
+			if ($cnt > $max) {
+				$cnt = 1;
 			}
 		}
-		return $result;
-	}
 
-	private function joinValues(array $values): string
-	{
-		$filtered = array();
-		foreach ($values as $value) {
-			$value = trim((string) $value);
-			if ($value !== '') {
-				$filtered[] = $value;
+		// 服薬
+		$this->cell('※服薬されている方(該当する内容を選んでください。)', 190, $ch, 1, 'L');
+		$this->multiCell('決まった通りに飲みましたか？', 15, $ch * 3, 0, 'C', 1, 1);
+		$this->multiCell($this->getKeyValue('medicine', (string) ($report['medicine_div'] ?? '')), 15, $ch * 3, 0, 'C', 1);
+		$this->multiCell('※薬を飲まなかった方の理由は何ですか？', 15, $ch * 3, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['medicine_reason'] ?? ''), 145, $ch * 3, 1, 'L', 1);
+
+		// 外出（チェックボックス）
+		$this->cell('※今日は外出しましたか？(空欄にチェックを入れてください。何個でもＯＫ)', 190, $ch, 1, 'L');
+		$outing = $this->getKeyValueList('outing');
+		$cnt = 1;
+		$max = 4;
+		foreach ($outing as $key => $value) {
+			$chk = in_array((string) $key, array_map('strval', (array) ($report['outing_div'] ?? array())), true) ? '●' : '';
+			$ln  = intdiv($cnt, $max);
+			$this->cell($chk, 7.5, $ch, 0, 'C', 1);
+			$this->cell($value, 40, $ch, $ln, 'C', 1, 1);
+			$cnt++;
+			if ($cnt > $max) {
+				$cnt = 1;
 			}
 		}
-		return implode(' / ', $filtered);
+
+		// 会話
+		$this->cell('※今日は家族以外の方と何人お話ししましたか？(該当する内容を選んでください。)', 190, $ch, 1, 'L');
+		$this->cell($this->getKeyValue('talk', (string) ($report['talk_div'] ?? '')), 40, $ch, 1, 'C', 1);
+
+		// 訓練状況
+		$this->cell('★今日の訓練状況', 190, $ch, 1, 'L');
+		$this->cell('訓練内容　午前', 31, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['training_am_1'] ?? ''), 53, $ch, 0, 'L', 1);
+		$this->cell((string) ($report['training_am_2'] ?? ''), 53, $ch, 0, 'L', 1);
+		$this->cell((string) ($report['training_am_3'] ?? ''), 53, $ch, 1, 'L', 1);
+		$this->cell('訓練内容　午後', 31, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['training_pm_1'] ?? ''), 53, $ch, 0, 'L', 1);
+		$this->cell((string) ($report['training_pm_2'] ?? ''), 53, $ch, 0, 'L', 1);
+		$this->cell((string) ($report['training_pm_3'] ?? ''), 53, $ch, 1, 'L', 1);
+		$this->cell('訓練時間　開始時間', 40, $ch, 0, 'C', 1, 1);
+		$this->cell($this->formatTime((string) ($report['training_start_time'] ?? '')), 20, $ch, 0, 'C', 1);
+		$this->cell('訓練時間　終了時間', 40, $ch, 0, 'C', 1, 1);
+		$this->cell($this->formatTime((string) ($report['training_end_time'] ?? '')), 20, $ch, 0, 'C', 1);
+		$this->cell('合計', 40, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['training_time'] ?? ''), 30, $ch, 1, 'C', 1);
+		$this->cell('休憩時間　昼休憩(分)', 30, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['lunch_time'] ?? ''), 20, $ch, 0, 'C', 1);
+		$this->cell('途中休憩(分)', 30, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['break_time'] ?? ''), 20, $ch, 0, 'C', 1);
+		$this->cell('合計(分)', 30, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['lunch_break_time'] ?? ''), 20, $ch, 0, 'C', 1);
+		$this->cell('実働', 20, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['work_time'] ?? ''), 20, $ch, 1, 'C', 1);
+
+		// 振り返り
+		$this->cell('★今日一日の訓練を振り返り(感想)', 190, $ch, 1, 'L');
+		$this->cell('訓練内容　午前', 30, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['rethink_am'] ?? ''), 160, $ch, 1, 'C', 1);
+		$this->cell('達成度(％)', 55, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['achieve_am'] ?? ''), 40, $ch, 0, 'C', 1);
+		$this->cell('疲労度(％)', 55, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['fatigue_am'] ?? ''), 40, $ch, 1, 'C', 1);
+		$this->cell('訓練内容　午後', 30, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['rethink_pm'] ?? ''), 160, $ch, 1, 'C', 1);
+		$this->cell('達成度(％)', 55, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['achieve_pm'] ?? ''), 40, $ch, 0, 'C', 1);
+		$this->cell('疲労度(％)', 55, $ch, 0, 'C', 1, 1);
+		$this->cell((string) ($report['fatigue_pm'] ?? ''), 40, $ch, 1, 'C', 1);
+
+		// 備考・支援記録
+		$this->cell('★疑問や質問の欄(悩みでも何でも結構です)', 190, $ch, 1, 'L');
+		$this->multiCell('備考欄', 40, $ch * 3, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['remark'] ?? ''), 150, $ch * 3, 1, 'L', 1);
+		$this->multiCell('【支援記録】及び【評価】', 40, $ch * 3, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['charge_comment'] ?? ''), 150, $ch * 3, 1, 'L', 1);
+	}
+
+	private function cell(string $text = '', float $width = 0, float $height = 0, int $line = 0, string $align = '', int $border = 0, int $fill = 0): void
+	{
+		$this->pdf->Cell($width, $height, $text, $border, $line, $align, $fill);
+	}
+
+	private function multiCell(string $text = '', float $width = 0, float $height = 0, int $line = 0, string $align = '', int $border = 0, int $fill = 0): void
+	{
+		$this->pdf->MultiCell($width, $height, $text, $border, $align, $fill, $line);
+	}
+
+	private function setFont(int $size, string $style = ''): void
+	{
+		$this->pdf->SetFont(self::FONT, $style, $size);
+	}
+
+	private function getKeyValue(string $parent, string $key): string
+	{
+		if ($key === '') {
+			return '';
+		}
+		return (string) ($this->divMap[$parent][(int) $key] ?? '');
+	}
+
+	private function getKeyValueList(string $parent): array
+	{
+		return $this->divMap[$parent] ?? array();
 	}
 
 	private function formatDate(string $value, string $format): string
 	{
-		$timestamp = strtotime($value);
+		$timestamp = strtotime($value . ' 00:00:00');
 		return $timestamp === false ? $value : date($format, $timestamp);
 	}
 
 	private function formatTime(string $value): string
 	{
-		if ($value === '' || strtotime('today ' . $value) === false) {
-			return $value;
+		if ($value === '') {
+			return '';
 		}
-		return date('H:i', strtotime('today ' . $value));
+		$timestamp = strtotime('today ' . $value);
+		return $timestamp === false ? $value : date('H:i', $timestamp);
 	}
 }

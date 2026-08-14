@@ -6,6 +6,7 @@ use App\Auth\AdminAuth;
 use App\Auth\GroupAuth;
 use App\Auth\UserAdminAuth;
 use App\Controllers\AdminCompleteController;
+use App\Controllers\AzureSpeechTokenController;
 use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
@@ -54,6 +55,7 @@ use App\Repositories\UserStatusSummaryRepository;
 use App\Services\FirstService;
 use App\Services\GroupFormService;
 use App\Services\AdminFormService;
+use App\Services\AzureSpeechTokenService;
 use App\Services\ChatService;
 use App\Services\ContactService;
 use App\Services\LoginService;
@@ -67,6 +69,8 @@ use App\Services\TrainingService;
 use App\Services\UserFormService;
 use App\Services\UserListService;
 use App\Support\TrainingImageStorage;
+use App\Support\InquiryMailer;
+use App\Support\InquirySlackNotifier;
 use App\Support\AppConfig;
 use App\Support\Container;
 use App\Support\Database;
@@ -200,7 +204,7 @@ $container->bind(UserIndexController::class, static function (Container $c) {
     return new UserIndexController($c->get(UserAdminAuth::class), $c->get(AppConfig::class), $c->get(UserRepositoryInterface::class), $c->get(UserListService::class), $c->get(View::class), $c->get(RequestContext::class));
 });
 $container->bind(UserStatusController::class, static function (Container $c) {
-    return new UserStatusController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserListService::class), $c->get(RequestContext::class));
+    return new UserStatusController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserListService::class), new UserStatusSummaryRepository(Database::connection()), $c->get(RequestContext::class));
 });
 $container->bind(UserEditController::class, static function (Container $c) {
     return new UserEditController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserFormService::class), $c->get(RequestContext::class), $c->get(View::class));
@@ -255,12 +259,20 @@ $container->bind(ReportCompleteController::class, static function (Container $c)
 });
 
 // --- WPF連携（Training / First） ---
+$container->singleton(InquiryMailer::class, static function (Container $c) {
+    return new InquiryMailer($c->get(AppConfig::class));
+});
+$container->singleton(InquirySlackNotifier::class, static function (Container $c) {
+    return new InquirySlackNotifier($c->get(AppConfig::class));
+});
 $container->singleton(TrainingService::class, static function (Container $c) {
     $pdo = Database::connection();
     return new TrainingService(
         new TrainingRepository($pdo),
         new UserStatusSummaryRepository($pdo),
-        new TrainingImageStorage($c->get(AppConfig::class))
+        new TrainingImageStorage($c->get(AppConfig::class)),
+        $c->get(InquiryMailer::class),
+        $c->get(InquirySlackNotifier::class)
     );
 });
 $container->singleton(FirstService::class, static function () {
@@ -271,6 +283,16 @@ $container->bind(TrainingController::class, static function (Container $c) {
 });
 $container->bind(FirstIndexController::class, static function (Container $c) {
     return new FirstIndexController($c->get(FirstService::class), $c->get(RequestContext::class));
+});
+$container->singleton(AzureSpeechTokenService::class, static function (Container $c) {
+    return new AzureSpeechTokenService($c->get(AppConfig::class));
+});
+$container->bind(AzureSpeechTokenController::class, static function (Container $c) {
+    return new AzureSpeechTokenController(
+        $c->get(AzureSpeechTokenService::class),
+        new TrainingRepository(Database::connection()),
+        $c->get(RequestContext::class)
+    );
 });
 $container->bind(ErrorIndexController::class, static function (Container $c) {
     return new ErrorIndexController($c->get(SessionStore::class), $c->get(View::class));

@@ -29,8 +29,8 @@
 ルート:
 
 - PHP: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`
-- 比較元 PHP: `C:\xampp\htdocs\zaitakukanri_honbu_high_speed`
-- WPF: `C:\xampp\htdocs\zaitakukanri_honbu_high_speed\JigyodanWpf_latest_v4.0.3`
+- 比較元 PHP: `C:\xampp\htdocs\zaitakukanri_honbu_high_speed_BK`
+- WPF: `C:\xampp\htdocs\Wpf`
 
 ## 主要構成
 
@@ -208,7 +208,7 @@ http://localhost/zaitakukanri_honbu_optimal/
 
 比較用の隣接プロジェクト:
 
-- `C:\xampp\htdocs\zaitakukanri_honbu_high_speed`
+- `C:\xampp\htdocs\zaitakukanri_honbu_high_speed_BK`
 
 ## 現在の到達点
 

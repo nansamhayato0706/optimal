@@ -22,14 +22,15 @@ $options = static function (array $map, $selected) use ($h): string {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>admin.css">
-	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>admin.js"></script>
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>admin.css?v=<?= $h($assetVer) ?>">
+	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>admin.js?v=<?= $h($assetVer) ?>"></script>
 </head>
 <body>
 <div id="wrapper">

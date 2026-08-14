@@ -68,6 +68,12 @@ $envToConfig = static function (array $env): array {
         'max_user' => ['ZAITAKU_MAX_USER'],
         'sv_root' => ['ZAITAKU_SV_ROOT'],
         'enable_status_summary_rebuild_button' => ['ZAITAKU_STATUS_SUMMARY_REBUILD_ENABLED'],
+        'inquiry_mail_enabled'  => ['ZAITAKU_INQUIRY_MAIL_ENABLED'],
+        'inquiry_mail_to'       => ['ZAITAKU_INQUIRY_MAIL_TO'],
+        'inquiry_mail_from'     => ['ZAITAKU_INQUIRY_MAIL_FROM'],
+        'slack_webhook_url'     => ['ZAITAKU_SLACK_WEBHOOK_URL'],
+        'azure_speech_key'      => ['ZAITAKU_AZURE_SPEECH_KEY'],
+        'azure_speech_region'   => ['ZAITAKU_AZURE_SPEECH_REGION'],
     ];
 
     $config = [];
@@ -135,6 +141,12 @@ if (isset($localConfig['app_url']) && $localConfig['app_url'] !== '') {
 define('APP_URL',     $appUrl);
 define('GROUP_LABEL', $localConfig['group_label'] ?? '事業団');
 define('STATUS_SUMMARY_REBUILD_ENABLED', !empty($localConfig['enable_status_summary_rebuild_button']));
+define('INQUIRY_MAIL_ENABLED', !empty($localConfig['inquiry_mail_enabled']) && filter_var($localConfig['inquiry_mail_enabled'], FILTER_VALIDATE_BOOLEAN));
+define('INQUIRY_MAIL_TO',      $localConfig['inquiry_mail_to']       ?? 'info-b@jigyodan.or.jp');
+define('INQUIRY_MAIL_FROM',    $localConfig['inquiry_mail_from']     ?? 'info-b@jigyodan.or.jp');
+define('SLACK_WEBHOOK_URL',    $localConfig['slack_webhook_url']     ?? '');
+define('AZURE_SPEECH_KEY',     $localConfig['azure_speech_key']      ?? '');
+define('AZURE_SPEECH_REGION',  $localConfig['azure_speech_region']   ?? 'japaneast');
 
 // ファイルパス
 define('UPLOAD_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'img/');

@@ -13,14 +13,15 @@ $h = array(Esc::class, 'h');
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>user.css" type="text/css" media="screen">
-	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>user_index.js"></script>
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>user.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>user_index.js?v=<?= $h($assetVer) ?>"></script>
 </head>
 <body>
 <div id="wrapper"
@@ -46,6 +47,7 @@ $h = array(Esc::class, 'h');
 <?php if ($statusSummaryRefreshEnabled): ?>
 					<input type="submit" class="h_link" name="status_summary_refresh" value="サマリ再反映（テスト用）" onclick="return confirm('利用中ユーザーのステータスサマリを再反映します。実行しますか？');">
 <?php endif; ?>
+					<button type="button" class="h_link" id="notify-toggle" hidden>通知を有効にする</button>
 				</div>
 			</div>
 		</form>
@@ -57,7 +59,7 @@ $h = array(Esc::class, 'h');
 		<div class="page-card panel-stack">
 			<div style="overflow-x:auto;">
 				<table class="data-table table-compact user_list">
-					<tr><th>No</th><th>ユーザーID</th><th>区分</th><th>名前</th><th>性別</th><th>年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
+					<tr><th>No</th><th>ユーザーID</th><th>区分</th><th>名前</th><th class="col-sex">性別</th><th class="col-age">年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
 <?php require __DIR__ . '/partials/user_rows.php'; ?>
 				</table>
 			</div>

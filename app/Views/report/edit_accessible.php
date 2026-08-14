@@ -81,18 +81,19 @@ $checkboxGroup = static function (string $name, array $map, array $selected, boo
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" href="<?= $h($imgBase) ?>favicon.ico" type="image/x-icon">
 	<title><?= $h($title) ?>｜在宅就労管理システム</title>
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>jquery-ui.min.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>datepicker-custom.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css" type="text/css" media="screen">
-	<link rel="stylesheet" href="<?= $h($cssBase) ?>report.css" type="text/css" media="screen">
-	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery-ui.min.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>datepicker-ja.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js"></script>
-	<script type="text/javascript" src="<?= $h($jsBase) ?>report.js"></script>
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>jquery-ui.min.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>datepicker-custom.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>base.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>components.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>common.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<link rel="stylesheet" href="<?= $h($cssBase) ?>report.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
+	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>jquery-ui.min.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>datepicker-ja.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
+	<script type="text/javascript" src="<?= $h($jsBase) ?>report.js?v=<?= $h($assetVer) ?>"></script>
 </head>
 <body>
 	<a class="skip-link" href="#main-content">本文へ移動</a>

@@ -3,6 +3,14 @@
 declare(strict_types=1);
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
+    $sessionSavePath = dirname(__DIR__) . '/storage/sessions';
+    if (!is_dir($sessionSavePath)) {
+        @mkdir($sessionSavePath, 0777, true);
+    }
+    if (is_dir($sessionSavePath) && is_writable($sessionSavePath)) {
+        session_save_path($sessionSavePath);
+    }
+    ini_set('session.gc_maxlifetime', '28800');
     session_name('ZK_OPTIMAL_SESSID');
     session_start();
 }

@@ -34,6 +34,20 @@ final class TrainingRepository extends AbstractRepository
         return $row === false ? null : $row;
     }
 
+    public function findGroupNotifySettings(string $groupUuid): ?array
+    {
+        if ($groupUuid === '') {
+            return null;
+        }
+        $stmt = $this->pdo->prepare(
+            'SELECT group_name, group_email, notify_slack_webhook_url'
+            . ' FROM mst_group WHERE group_uuid = :group_uuid AND delete_flg = 0 LIMIT 1'
+        );
+        $stmt->execute(['group_uuid' => $groupUuid]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row === false ? null : $row;
+    }
+
     public function updateUserLogin(array $params): bool
     {
         $stmt = $this->pdo->prepare(

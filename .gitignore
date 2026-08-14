@@ -5,3 +5,6 @@ env.production
 !.env.local.example
 .codex
 logs/*.log
+storage/sessions/*
+!storage/sessions/.gitkeep
+wpf/
