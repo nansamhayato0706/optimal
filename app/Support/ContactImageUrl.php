@@ -25,6 +25,12 @@ final class ContactImageUrl
 			return './' . $relativePath;
 		}
 
+		foreach ($config->siblingImageProjectDirs() as $dirName) {
+			if (is_file($config->siblingProjectRoot($dirName) . $relativePath)) {
+				return '../' . $dirName . '/' . $relativePath;
+			}
+		}
+
 		if ($config->remoteImageBase() !== '') {
 			return rtrim($config->remoteImageBase(), '/') . '/' . ltrim($relativePath, '/');
 		}

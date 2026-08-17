@@ -84,6 +84,8 @@ final class AppConfig
     public function azureSpeechRegion(): string { return $this->azureSpeechRegion; }
     public function azureSpeechEnabled(): bool { return $this->azureSpeechKey !== ''; }
     public function rootPath(): string { return dirname(__DIR__, 2) . '/'; }
+    public function siblingImageProjectDirs(): array { return array('zaitakukanri_honbu_new', 'zaitakukanri_honbu'); }
+    public function siblingProjectRoot(string $dirName): string { return dirname(rtrim($this->rootPath(), '/')) . '/' . $dirName . '/'; }
     public function uploadDir(): string { return (string) (defined('UPLOAD_DIR') ? UPLOAD_DIR : $this->rootPath() . 'img/'); }
     public function imgBase(): string { return $this->appUrl . '/img/'; }
     public function dummyImage(): string { return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMzIwIDI0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJObyBpbWFnZSI+PHJlY3Qgd2lkdGg9IjMyMCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNmM2Y0ZjYiLz48cGF0aCBkPSJNNjQgMTc2bDU2LTY0IDQwIDQ4IDMyLTMyIDY0IDQ4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48Y2lyY2xlIGN4PSIyMTYiIGN5PSI4MCIgcj0iMjQiIGZpbGw9IiNjYmQ1ZTEiLz48dGV4dCB4PSIxNjAiIHk9IjIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI3MjgwIj5ObyBpbWFnZTwvdGV4dD48L3N2Zz4='; }
