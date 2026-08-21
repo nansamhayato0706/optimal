@@ -162,12 +162,14 @@ final class ReportPdfGenerator
 		$this->cell('疲労度(％)', 55, $ch, 0, 'C', 1, 1);
 		$this->cell((string) ($report['fatigue_pm'] ?? ''), 40, $ch, 1, 'C', 1);
 
-		// 備考・支援記録
+		// 備考・返信・支援記録
 		$this->cell('★疑問や質問の欄(悩みでも何でも結構です)', 190, $ch, 1, 'L');
-		$this->multiCell('備考欄', 40, $ch * 3, 0, 'C', 1, 1);
-		$this->multiCell((string) ($report['remark'] ?? ''), 150, $ch * 3, 1, 'L', 1);
-		$this->multiCell('【支援記録】及び【評価】', 40, $ch * 3, 0, 'C', 1, 1);
-		$this->multiCell((string) ($report['charge_comment'] ?? ''), 150, $ch * 3, 1, 'L', 1);
+		$this->multiCell('備考欄', 40, $ch * 2, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['remark'] ?? ''), 150, $ch * 2, 1, 'L', 1);
+		$this->multiCell('返信', 40, $ch * 2, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['reply'] ?? ''), 150, $ch * 2, 1, 'L', 1);
+		$this->multiCell('【支援記録】及び【評価】', 40, $ch * 2, 0, 'C', 1, 1);
+		$this->multiCell((string) ($report['charge_comment'] ?? ''), 150, $ch * 2, 1, 'L', 1);
 	}
 
 	private function cell(string $text = '', float $width = 0, float $height = 0, int $line = 0, string $align = '', int $border = 0, int $fill = 0): void

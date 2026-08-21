@@ -177,7 +177,10 @@ $formatTime = static function (?string $time): string {
 						<div class="rf-title">疑問や質問</div>
 						<div class="rf-body-split">
 							<div class="rf-split-col"><span class="rf-label">備考欄</span><div class="rf-value rf-value--multiline" aria-label="備考欄"><?= $h($detail['remark']) ?></div></div>
+							<div class="rf-split-col"><span class="rf-label">返信</span><div class="rf-value rf-value--multiline" aria-label="返信"><?= $h($detail['reply']) ?></div></div>
+<?php if ($loginAuth > 0): ?>
 							<div class="rf-split-col"><span class="rf-label">支援記録及び評価</span><div class="rf-value rf-value--multiline" aria-label="支援記録及び評価"><?= $h($detail['charge_comment']) ?></div></div>
+<?php endif; ?>
 						</div>
 					</div>
 				</div>

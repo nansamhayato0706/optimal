@@ -122,7 +122,10 @@ $formatDateWithWeekday = static function (?string $date): string {
 							<th class="report_nowrap text-nowrap">開始時間</th>
 							<th class="report_nowrap text-nowrap">終了時間</th>
 							<th>備考</th>
+							<th>返信</th>
+							<?php if ($loginAuth > 0): ?>
 							<th>支援記録及び評価</th>
+							<?php endif; ?>
 							<th class="report_nowrap text-nowrap"></th>
 						</tr>
 						<?php foreach ($pageData['report'] as $report): ?>
@@ -131,7 +134,10 @@ $formatDateWithWeekday = static function (?string $date): string {
 								<td class="report_nowrap text-nowrap"><?= $h($formatTime($report['training_start_time'])) ?></td>
 								<td class="report_nowrap text-nowrap"><?= $h($formatTime($report['training_end_time'])) ?></td>
 								<td><?= nl2br($h($report['remark'])) ?></td>
+								<td><?= nl2br($h($report['reply'])) ?></td>
+								<?php if ($loginAuth > 0): ?>
 								<td><?= nl2br($h($report['charge_comment'])) ?></td>
+								<?php endif; ?>
 								<td class="report_nowrap text-nowrap"><a href="<?= !empty($report['admin_uuid']) ? 'report_detail.php' : 'report_edit.php' ?>?i=<?= $h($report['report_uuid']) ?>">確認</a></td>
 							</tr>
 						<?php endforeach; ?>

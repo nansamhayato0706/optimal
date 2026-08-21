@@ -77,7 +77,7 @@ $fieldLabel = static function (string $key): string {
 
 <?php
 				$reportData = $detail;
-				$showReadonlyAdminComment = true;
+				$showReadonlyAdminComment = $loginAuth > 0;
 				$renderMultiline = true;
 				require __DIR__ . '/partials/accessible_readonly_training_section.php';
 				require __DIR__ . '/partials/accessible_readonly_review_section.php';

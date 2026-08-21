@@ -19,8 +19,10 @@
 判断に迷った場合は、この3点を優先する。
 
 重要な実行制約：
-- PHP 側は **PHP 7 で動作しなければならない**
+- **本番環境は PHP 7 で稼働している。** PHP 側のコードは PHP 7 で動作しなければならない
 - PHP 8 専用構文（match式・readonly・nullsafe演算子・enum・属性 #[] など）は使わない
+- ⚠️ ローカルの XAMPP 環境は PHP 8 系（`php -v` で確認可能）。`php -l` のシンタックスチェックはローカルの PHP バージョンで実行されるため、**PHP 8 専用構文が混入していてもローカルの `php -l` ではエラーにならない**。目視でも PHP 7 互換性を確認すること
+- 迷ったら [PHP: Migrating from PHP 7.x to PHP 8.0](https://www.php.net/manual/en/migration80.php) 等で当該構文が PHP 8 以降の追加かどうかを確認する
 
 ルート：
 - PHP: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`

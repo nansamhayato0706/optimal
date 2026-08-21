@@ -163,16 +163,17 @@ final class ReportRepository extends BaseRepository
 		}
 	}
 
-	public function saveAdminComment(string $reportUuid, string $adminUuid, string $chargeComment, string $updateUuid): bool
+	public function saveAdminComment(string $reportUuid, string $adminUuid, string $reply, string $chargeComment, string $updateUuid): bool
 	{
 		$stmt = $this->pdo->prepare(
 			'UPDATE tbl_report'
-			. ' SET admin_uuid = :admin_uuid, charge_comment = :charge_comment, update_date = NOW(), update_uuid = :update_uuid'
+			. ' SET admin_uuid = :admin_uuid, reply = :reply, charge_comment = :charge_comment, update_date = NOW(), update_uuid = :update_uuid'
 			. ' WHERE report_uuid = :report_uuid'
 		);
 
 		return $stmt->execute(array(
 			'admin_uuid' => $adminUuid,
+			'reply' => $reply,
 			'charge_comment' => $chargeComment,
 			'update_uuid' => $updateUuid,
 			'report_uuid' => $reportUuid,
@@ -200,7 +201,7 @@ final class ReportRepository extends BaseRepository
 			return array();
 		}
 
-		$sql = 'SELECT report_uuid, report_date, training_start_time, training_end_time, admin_uuid, remark, charge_comment'
+		$sql = 'SELECT report_uuid, report_date, training_start_time, training_end_time, admin_uuid, remark, reply, charge_comment'
 			 . ' FROM tbl_report'
 			 . ' WHERE delete_flg = 0 AND user_uuid = :user_uuid';
 		$params = array('user_uuid' => $userUuid);
@@ -323,12 +324,12 @@ final class ReportRepository extends BaseRepository
 			 . ' report_uuid, user_uuid, report_date, retiring_time, rising_time, mood_div, condition_div, medicine_div, medicine_reason,'
 			 . ' talk_div, training_am_1, training_am_2, training_am_3, training_pm_1, training_pm_2, training_pm_3, training_start_time,'
 			 . ' training_end_time, lunch_time, break_time, rethink_am, achieve_am, fatigue_am, rethink_pm, achieve_pm, fatigue_pm,'
-			 . ' admin_uuid, charge_comment, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
+			 . ' admin_uuid, reply, charge_comment, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
 			 . ' ) VALUES ('
 			 . ' :report_uuid, :user_uuid, :report_date, :retiring_time, :rising_time, :mood_div, :condition_div, :medicine_div, :medicine_reason,'
 			 . ' :talk_div, :training_am_1, :training_am_2, :training_am_3, :training_pm_1, :training_pm_2, :training_pm_3, :training_start_time,'
 			 . ' :training_end_time, :lunch_time, :break_time, :rethink_am, :achieve_am, :fatigue_am, :rethink_pm, :achieve_pm, :fatigue_pm,'
-			 . ' :admin_uuid, :charge_comment, :remark, 0, NOW(), :insert_uuid, NOW(), :update_uuid'
+			 . ' :admin_uuid, :reply, :charge_comment, :remark, 0, NOW(), :insert_uuid, NOW(), :update_uuid'
 			 . ' )';
 		$stmt = $this->pdo->prepare($sql);
 		$params = $this->normalizeReportParams($report);
@@ -345,7 +346,7 @@ final class ReportRepository extends BaseRepository
 			 . ' training_pm_1 = :training_pm_1, training_pm_2 = :training_pm_2, training_pm_3 = :training_pm_3,'
 			 . ' training_start_time = :training_start_time, training_end_time = :training_end_time, lunch_time = :lunch_time, break_time = :break_time,'
 			 . ' rethink_am = :rethink_am, achieve_am = :achieve_am, fatigue_am = :fatigue_am, rethink_pm = :rethink_pm,'
-			 . ' achieve_pm = :achieve_pm, fatigue_pm = :fatigue_pm, admin_uuid = :admin_uuid, charge_comment = :charge_comment,'
+			 . ' achieve_pm = :achieve_pm, fatigue_pm = :fatigue_pm, admin_uuid = :admin_uuid, reply = :reply, charge_comment = :charge_comment,'
 			 . ' remark = :remark, update_date = NOW(), update_uuid = :actor_uuid'
 			 . ' WHERE report_uuid = :report_uuid';
 		$stmt = $this->pdo->prepare($sql);
@@ -382,6 +383,7 @@ final class ReportRepository extends BaseRepository
 			'achieve_pm' => (int) ($report['achieve_pm'] ?? 0),
 			'fatigue_pm' => (int) ($report['fatigue_pm'] ?? 0),
 			'admin_uuid' => (string) ($report['admin_uuid'] ?? ''),
+			'reply' => (string) ($report['reply'] ?? ''),
 			'charge_comment' => (string) ($report['charge_comment'] ?? ''),
 			'remark' => (string) ($report['remark'] ?? ''),
 			'actor_uuid' => (string) ($report['actor_uuid'] ?? ($report['user_uuid'] ?? '')),

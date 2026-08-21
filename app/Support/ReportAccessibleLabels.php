@@ -75,6 +75,7 @@ final class ReportAccessibleLabels
 			'achieve_pm' => '午後の達成度',
 			'fatigue_pm' => '午後の疲労度',
 			'remark' => '備考欄',
+			'reply' => '返信',
 			'charge_comment' => '支援記録と評価',
 			'back' => '戻る',
 			'register' => '登録',

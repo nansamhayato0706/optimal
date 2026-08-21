@@ -113,6 +113,7 @@ final class ReportFormService
 
 		if ($loginAuth === 0) {
 			$form['admin_uuid'] = '';
+			$form['reply'] = '';
 			$form['charge_comment'] = '';
 		} elseif (($form['report_uuid'] ?? '') === '') {
 			$form['admin_uuid'] = '';
@@ -202,6 +203,7 @@ final class ReportFormService
 			$ok = $this->reportRepository->saveAdminComment(
 				(string) $draft['report_uuid'],
 				$loginAdminUuid,
+				(string) ($draft['reply'] ?? ''),
 				(string) ($draft['charge_comment'] ?? ''),
 				$loginAdminUuid
 			);
@@ -256,6 +258,7 @@ final class ReportFormService
 			'fatigue_pm' => '0',
 			'remark' => '',
 			'admin_uuid' => '',
+			'reply' => '',
 			'charge_comment' => '',
 		);
 	}
@@ -371,11 +374,15 @@ final class ReportFormService
 			'training_am_1' => 255, 'training_am_2' => 255, 'training_am_3' => 255,
 			'training_pm_1' => 255, 'training_pm_2' => 255, 'training_pm_3' => 255,
 			'medicine_reason' => 255, 'rethink_am' => 255, 'rethink_pm' => 255,
-			'remark' => 255, 'charge_comment' => 255,
+			'remark' => 255, 'reply' => 255, 'charge_comment' => 255,
 		) as $field => $length) {
 			if (!$this->isMaxLength($form[$field] ?? '', $length)) {
 				$errors[$field] = $length . '文字以内で入力してください。';
 			}
+		}
+
+		if (!$this->isMaxLineCount($form['reply'] ?? '', 5)) {
+			$errors['reply'] = '5行以内で入力してください。';
 		}
 
 		if (!$this->isMaxLineCount($form['charge_comment'] ?? '', 5)) {
