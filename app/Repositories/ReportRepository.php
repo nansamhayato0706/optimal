@@ -324,12 +324,12 @@ final class ReportRepository extends BaseRepository
 			 . ' report_uuid, user_uuid, report_date, retiring_time, rising_time, mood_div, condition_div, medicine_div, medicine_reason,'
 			 . ' talk_div, training_am_1, training_am_2, training_am_3, training_pm_1, training_pm_2, training_pm_3, training_start_time,'
 			 . ' training_end_time, lunch_time, break_time, rethink_am, achieve_am, fatigue_am, rethink_pm, achieve_pm, fatigue_pm,'
-			 . ' admin_uuid, reply, charge_comment, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
+			 . ' admin_uuid, reply, charge_comment, consent_flg, remark, delete_flg, insert_date, insert_uuid, update_date, update_uuid'
 			 . ' ) VALUES ('
 			 . ' :report_uuid, :user_uuid, :report_date, :retiring_time, :rising_time, :mood_div, :condition_div, :medicine_div, :medicine_reason,'
 			 . ' :talk_div, :training_am_1, :training_am_2, :training_am_3, :training_pm_1, :training_pm_2, :training_pm_3, :training_start_time,'
 			 . ' :training_end_time, :lunch_time, :break_time, :rethink_am, :achieve_am, :fatigue_am, :rethink_pm, :achieve_pm, :fatigue_pm,'
-			 . ' :admin_uuid, :reply, :charge_comment, :remark, 0, NOW(), :insert_uuid, NOW(), :update_uuid'
+			 . ' :admin_uuid, :reply, :charge_comment, :consent_flg, :remark, 0, NOW(), :insert_uuid, NOW(), :update_uuid'
 			 . ' )';
 		$stmt = $this->pdo->prepare($sql);
 		$params = $this->normalizeReportParams($report);
@@ -347,7 +347,7 @@ final class ReportRepository extends BaseRepository
 			 . ' training_start_time = :training_start_time, training_end_time = :training_end_time, lunch_time = :lunch_time, break_time = :break_time,'
 			 . ' rethink_am = :rethink_am, achieve_am = :achieve_am, fatigue_am = :fatigue_am, rethink_pm = :rethink_pm,'
 			 . ' achieve_pm = :achieve_pm, fatigue_pm = :fatigue_pm, admin_uuid = :admin_uuid, reply = :reply, charge_comment = :charge_comment,'
-			 . ' remark = :remark, update_date = NOW(), update_uuid = :actor_uuid'
+			 . ' consent_flg = :consent_flg, remark = :remark, update_date = NOW(), update_uuid = :actor_uuid'
 			 . ' WHERE report_uuid = :report_uuid';
 		$stmt = $this->pdo->prepare($sql);
 		$stmt->execute($this->normalizeReportParams($report));
@@ -385,6 +385,7 @@ final class ReportRepository extends BaseRepository
 			'admin_uuid' => (string) ($report['admin_uuid'] ?? ''),
 			'reply' => (string) ($report['reply'] ?? ''),
 			'charge_comment' => (string) ($report['charge_comment'] ?? ''),
+			'consent_flg' => ((string) ($report['consent_flg'] ?? '0')) === '1' ? 1 : 0,
 			'remark' => (string) ($report['remark'] ?? ''),
 			'actor_uuid' => (string) ($report['actor_uuid'] ?? ($report['user_uuid'] ?? '')),
 			'insert_uuid' => (string) ($report['actor_uuid'] ?? ($report['user_uuid'] ?? '')),

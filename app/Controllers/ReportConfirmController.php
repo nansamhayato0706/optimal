@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Repositories\ReportRepository;
 use App\Services\ReportFormService;
 use App\Support\ReportAuth;
+use App\Support\ReportFieldLabels;
 use App\Support\ViewRenderer;
 
 final class ReportConfirmController
@@ -45,6 +46,8 @@ final class ReportConfirmController
 		$this->viewRenderer->render($view, array(
 			'title' => '日報入力確認',
 			'form' => $draft,
+			'errors' => $this->formService->pullErrors(),
+			'errorLabels' => ReportFieldLabels::forEdit(),
 			'divMap' => $this->reportRepository->findDivMap(),
 			'headerLinks' => $this->auth->buildHeaderLinks(),
 			'loginAuth' => $this->auth->getLoginAuth(),

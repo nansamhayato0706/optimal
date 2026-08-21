@@ -136,6 +136,13 @@ final class ReportFormService
 		return is_array($draft) ? $draft : null;
 	}
 
+	public function pullErrors(): array
+	{
+		$errors = $this->sessionStore->get(self::ERROR_SESSION_KEY, array());
+		$this->sessionStore->forget(self::ERROR_SESSION_KEY);
+		return is_array($errors) ? $errors : array();
+	}
+
 	public function getStoredDraftWithDerived(): ?array
 	{
 		$draft = $this->getStoredDraft();
@@ -260,6 +267,7 @@ final class ReportFormService
 			'admin_uuid' => '',
 			'reply' => '',
 			'charge_comment' => '',
+			'consent_flg' => '0',
 		);
 	}
 

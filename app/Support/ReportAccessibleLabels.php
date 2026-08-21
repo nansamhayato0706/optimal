@@ -77,6 +77,8 @@ final class ReportAccessibleLabels
 			'remark' => '備考欄',
 			'reply' => '返信',
 			'charge_comment' => '支援記録と評価',
+			'consent_heading' => '利用の確認',
+			'consent_text' => '本日の利用について確認し、了承しました！',
 			'back' => '戻る',
 			'register' => '登録',
 			'confirm' => '確認',

@@ -18,6 +18,9 @@ $sectionLabel = static function (string $key): string {
 $fieldLabel = static function (string $key): string {
 	return \App\Support\ReportAccessibleLabels::field($key);
 };
+$errorSummary = array_filter($errors, static function ($value, $key): bool {
+	return $key !== 'general';
+}, ARRAY_FILTER_USE_BOTH);
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -56,6 +59,15 @@ $fieldLabel = static function (string $key): string {
 				<p>この画面は確認専用です。上から順番に読み上げで確認し、問題がなければ最後に登録してください。</p>
 				<p>修正する場合は、最後の「入力画面に戻る」を選んでください。</p>
 			</div>
+			<?php if ($errorSummary !== array()): ?>
+				<div class="accessible-intro" id="report-accessible-error-summary" role="alert" tabindex="-1">
+					<p><strong>入力内容を確認してください。</strong></p>
+					<?php foreach ($errorSummary as $key => $message): ?>
+						<?php $label = $errorLabels[$key] ?? $key; ?>
+						<p><?= $h($label . '：' . $message) ?></p>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 
 			<form id="main-content" action="report_complete.php" method="post" class="report_edit_form accessible-form" tabindex="-1">
 				<?= csrf_field() ?>
@@ -82,11 +94,48 @@ $fieldLabel = static function (string $key): string {
 				require __DIR__ . '/partials/accessible_readonly_question_section.php';
 ?>
 
+				<?php if ($loginAuth === 0): ?>
+				<section class="accessible-card">
+					<fieldset class="accessible-choice-group">
+						<legend class="accessible-group-legend"><?= $h($fieldLabel('consent_heading')) ?></legend>
+						<div class="accessible-choice-list">
+							<label class="accessible-choice" for="report_accessible_consent_flg">
+								<input id="report_accessible_consent_flg" type="checkbox" name="consent_flg" value="1"<?= ($errors['consent_flg'] ?? '') !== '' ? ' aria-invalid="true" aria-describedby="report_accessible_consent_flg_error"' : '' ?>>
+								<span class="accessible-choice-text"><?= $h($fieldLabel('consent_text')) ?></span>
+							</label>
+						</div>
+						<p class="err" id="report_accessible_consent_flg_error" role="alert"<?= ($errors['consent_flg'] ?? '') === '' ? ' style="display:none"' : '' ?>><?= $h($errors['consent_flg'] ?? '本日の利用について確認し、チェックを入れてください。') ?></p>
+					</fieldset>
+				</section>
+				<?php endif; ?>
+
 				<div class="accessible-action-bar" id="frm_button"><a class="h_link btn-secondary" href="report_edit.php">入力画面に戻る</a><input type="submit" class="h_link" name="act" value="この内容で登録"></div>
 			</form>
 		</main>
 		<footer id="footer"></footer>
 	</div>
+	<script>
+	$(function () {
+		var $consent = $('#report_accessible_consent_flg');
+		if (!$consent.length) {
+			return;
+		}
+		var $err = $('#report_accessible_consent_flg_error');
+		$('.accessible-form').on('submit', function (e) {
+			if (!$consent.prop('checked')) {
+				e.preventDefault();
+				$err.show();
+				$consent.attr('aria-invalid', 'true').focus();
+			}
+		});
+		$consent.on('change', function () {
+			if ($consent.prop('checked')) {
+				$err.hide();
+				$consent.removeAttr('aria-invalid');
+			}
+		});
+	});
+	</script>
 </body>
 </html>
 

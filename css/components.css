@@ -445,6 +445,15 @@ td.user_contact_f_3 {
   flex-shrink: 0;
 }
 
+.rf-consent {
+  padding: var(--sp-3) var(--sp-4);
+}
+
+.rf-consent .rf-check-item {
+  font-size: 0.95rem;
+  padding: var(--sp-2) var(--sp-4);
+}
+
 .rf-body-split {
   display: flex;
   flex-direction: column;

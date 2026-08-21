@@ -35,6 +35,24 @@ $fieldLabel = static function (string $key): string {
 					e.preventDefault();
 				}
 			});
+
+			var $consent = $('#report_consent_flg');
+			if ($consent.length) {
+				var $err = $('#report_consent_flg_error');
+				$('.report_edit_form').on('submit', function(e){
+					if (!$consent.prop('checked')) {
+						e.preventDefault();
+						$err.show();
+						$consent.attr('aria-invalid', 'true').focus();
+					}
+				});
+				$consent.on('change', function () {
+					if ($consent.prop('checked')) {
+						$err.hide();
+						$consent.removeAttr('aria-invalid');
+					}
+				});
+			}
 		});
 		</script>
 	</head>
@@ -91,6 +109,16 @@ $fieldLabel = static function (string $key): string {
 						require __DIR__ . '/partials/readonly_question_card.php';
 ?>
 					</div>
+
+					<?php if ($loginAuth === 0): ?>
+					<div class="rf-card rf-consent">
+						<label class="rf-check-item" for="report_consent_flg">
+							<input id="report_consent_flg" type="checkbox" name="consent_flg" value="1"<?= ($errors['consent_flg'] ?? '') !== '' ? ' aria-invalid="true" aria-describedby="report_consent_flg_error"' : '' ?>>
+							<?= $h($fieldLabel('consent_text')) ?>
+						</label>
+						<p class="err" id="report_consent_flg_error" role="alert"<?= ($errors['consent_flg'] ?? '') === '' ? ' style="display:none"' : '' ?>><?= $h($errors['consent_flg'] ?? '本日の利用について確認し、チェックを入れてください。') ?></p>
+					</div>
+					<?php endif; ?>
 
 					<div class="rf-actions" id="frm_button">
 						<a class="h_link btn-secondary" href="report_edit.php"><?= $h($fieldLabel('back')) ?></a>

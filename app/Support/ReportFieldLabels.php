@@ -30,6 +30,7 @@ final class ReportFieldLabels
 			'remark' => '備考欄',
 			'reply' => '返信',
 			'charge_comment' => '支援記録と評価',
+			'consent_flg' => '利用の了承',
 			'user_uuid' => '対象ユーザー',
 			'report_uuid' => '日報',
 		);

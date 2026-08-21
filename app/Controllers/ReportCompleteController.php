@@ -34,11 +34,26 @@ final class ReportCompleteController
 			exit;
 		}
 
-		if ($this->request->isPost()) {
-			\csrf_verify_or_abort($this->request);
-			$draft['charge_comment'] = trim((string) $this->request->post('charge_comment', $draft['charge_comment'] ?? ''));
-			$this->formService->replaceStoredDraft($draft);
+		if (!$this->request->isPost()) {
+			header('Location: report_confirm.php');
+			exit;
 		}
+
+		\csrf_verify_or_abort($this->request);
+		$draft['charge_comment'] = trim((string) $this->request->post('charge_comment', $draft['charge_comment'] ?? ''));
+		$consented = trim((string) $this->request->post('consent_flg', '')) === '1';
+
+		if ($this->auth->getLoginAuth() === 0 && !$consented) {
+			$this->formService->storeErrors(
+				array('consent_flg' => '本日の利用について確認し、チェックを入れてください。'),
+				$draft
+			);
+			header('Location: report_confirm.php');
+			exit;
+		}
+
+		$draft['consent_flg'] = $consented ? '1' : '0';
+		$this->formService->replaceStoredDraft($draft);
 
 		$result = $this->formService->completeDraft(
 			$this->auth->getLoginAuth(),
