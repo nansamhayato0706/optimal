@@ -17,6 +17,17 @@ final class OpenAiTranscriptionService
     const API_URL         = 'https://api.openai.com/v1/audio/transcriptions';
     const REQUEST_TIMEOUT = 20;
 
+    /**
+     * コマンド認識モード時に渡すヒント。短い孤立した単語（「ログアウト」等）は文脈が無いため
+     * 誤認識されやすい（実運用で「Lautof.」「ツーアウト」等に誤認識される例が確認された）。
+     * OpenAI の prompt パラメータで語彙を事前に示すことで認識精度を上げる。
+     * WPF 側の SpeechService.CommandPhrases と同じ語彙を保つこと。
+     */
+    const COMMAND_VOCABULARY_PROMPT =
+        'よくある発話：ログイン、ログアウト、ログオフ、作業開始、開始、スタート、作業終了、終了、ストップ、' .
+        '送信、更新、連絡要求、連絡、緊急、ヘルプ、助けて、はい、イエス、オーケー、いいえ、ノー、キャンセル、' .
+        '日報、日報を開く、レポート、リポート、レポートを開く、報告、チャット、チャット入力、取り消し、閉じる';
+
     private $config;
 
     public function __construct(AppConfig $config)
@@ -32,9 +43,11 @@ final class OpenAiTranscriptionService
     /**
      * @param string $tmpPath アップロードされた一時ファイルの絶対パス（move_uploaded_file 済み、または is_uploaded_file 検証済みのパス）
      * @param string $originalName クライアントが送ってきたファイル名（拡張子判定用）
+     * @param bool $isCommandMode true の場合、コマンド語彙をヒントとして渡し認識精度を上げる。
+     *   チャット自由入力（口述）では内容を誘導したくないため false のまま呼ぶこと。
      * @return string|null 文字起こし結果。失敗時は null
      */
-    public function transcribe(string $tmpPath, string $originalName): ?string
+    public function transcribe(string $tmpPath, string $originalName, bool $isCommandMode = false): ?string
     {
         if (!$this->isEnabled()) {
             return null;
@@ -51,18 +64,23 @@ final class OpenAiTranscriptionService
         $mimeType = 'audio/wav';
         $fileName = $originalName !== '' ? $originalName : 'audio.wav';
 
+        $postFields = [
+            'file'            => new \CURLFile($tmpPath, $mimeType, $fileName),
+            'model'           => $this->config->openAiTranscribeModel(),
+            'language'        => 'ja',
+            'response_format' => 'json',
+        ];
+        if ($isCommandMode) {
+            $postFields['prompt'] = self::COMMAND_VOCABULARY_PROMPT;
+        }
+
         curl_setopt_array($ch, [
             CURLOPT_POST           => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_HTTPHEADER     => [
                 'Authorization: Bearer ' . $this->config->openAiApiKey(),
             ],
-            CURLOPT_POSTFIELDS     => [
-                'file'            => new \CURLFile($tmpPath, $mimeType, $fileName),
-                'model'           => $this->config->openAiTranscribeModel(),
-                'language'        => 'ja',
-                'response_format' => 'json',
-            ],
+            CURLOPT_POSTFIELDS     => $postFields,
             CURLOPT_TIMEOUT        => self::REQUEST_TIMEOUT,
             CURLOPT_CONNECTTIMEOUT => self::REQUEST_TIMEOUT,
         ]);

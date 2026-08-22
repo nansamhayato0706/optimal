@@ -103,7 +103,8 @@ final class TrainingTranscribeController
             return;
         }
 
-        $text = $this->transcriptionService->transcribe($tmpPath, $originalName);
+        $isCommandMode = $this->request->post('value2', '') === 'command';
+        $text = $this->transcriptionService->transcribe($tmpPath, $originalName, $isCommandMode);
         if ($text === null) {
             JsonResponder::send(['ok' => false, 'error' => 'transcription_failed'], 503);
             return;
