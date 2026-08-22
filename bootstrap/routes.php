@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Controllers\AdminCompleteController;
-use App\Controllers\AzureSpeechTokenController;
+use App\Controllers\TrainingTranscribeController;
 use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
@@ -91,8 +91,8 @@ $routes->add(['POST'], '/training_update.php',   static function (): void { app_
 // --- WPF初期データ ---
 $routes->add(['POST'], '/first.php', static function (): void { app_container()->get(FirstIndexController::class)->handle(); });
 
-// --- WPF音声認識（Azure Speech 短期トークン発行） ---
-$routes->add(['POST'], '/azure_speech_token.php', static function (): void { app_container()->get(AzureSpeechTokenController::class)->handle(); });
+// --- WPF音声認識（OpenAI 文字起こし） ---
+$routes->add(['POST'], '/training_transcribe.php', static function (): void { app_container()->get(TrainingTranscribeController::class)->handle(); });
 
 // --- エラーページ ---
 $routes->add(['GET', 'POST'], '/error.php', static function (): void { app_container()->get(ErrorIndexController::class)->handle(); });

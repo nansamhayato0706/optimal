@@ -17,8 +17,9 @@ final class AppConfig
     private $inquiryMailTo;
     private $inquiryMailFrom;
     private $slackWebhookUrl;
-    private $azureSpeechKey;
-    private $azureSpeechRegion;
+    private $openAiApiKey;
+    private $openAiTranscribeModel;
+    private $transcribeDailySeconds;
 
     private function __construct(
         string $dbHost,
@@ -32,8 +33,9 @@ final class AppConfig
         string $inquiryMailTo,
         string $inquiryMailFrom,
         string $slackWebhookUrl,
-        string $azureSpeechKey,
-        string $azureSpeechRegion
+        string $openAiApiKey,
+        string $openAiTranscribeModel,
+        int $transcribeDailySeconds
     ) {
         $this->dbHost  = $dbHost;
         $this->dbName  = $dbName;
@@ -46,8 +48,9 @@ final class AppConfig
         $this->inquiryMailTo      = $inquiryMailTo;
         $this->inquiryMailFrom    = $inquiryMailFrom;
         $this->slackWebhookUrl    = $slackWebhookUrl;
-        $this->azureSpeechKey     = $azureSpeechKey;
-        $this->azureSpeechRegion  = $azureSpeechRegion === '' ? 'japaneast' : $azureSpeechRegion;
+        $this->openAiApiKey       = $openAiApiKey;
+        $this->openAiTranscribeModel = $openAiTranscribeModel === '' ? 'gpt-4o-transcribe' : $openAiTranscribeModel;
+        $this->transcribeDailySeconds = $transcribeDailySeconds > 0 ? $transcribeDailySeconds : 3600;
     }
 
     public static function fromGlobals(): self
@@ -64,8 +67,9 @@ final class AppConfig
             (string) (defined('INQUIRY_MAIL_TO')      ? INQUIRY_MAIL_TO      : 'info-b@jigyodan.or.jp'),
             (string) (defined('INQUIRY_MAIL_FROM')    ? INQUIRY_MAIL_FROM    : 'info-b@jigyodan.or.jp'),
             (string) (defined('SLACK_WEBHOOK_URL')    ? SLACK_WEBHOOK_URL    : ''),
-            (string) (defined('AZURE_SPEECH_KEY')     ? AZURE_SPEECH_KEY     : ''),
-            (string) (defined('AZURE_SPEECH_REGION')  ? AZURE_SPEECH_REGION  : 'japaneast')
+            (string) (defined('OPENAI_API_KEY')       ? OPENAI_API_KEY       : ''),
+            (string) (defined('OPENAI_TRANSCRIBE_MODEL') ? OPENAI_TRANSCRIBE_MODEL : 'gpt-4o-transcribe'),
+            (int)    (defined('TRANSCRIBE_DAILY_SECONDS') ? TRANSCRIBE_DAILY_SECONDS : 3600)
         );
     }
 
@@ -80,9 +84,10 @@ final class AppConfig
     public function inquiryMailTo(): string    { return $this->inquiryMailTo; }
     public function inquiryMailFrom(): string  { return $this->inquiryMailFrom; }
     public function slackWebhookUrl(): string  { return $this->slackWebhookUrl; }
-    public function azureSpeechKey(): string   { return $this->azureSpeechKey; }
-    public function azureSpeechRegion(): string { return $this->azureSpeechRegion; }
-    public function azureSpeechEnabled(): bool { return $this->azureSpeechKey !== ''; }
+    public function openAiApiKey(): string     { return $this->openAiApiKey; }
+    public function openAiTranscribeModel(): string { return $this->openAiTranscribeModel; }
+    public function transcribeDailySeconds(): int { return $this->transcribeDailySeconds; }
+    public function openAiTranscriptionEnabled(): bool { return $this->openAiApiKey !== ''; }
     public function rootPath(): string { return dirname(__DIR__, 2) . '/'; }
     public function siblingImageProjectDirs(): array { return array('zaitakukanri_honbu_new', 'zaitakukanri_honbu'); }
     public function siblingProjectRoot(string $dirName): string { return dirname(rtrim($this->rootPath(), '/')) . '/' . $dirName . '/'; }

@@ -7,6 +7,8 @@ env.production
 logs/*.log
 storage/sessions/*
 !storage/sessions/.gitkeep
+storage/transcribe/*
+!storage/transcribe/.gitkeep
 node_modules/
 img/
 wpf/

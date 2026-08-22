@@ -72,8 +72,9 @@ $envToConfig = static function (array $env): array {
         'inquiry_mail_to'       => ['ZAITAKU_INQUIRY_MAIL_TO'],
         'inquiry_mail_from'     => ['ZAITAKU_INQUIRY_MAIL_FROM'],
         'slack_webhook_url'     => ['ZAITAKU_SLACK_WEBHOOK_URL'],
-        'azure_speech_key'      => ['ZAITAKU_AZURE_SPEECH_KEY'],
-        'azure_speech_region'   => ['ZAITAKU_AZURE_SPEECH_REGION'],
+        'openai_api_key'            => ['ZAITAKU_OPENAI_API_KEY'],
+        'openai_transcribe_model'   => ['ZAITAKU_OPENAI_TRANSCRIBE_MODEL'],
+        'transcribe_daily_seconds'  => ['ZAITAKU_TRANSCRIBE_DAILY_SECONDS'],
     ];
 
     $config = [];
@@ -145,8 +146,9 @@ define('INQUIRY_MAIL_ENABLED', !empty($localConfig['inquiry_mail_enabled']) && f
 define('INQUIRY_MAIL_TO',      $localConfig['inquiry_mail_to']       ?? 'info-b@jigyodan.or.jp');
 define('INQUIRY_MAIL_FROM',    $localConfig['inquiry_mail_from']     ?? 'info-b@jigyodan.or.jp');
 define('SLACK_WEBHOOK_URL',    $localConfig['slack_webhook_url']     ?? '');
-define('AZURE_SPEECH_KEY',     $localConfig['azure_speech_key']      ?? '');
-define('AZURE_SPEECH_REGION',  $localConfig['azure_speech_region']   ?? 'japaneast');
+define('OPENAI_API_KEY',       $localConfig['openai_api_key']            ?? '');
+define('OPENAI_TRANSCRIBE_MODEL', $localConfig['openai_transcribe_model']   ?? 'gpt-4o-transcribe');
+define('TRANSCRIBE_DAILY_SECONDS', (int) ($localConfig['transcribe_daily_seconds'] ?? 3600));
 
 // ファイルパス
 define('UPLOAD_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'img/');

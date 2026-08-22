@@ -6,7 +6,7 @@ use App\Auth\AdminAuth;
 use App\Auth\GroupAuth;
 use App\Auth\UserAdminAuth;
 use App\Controllers\AdminCompleteController;
-use App\Controllers\AzureSpeechTokenController;
+use App\Controllers\TrainingTranscribeController;
 use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
@@ -55,7 +55,8 @@ use App\Repositories\UserStatusSummaryRepository;
 use App\Services\FirstService;
 use App\Services\GroupFormService;
 use App\Services\AdminFormService;
-use App\Services\AzureSpeechTokenService;
+use App\Services\OpenAiTranscriptionService;
+use App\Services\TranscriptionRateLimiter;
 use App\Services\ChatService;
 use App\Services\ContactService;
 use App\Services\LoginService;
@@ -284,12 +285,16 @@ $container->bind(TrainingController::class, static function (Container $c) {
 $container->bind(FirstIndexController::class, static function (Container $c) {
     return new FirstIndexController($c->get(FirstService::class), $c->get(RequestContext::class));
 });
-$container->singleton(AzureSpeechTokenService::class, static function (Container $c) {
-    return new AzureSpeechTokenService($c->get(AppConfig::class));
+$container->singleton(OpenAiTranscriptionService::class, static function (Container $c) {
+    return new OpenAiTranscriptionService($c->get(AppConfig::class));
 });
-$container->bind(AzureSpeechTokenController::class, static function (Container $c) {
-    return new AzureSpeechTokenController(
-        $c->get(AzureSpeechTokenService::class),
+$container->singleton(TranscriptionRateLimiter::class, static function (Container $c) {
+    return new TranscriptionRateLimiter($c->get(AppConfig::class));
+});
+$container->bind(TrainingTranscribeController::class, static function (Container $c) {
+    return new TrainingTranscribeController(
+        $c->get(OpenAiTranscriptionService::class),
+        $c->get(TranscriptionRateLimiter::class),
         new TrainingRepository(Database::connection()),
         $c->get(RequestContext::class)
     );
