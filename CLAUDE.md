@@ -26,7 +26,7 @@
 
 ルート：
 - PHP: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`
-- WPF: `C:\xampp\htdocs\zaitakukanri_honbu_high_speed\JigyodanWpf_latest_v4.0.3`
+- WPF: `C:\xampp\htdocs\wpf-main`（独立リポジトリ。詳細は `wpf-main\JigyodanWpf\CLAUDE.md` を参照）
 
 ## 主要構成
 
@@ -114,6 +114,7 @@ docs/              設計メモ・確認記録
 - `training_start/end/inquiry/middle.php`：勤務状態（イベント1/2/3/4）
 - `training_keyboard/mouse.php`：入力活動（イベント7/8）
 - `training_insert/update.php`：チャット送受信（イベント11/12）
+- `training_transcribe.php`：WPF 音声入力の文字起こし（OpenAI プロキシ。login_uuid 認証、CSRF 対象外）
 - `first.php`：初期データ取得
 
 JSON レスポンス形式の期待値は `docs/training_checks.md` を参照。
