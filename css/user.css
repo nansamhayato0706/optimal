@@ -109,10 +109,10 @@
 
 /* ステータスセル色（詳細度を .data-table td より高くするため td を明示） */
 .data-table td.user_report {
-  background-color: #fce7f3;
+  background-color: #fbcfe8;
 }
 .data-table td.user_chat {
-  background-color: #ede9fe;
+  background-color: #fbcfe8;
 }
 .data-table td.user_start {
   background-color: #d1fae5;
