@@ -28,6 +28,12 @@ final class OpenAiTranscriptionService
         '送信、更新、連絡要求、連絡、緊急、ヘルプ、助けて、はい、イエス、オーケー、いいえ、ノー、キャンセル、' .
         '日報、日報を開く、レポート、リポート、レポートを開く、報告、チャット、チャット入力、取り消し、閉じる';
 
+    /**
+     * チャット口述（自由入力）中に渡すヒント。内容そのものは誘導したくないので、
+     * 口述を終える制御語「送信」「取り消し」だけを軽く示す。
+     */
+    const DICTATION_CONTROL_PROMPT = '発話の終わりに「送信」または「取り消し」と言うことがあります。';
+
     private $config;
 
     public function __construct(AppConfig $config)
@@ -43,11 +49,11 @@ final class OpenAiTranscriptionService
     /**
      * @param string $tmpPath アップロードされた一時ファイルの絶対パス（move_uploaded_file 済み、または is_uploaded_file 検証済みのパス）
      * @param string $originalName クライアントが送ってきたファイル名（拡張子判定用）
-     * @param bool $isCommandMode true の場合、コマンド語彙をヒントとして渡し認識精度を上げる。
-     *   チャット自由入力（口述）では内容を誘導したくないため false のまま呼ぶこと。
+     * @param string $mode 'command'：コマンド語彙全体をヒントにする。'dictation'：チャット口述中。
+     *   内容を誘導しないよう「送信」「取り消し」の制御語のみヒントにする。それ以外：ヒント無し。
      * @return string|null 文字起こし結果。失敗時は null
      */
-    public function transcribe(string $tmpPath, string $originalName, bool $isCommandMode = false): ?string
+    public function transcribe(string $tmpPath, string $originalName, string $mode = ''): ?string
     {
         if (!$this->isEnabled()) {
             return null;
@@ -70,8 +76,10 @@ final class OpenAiTranscriptionService
             'language'        => 'ja',
             'response_format' => 'json',
         ];
-        if ($isCommandMode) {
+        if ($mode === 'command') {
             $postFields['prompt'] = self::COMMAND_VOCABULARY_PROMPT;
+        } elseif ($mode === 'dictation') {
+            $postFields['prompt'] = self::DICTATION_CONTROL_PROMPT;
         }
 
         curl_setopt_array($ch, [
