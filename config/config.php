@@ -147,7 +147,7 @@ define('INQUIRY_MAIL_TO',      $localConfig['inquiry_mail_to']       ?? 'info-b@
 define('INQUIRY_MAIL_FROM',    $localConfig['inquiry_mail_from']     ?? 'info-b@jigyodan.or.jp');
 define('SLACK_WEBHOOK_URL',    $localConfig['slack_webhook_url']     ?? '');
 define('OPENAI_API_KEY',       $localConfig['openai_api_key']            ?? '');
-define('OPENAI_TRANSCRIBE_MODEL', $localConfig['openai_transcribe_model']   ?? 'gpt-4o-transcribe');
+define('OPENAI_TRANSCRIBE_MODEL', $localConfig['openai_transcribe_model']   ?? 'gpt-transcribe');
 define('TRANSCRIBE_DAILY_SECONDS', (int) ($localConfig['transcribe_daily_seconds'] ?? 3600));
 
 // ファイルパス

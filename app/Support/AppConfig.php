@@ -49,7 +49,7 @@ final class AppConfig
         $this->inquiryMailFrom    = $inquiryMailFrom;
         $this->slackWebhookUrl    = $slackWebhookUrl;
         $this->openAiApiKey       = $openAiApiKey;
-        $this->openAiTranscribeModel = $openAiTranscribeModel === '' ? 'gpt-4o-transcribe' : $openAiTranscribeModel;
+        $this->openAiTranscribeModel = $openAiTranscribeModel === '' ? 'gpt-transcribe' : $openAiTranscribeModel;
         $this->transcribeDailySeconds = $transcribeDailySeconds > 0 ? $transcribeDailySeconds : 3600;
     }
 
@@ -68,7 +68,7 @@ final class AppConfig
             (string) (defined('INQUIRY_MAIL_FROM')    ? INQUIRY_MAIL_FROM    : 'info-b@jigyodan.or.jp'),
             (string) (defined('SLACK_WEBHOOK_URL')    ? SLACK_WEBHOOK_URL    : ''),
             (string) (defined('OPENAI_API_KEY')       ? OPENAI_API_KEY       : ''),
-            (string) (defined('OPENAI_TRANSCRIBE_MODEL') ? OPENAI_TRANSCRIBE_MODEL : 'gpt-4o-transcribe'),
+            (string) (defined('OPENAI_TRANSCRIBE_MODEL') ? OPENAI_TRANSCRIBE_MODEL : 'gpt-transcribe'),
             (int)    (defined('TRANSCRIBE_DAILY_SECONDS') ? TRANSCRIBE_DAILY_SECONDS : 3600)
         );
     }
