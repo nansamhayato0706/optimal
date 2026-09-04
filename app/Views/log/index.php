@@ -52,7 +52,6 @@ $imageUrl = static function (array $contact): string {
 					<input type="text" class="date log_date" name="date_st" value="<?= $h($dateSt) ?>">
 					<span class="toolbar-separator">～</span>
 					<input type="text" class="date log_date" name="date_ed" value="<?= $h($dateEd) ?>">
-					<input type="submit" class="h_link" name="search" value="検索">
 					<input type="submit" class="h_link" name="contact" value="連絡CSV">
 					<input type="submit" class="h_link" name="log" value="ログCSV">
 				</form>

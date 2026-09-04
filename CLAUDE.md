@@ -25,7 +25,7 @@
 - 迷ったら [PHP: Migrating from PHP 7.x to PHP 8.0](https://www.php.net/manual/en/migration80.php) 等で当該構文が PHP 8 以降の追加かどうかを確認する
 
 ルート：
-- PHP: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`
+- PHP: `C:\xampp\htdocs\zaitakukanri_honbu_new`
 - WPF: `C:\xampp\htdocs\wpf-main`（独立リポジトリ。詳細は `wpf-main\JigyodanWpf\CLAUDE.md` を参照）
 
 ## 主要構成
@@ -190,7 +190,7 @@ tail -f C:/xampp/apache/logs/error.log
 ## ローカル環境前提
 
 - XAMPP 上で PHP が動作
-- ローカル URL：`http://localhost/zaitakukanri_honbu_optimal/`
+- ローカル URL：`http://localhost/zaitakukanri_honbu_new/`
 - MySQL DB 名：`jigyodan_zk_honbu`
 - ローカル設定：`.env.local`
 - セッション名：`ZK_OPTIMAL_SESSID`

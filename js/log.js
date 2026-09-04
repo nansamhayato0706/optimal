@@ -4,6 +4,9 @@ $(function(){
 		dateFormat:'yy-mm-dd',
 		showButtonPanel:false,
 		changeMonth:true,
-		changeYear:true
+		changeYear:true,
+		onSelect: function(){
+			$('#frm').trigger('submit');
+		}
 	});
 });

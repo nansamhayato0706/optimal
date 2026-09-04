@@ -1,4 +1,4 @@
 interface:
   display_name: "Zaitakukanri Optimal Project"
-  short_description: "Project workflow for the zaitakukanri_honbu_optimal PHP app and its WPF endpoint compatibility."
-  default_prompt: "Use this skill when working on zaitakukanri_honbu_optimal to navigate routes, DI, repositories, WPF training endpoints, performance hot paths, and verification rules."
+  short_description: "Project workflow for the zaitakukanri_honbu_new PHP app and its WPF endpoint compatibility."
+  default_prompt: "Use this skill when working on zaitakukanri_honbu_new to navigate routes, DI, repositories, WPF training endpoints, performance hot paths, and verification rules."

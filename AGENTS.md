@@ -30,7 +30,7 @@
 
 ルート:
 
-- PHP: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`
+- PHP: `C:\xampp\htdocs\zaitakukanri_honbu_new`
 - 比較元 PHP: `C:\xampp\htdocs\zaitakukanri_honbu_high_speed_BK`
 - WPF: `C:\xampp\htdocs\Wpf`
 
@@ -200,13 +200,13 @@ MySQL 確認:
 ローカル URL:
 
 ```text
-http://localhost/zaitakukanri_honbu_optimal/
+http://localhost/zaitakukanri_honbu_new/
 ```
 
 ## ローカル環境前提
 
 - XAMPP 上で PHP が動作
-- ローカル URL: `http://localhost/zaitakukanri_honbu_optimal/`
+- ローカル URL: `http://localhost/zaitakukanri_honbu_new/`
 - MySQL DB 名: `jigyodan_zk_honbu`
 - ローカル設定: `.env.local`
 - セッション名: `ZK_OPTIMAL_SESSID`

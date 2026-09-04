@@ -1,13 +1,13 @@
 ---
 name: zaitakukanri-project
-description: Work effectively in the zaitakukanri_honbu_optimal PHP codebase and its adjacent WPF client. Use when Codex needs project-specific navigation, route and DI conventions, WPF training_* endpoint compatibility, hot-path investigation, verification commands, or comparison guidance against zaitakukanri_honbu_high_speed.
+description: Work effectively in the zaitakukanri_honbu_new PHP codebase and its adjacent WPF client. Use when Codex needs project-specific navigation, route and DI conventions, WPF training_* endpoint compatibility, hot-path investigation, verification commands, or comparison guidance against zaitakukanri_honbu_high_speed.
 ---
 
 # Zaitakukanri Project
 
 ## Overview
 
-Use this skill to rebuild project context before editing `zaitakukanri_honbu_optimal`.
+Use this skill to rebuild project context before editing `zaitakukanri_honbu_new`.
 
 The standing project goal is to make this codebase more efficient, easier to understand, and faster in runtime behavior. When choosing between implementation options, prefer the one that improves those three qualities without breaking compatibility.
 
@@ -19,7 +19,7 @@ Read `AGENTS.md` first when starting work in this repository.
 
 ## Quick Start
 
-For PHP changes, work in `C:\xampp\htdocs\zaitakukanri_honbu_optimal`.
+For PHP changes, work in `C:\xampp\htdocs\zaitakukanri_honbu_new`.
 
 Use `C:\xampp\htdocs\zaitakukanri_honbu_high_speed` as the comparison source when checking behavior parity or migration gaps.
 

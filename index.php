@@ -28,7 +28,7 @@ try {
     $line = json_encode($context, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if ($line !== false) {
         @error_log($line . PHP_EOL, 3, $logDir . '/app.log');
-        error_log('[zaitakukanri_honbu_optimal] ' . $line);
+        error_log('[zaitakukanri_honbu_new] ' . $line);
     }
 
     http_response_code(500);

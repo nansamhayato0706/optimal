@@ -57,7 +57,7 @@ dotnet restore JigyodanWpf/JigyodanWpf/JigyodanWpf.csproj
 
 ## PHP との連携エンドポイント（接続先変更時に確認）
 
-WPF 側の接続先 URL が `zaitakukanri_honbu_optimal` になっているか確認する：
+WPF 側の接続先 URL が `zaitakukanri_honbu_new` になっているか確認する：
 - `training_login.php`、`training_*.php`、`first.php`
 - URL は WPF の設定画面または `AppConfig` で管理
 

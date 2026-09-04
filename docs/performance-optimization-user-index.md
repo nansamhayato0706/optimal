@@ -201,7 +201,7 @@ $h = array(Esc::class, 'h');
 
 2. JS の目視確認
 
-- `http://localhost/zaitakukanri_honbu_optimal/user.php`
+- `http://localhost/zaitakukanri_honbu_new/user.php`
 - Network タブで `user_status.php` の 304 応答を確認
 - タブ非表示中にポーリングが止まり、復帰時に 1 回更新されることを確認
 

@@ -12,7 +12,7 @@
 
 import { request } from 'playwright';
 
-const BASE_URL = 'http://localhost/zaitakukanri_honbu_optimal';
+const BASE_URL = 'http://localhost/zaitakukanri_honbu_new';
 const ADMIN_ID = process.env.TEST_ADMIN_ID;
 const ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD;
 const USER_UUID = process.env.TEST_USER_UUID;

@@ -2,8 +2,8 @@
 
 ## PHP
 
-- Workspace root: `C:\xampp\htdocs\zaitakukanri_honbu_optimal`
-- Local URL: `http://localhost/zaitakukanri_honbu_optimal/`
+- Workspace root: `C:\xampp\htdocs\zaitakukanri_honbu_new`
+- Local URL: `http://localhost/zaitakukanri_honbu_new/`
 - Local DB: `jigyodan_zk_honbu`
 - Local config: `.env.local`
 - Session name: `ZK_OPTIMAL_SESSID`

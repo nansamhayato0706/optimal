@@ -10,7 +10,7 @@
 
 import { chromium, request } from 'playwright';
 
-const BASE_URL = 'http://localhost/zaitakukanri_honbu_optimal';
+const BASE_URL = 'http://localhost/zaitakukanri_honbu_new';
 const results = [];
 
 function record(name, pass, detail) {
