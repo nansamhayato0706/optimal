@@ -112,6 +112,7 @@ final class UserAdminAuth
         $links[] = ['link' => 'link.php', 'text' => '外部リンク一覧'];
         $links[] = ['link' => 'user.php', 'text' => 'ユーザー一覧'];
         $links[] = ['link' => 'user_edit.php', 'text' => 'ユーザー登録'];
+        $links[] = ['link' => 'report_daily.php', 'text' => '全員日報一覧'];
         $links[] = ['link' => 'login.php', 'text' => 'ログアウト'];
         return $links;
     }

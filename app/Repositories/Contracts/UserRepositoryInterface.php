@@ -10,6 +10,7 @@ interface UserRepositoryInterface
     public function userAssignedToAdmin(string $userUuid, string $adminUuid): bool;
     public function findUsers(string $groupUuid, string $adminUuid, string $deleteFlag): array;
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array;
+    public function findReportsByDate(string $groupUuid, string $adminUuid, string $date): array;
     public function findUserByUuid(string $userUuid): ?array;
     public function findDivMap(): array;
     public function findAdminBySessionUuid(string $sessionUuid): ?array;

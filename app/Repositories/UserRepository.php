@@ -113,6 +113,29 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findReportsByDate(string $groupUuid, string $adminUuid, string $date): array
+    {
+        $sql = 'SELECT m2.user_uuid, m2.user_id, m2.user_name, m2.work_style_div,'
+             . ' r.report_uuid, r.admin_uuid AS report_admin_uuid,'
+             . ' r.training_start_time, r.training_end_time, r.remark, r.reply, r.charge_comment'
+             . ' FROM mst_user_admin m1'
+             . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
+             . ' LEFT JOIN tbl_report r ON r.report_uuid = ('
+             . '   SELECT t.report_uuid FROM tbl_report t'
+             . '   WHERE t.user_uuid = m2.user_uuid AND t.delete_flg = 0 AND t.report_date = :report_date'
+             . '   ORDER BY t.report_uuid DESC LIMIT 1'
+             . ' )'
+             . ' WHERE m2.group_uuid = :group_uuid AND m1.admin_uuid = :admin_uuid AND m2.delete_flg = 0'
+             . ' ORDER BY m2.work_style_div ASC, m2.user_id ASC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'group_uuid'  => $groupUuid,
+            'admin_uuid'  => $adminUuid,
+            'report_date' => $date,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function findUserByUuid(string $userUuid): ?array
     {
         if ($userUuid === '') {
