@@ -43,7 +43,6 @@ $h = array(Esc::class, 'h');
 						<option value="<?= $h($id) ?>"<?= (string) $id === $deleteFlag ? ' selected' : '' ?>><?= $h($label) ?></option>
 <?php endforeach; ?>
 					</select>
-					<input type="submit" class="h_link" name="renew" value="更新">
 <?php if ($statusSummaryRefreshEnabled): ?>
 					<input type="submit" class="h_link" name="status_summary_refresh" value="サマリ再反映（テスト用）" onclick="return confirm('利用中ユーザーのステータスサマリを再反映します。実行しますか？');">
 <?php endif; ?>

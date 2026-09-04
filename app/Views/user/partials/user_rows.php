@@ -1,13 +1,16 @@
 <?php
 
 // Keep the list row markup together so column changes do not sprawl across the page view.
-foreach ($users as $index => $user):
+$rowNumbersByWorkStyle = array();
+foreach ($users as $user):
+	$workStyleDiv = (int) ($user['work_style_div'] ?? 0);
+	$rowNumbersByWorkStyle[$workStyleDiv] = ($rowNumbersByWorkStyle[$workStyleDiv] ?? 0) + 1;
 	$confirmDiv = (int) ($user['confirm_div'] ?? 0);
 	$contactDiv = (int) ($user['contact_div'] ?? 0);
 	$nameTitle = \App\Support\UserViewHelpers::nameTitle($user);
 ?>
 					<tr data-user-uuid="<?= $h($user['user_uuid']) ?>" data-user-name="<?= $h($user['user_name']) ?>">
-						<td class="row_no text-right"><?= $h($index + 1) ?></td>
+						<td class="row_no text-right"><?= $h($rowNumbersByWorkStyle[$workStyleDiv]) ?></td>
 						<td class="text-center"><?= $h($user['user_id']) ?></td>
 						<td class="text-center"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'work_style', $user['work_style_div'])) ?></td>
 						<td<?= $nameTitle !== '' ? ' title="' . $h($nameTitle) . '"' : '' ?>><?= $h($user['user_name']) ?></td>
