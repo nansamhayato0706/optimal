@@ -54,17 +54,18 @@ $dateLabel = $dateTimestamp === false
 						<th class="report_nowrap text-nowrap">終了時間</th>
 						<th>備考</th>
 						<th>支援記録及び評価</th>
-						<th class="report_nowrap text-nowrap"></th>
+						<th class="report_nowrap text-nowrap">状況</th>
 					</tr>
 <?php foreach ($rows as $row): ?>
-					<tr>
+<?php $isUnsubmitted = empty($row['report_uuid']); ?>
+					<tr<?= $isUnsubmitted ? ' class="report_daily_unsubmitted"' : '' ?>>
 						<td><?= $h($row['user_name']) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_start_time'])) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_end_time'])) ?></td>
 						<td><?= nl2br($h($row['remark'] ?? '')) ?></td>
 						<td><?= nl2br($h($row['charge_comment'] ?? '')) ?></td>
-<?php if (empty($row['report_uuid'])): ?>
-						<td class="report_nowrap text-nowrap"><a href="report_edit.php?user_uuid=<?= $h($row['user_uuid']) ?>&amp;report_date=<?= $h($date) ?>">未提出（登録）</a></td>
+<?php if ($isUnsubmitted): ?>
+						<td class="report_nowrap text-nowrap">未提出</td>
 <?php elseif (empty($row['report_admin_uuid'])): ?>
 						<td class="report_nowrap text-nowrap"><a href="report_edit.php?i=<?= $h($row['report_uuid']) ?>">編集</a></td>
 <?php else: ?>

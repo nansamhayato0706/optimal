@@ -126,7 +126,7 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
              . '   ORDER BY t.report_uuid DESC LIMIT 1'
              . ' )'
              . ' WHERE m2.group_uuid = :group_uuid AND m1.admin_uuid = :admin_uuid AND m2.delete_flg = 0'
-             . ' ORDER BY m2.work_style_div ASC, m2.user_id ASC';
+             . ' ORDER BY (r.report_uuid IS NULL) ASC, m2.user_id ASC';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
             'group_uuid'  => $groupUuid,
