@@ -4,18 +4,40 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\ReportRepository;
 use App\Support\AppConfig;
 
 final class ReportListService
 {
 	private $reportRepository;
+	private $userRepository;
 	private $config;
 
-	public function __construct(ReportRepository $reportRepository, AppConfig $config)
+	public function __construct(ReportRepository $reportRepository, UserRepositoryInterface $userRepository, AppConfig $config)
 	{
 		$this->reportRepository = $reportRepository;
+		$this->userRepository = $userRepository;
 		$this->config = $config;
+	}
+
+	public function buildUserSwitchOptions(string $groupUuid, string $adminUuid): array
+	{
+		if ($groupUuid === '' || $adminUuid === '') {
+			return array();
+		}
+
+		$rows = $this->userRepository->findUsers($groupUuid, $adminUuid, '0');
+
+		$options = array();
+		foreach ($rows as $row) {
+			$options[] = array(
+				'user_uuid' => (string) $row['user_uuid'],
+				'user_name' => (string) $row['user_name'],
+			);
+		}
+
+		return $options;
 	}
 
 	public function buildPageData(string $userUuid, string $dateStartInput, string $dateEndInput): array

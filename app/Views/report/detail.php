@@ -60,6 +60,16 @@ $formatTime = static function (?string $time): string {
 						<a class="h_link" href="report_pdf.php?i=<?= $h($detail['report_uuid']) ?>" target="_blank">PDF出力</a>
 <?php endif; ?>
 					</h3>
+<?php if ($loginAuth > 0 && !empty($userOptions)): ?>
+					<div class="report_detail_user_switch">
+						<label for="report_detail_user_select">利用者</label>
+						<select id="report_detail_user_select" onchange="if (this.value) { location.href = this.value; }">
+<?php foreach ($userOptions as $option): ?>
+							<option value="<?= $h($option['link']) ?>"<?= $option['user_uuid'] === $currentUserUuid ? ' selected' : '' ?>><?= $h($option['user_name']) ?></option>
+<?php endforeach; ?>
+						</select>
+					</div>
+<?php endif; ?>
 				</div>
 
 				<div class="rf-form">

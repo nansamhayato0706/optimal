@@ -27,6 +27,13 @@
   width: 100%;
 }
 
+.report_index_title_actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  flex-wrap: wrap;
+}
+
 .report_index_title {
   margin: 0;
   font-size: 1.05rem;
@@ -223,6 +230,13 @@ input.date {
   gap: var(--sp-3);
   flex-wrap: wrap;
   margin: 0;
+}
+
+.report_detail_user_switch {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: 0.9rem;
 }
 
 .report_detail_period {

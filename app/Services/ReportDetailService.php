@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\ReportRepository;
 
 final class ReportDetailService
 {
 	private $reportRepository;
+	private $userRepository;
 
-	public function __construct(ReportRepository $reportRepository)
+	public function __construct(ReportRepository $reportRepository, UserRepositoryInterface $userRepository)
 	{
 		$this->reportRepository = $reportRepository;
+		$this->userRepository = $userRepository;
 	}
 
 	public function getByReportId(string $reportUuid): ?array
@@ -33,6 +36,35 @@ final class ReportDetailService
 		}
 
 		return $this->decorateReport($report);
+	}
+
+	public function buildUserSwitchOptions(string $groupUuid, string $adminUuid, string $reportDate): array
+	{
+		if ($groupUuid === '' || $adminUuid === '' || $reportDate === '') {
+			return array();
+		}
+
+		$rows = $this->userRepository->findReportsByDate($groupUuid, $adminUuid, $reportDate);
+
+		$options = array();
+		foreach ($rows as $row) {
+			$reportUuid = (string) ($row['report_uuid'] ?? '');
+			if ($reportUuid === '') {
+				continue;
+			}
+			$hasRegisteredReport = trim((string) ($row['report_admin_uuid'] ?? '')) !== '';
+			$link = $hasRegisteredReport
+				? 'report_detail.php?i=' . rawurlencode($reportUuid)
+				: 'report_edit.php?i=' . rawurlencode($reportUuid);
+
+			$options[] = array(
+				'user_uuid' => (string) $row['user_uuid'],
+				'user_name' => (string) $row['user_name'],
+				'link' => $link,
+			);
+		}
+
+		return $options;
 	}
 
 	public function getByRange(string $userUuid, string $dateStart, string $dateEnd): array

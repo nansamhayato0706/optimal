@@ -68,14 +68,26 @@ $formatDateWithWeekday = static function (?string $date): string {
 				<div class="page-header report_index_header">
 					<div class="report_index_title_row">
 						<h3 class="page-title report_index_title"><?= $h($title) ?><?php if ($pageData['user_name'] !== ''): ?><span class="page-username"><?= $h($pageData['user_name']) ?></span><?php endif; ?></h3>
-						<?php if ($loginAuth > 0): ?>
-						<form action="report_edit.php" method="get" class="report_index_create_form">
-							<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
-							<span class="report_index_create_label">日報追加</span>
-							<input type="text" name="report_date" autocomplete="off" value="<?= $h($pageData['report_date_new']) ?>" class="date report_index_create_date">
-							<input type="submit" class="h_link report_index_button" value="追加">
-						</form>
-						<?php endif; ?>
+						<div class="report_index_title_actions">
+							<?php if ($loginAuth > 0 && !empty($userOptions)): ?>
+							<div class="report_detail_user_switch">
+								<label for="report_index_user_select">利用者</label>
+								<select id="report_index_user_select" onchange="if (this.value) { location.href = 'report.php?i=' + encodeURIComponent(this.value); }">
+<?php foreach ($userOptions as $option): ?>
+									<option value="<?= $h($option['user_uuid']) ?>"<?= $option['user_uuid'] === $currentUserUuid ? ' selected' : '' ?>><?= $h($option['user_name']) ?></option>
+<?php endforeach; ?>
+								</select>
+							</div>
+							<?php endif; ?>
+							<?php if ($loginAuth > 0): ?>
+							<form action="report_edit.php" method="get" class="report_index_create_form">
+								<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
+								<span class="report_index_create_label">日報追加</span>
+								<input type="text" name="report_date" autocomplete="off" value="<?= $h($pageData['report_date_new']) ?>" class="date report_index_create_date">
+								<input type="submit" class="h_link report_index_button" value="追加">
+							</form>
+							<?php endif; ?>
+						</div>
 					</div>
 					<div class="report_index_toolbar">
 						<form id="frm" action="report.php<?= $currentUserUuid !== '' && $loginAuth > 0 ? '?i=' . rawurlencode($currentUserUuid) : '' ?>" method="post" class="report_index_search_form">

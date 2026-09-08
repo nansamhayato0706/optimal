@@ -42,6 +42,10 @@ final class ReportIndexController
 		}
 
 		$pageData = $this->reportListService->buildPageData($userUuid, $dateStart, $dateEnd);
+		$userOptions = $this->auth->getLoginAuth() > 0
+			? $this->reportListService->buildUserSwitchOptions($this->auth->getLoginGroupUuid(), $this->auth->getLoginAdminUuid())
+			: array();
+
 		$this->viewRenderer->render('report/index', array(
 			'title' => '日報一覧',
 			'pageData' => $pageData,
@@ -49,6 +53,7 @@ final class ReportIndexController
 			'loginAuth' => $this->auth->getLoginAuth(),
 			'loginAdminId' => $this->auth->getLoginAdminId(),
 			'currentUserUuid' => $userUuid,
+			'userOptions' => $userOptions,
 		));
 	}
 

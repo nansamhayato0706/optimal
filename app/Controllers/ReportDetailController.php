@@ -43,8 +43,14 @@ final class ReportDetailController
 			exit;
 		}
 
+		$userOptions = array();
 		if ($this->auth->getLoginAuth() > 0) {
 			$this->auth->resolveReportUserUuid((string) $detail['user_uuid']);
+			$userOptions = $this->reportDetailService->buildUserSwitchOptions(
+				$this->auth->getLoginGroupUuid(),
+				$this->auth->getLoginAdminUuid(),
+				(string) $detail['report_date']
+			);
 		} elseif ((string) $detail['user_uuid'] !== $this->auth->getLoginId()) {
 			header('Location: error.php');
 			exit;
@@ -62,6 +68,7 @@ final class ReportDetailController
 			'loginAuth' => $this->auth->getLoginAuth(),
 			'loginAdminId' => $this->auth->getLoginAdminId(),
 			'currentUserUuid' => (string) $detail['user_uuid'],
+			'userOptions' => $userOptions,
 		));
 	}
 }

@@ -138,13 +138,13 @@ $container->singleton(ChatService::class, static function () {
     return new ChatService(new ChatRepository($pdo), new UserStatusSummaryRepository($pdo));
 });
 $container->singleton(ReportListService::class, static function (Container $c) {
-    return new ReportListService($c->get(ReportRepository::class), $c->get(AppConfig::class));
+    return new ReportListService($c->get(ReportRepository::class), $c->get(UserRepositoryInterface::class), $c->get(AppConfig::class));
 });
 $container->singleton(ReportDailyListService::class, static function (Container $c) {
     return new ReportDailyListService($c->get(UserRepositoryInterface::class));
 });
 $container->singleton(ReportDetailService::class, static function (Container $c) {
-    return new ReportDetailService($c->get(ReportRepository::class));
+    return new ReportDetailService($c->get(ReportRepository::class), $c->get(UserRepositoryInterface::class));
 });
 $container->singleton(ReportFormService::class, static function (Container $c) {
     return new ReportFormService(

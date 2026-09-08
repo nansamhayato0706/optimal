@@ -60,6 +60,11 @@ final class ReportAuth
 		return (string) $this->sessionStore->get('login.admin_id', '');
 	}
 
+	public function getLoginGroupUuid(): string
+	{
+		return (string) $this->sessionStore->get('login.group_id', '');
+	}
+
 	public function resolveReportUserUuid(?string $requestedUserUuid): string
 	{
 		if ($this->getLoginAuth() > 0) {
