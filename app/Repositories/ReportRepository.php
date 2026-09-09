@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Support\BaseRepository;
+use App\Support\Logger;
 use PDO;
 
 final class ReportRepository extends BaseRepository
@@ -159,25 +160,38 @@ final class ReportRepository extends BaseRepository
 			return true;
 		} catch (\Throwable $e) {
 			$this->pdo->rollBack();
+			Logger::error('日報の保存に失敗しました', array(
+				'report_uuid' => (string) ($report['report_uuid'] ?? ''),
+				'user_uuid' => (string) ($report['user_uuid'] ?? ''),
+				'error' => $e->getMessage(),
+			));
 			return false;
 		}
 	}
 
 	public function saveAdminComment(string $reportUuid, string $adminUuid, string $reply, string $chargeComment, string $updateUuid): bool
 	{
-		$stmt = $this->pdo->prepare(
-			'UPDATE tbl_report'
-			. ' SET admin_uuid = :admin_uuid, reply = :reply, charge_comment = :charge_comment, update_date = NOW(), update_uuid = :update_uuid'
-			. ' WHERE report_uuid = :report_uuid'
-		);
+		try {
+			$stmt = $this->pdo->prepare(
+				'UPDATE tbl_report'
+				. ' SET admin_uuid = :admin_uuid, reply = :reply, charge_comment = :charge_comment, update_date = NOW(), update_uuid = :update_uuid'
+				. ' WHERE report_uuid = :report_uuid'
+			);
 
-		return $stmt->execute(array(
-			'admin_uuid' => $adminUuid,
-			'reply' => $reply,
-			'charge_comment' => $chargeComment,
-			'update_uuid' => $updateUuid,
-			'report_uuid' => $reportUuid,
-		));
+			return $stmt->execute(array(
+				'admin_uuid' => $adminUuid,
+				'reply' => $reply,
+				'charge_comment' => $chargeComment,
+				'update_uuid' => $updateUuid,
+				'report_uuid' => $reportUuid,
+			));
+		} catch (\Throwable $e) {
+			Logger::error('管理者コメントの保存に失敗しました', array(
+				'report_uuid' => $reportUuid,
+				'error' => $e->getMessage(),
+			));
+			return false;
+		}
 	}
 
 	public function insertSendLog(string $insertUuid): void
@@ -350,7 +364,9 @@ final class ReportRepository extends BaseRepository
 			 . ' consent_flg = :consent_flg, remark = :remark, update_date = NOW(), update_uuid = :actor_uuid'
 			 . ' WHERE report_uuid = :report_uuid';
 		$stmt = $this->pdo->prepare($sql);
-		$stmt->execute($this->normalizeReportParams($report));
+		$params = $this->normalizeReportParams($report);
+		unset($params['insert_uuid'], $params['update_uuid']);
+		$stmt->execute($params);
 	}
 
 	private function normalizeReportParams(array $report): array

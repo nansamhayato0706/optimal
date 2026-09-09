@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Repositories\ReportRepository;
 use App\Repositories\UserStatusSummaryRepository;
 use App\Support\AppConfig;
+use App\Support\Logger;
 use App\Support\SessionStore;
 
 final class ReportFormService
@@ -170,12 +171,20 @@ final class ReportFormService
 	{
 		$draft = $this->getStoredDraft();
 		if ($draft === null) {
+			Logger::warning('日報の完了処理で下書きセッションが見つかりませんでした', array(
+				'login_auth' => $loginAuth,
+				'login_id' => $loginId,
+			));
 			return false;
 		}
 
 		if ($loginAuth > 0) {
 			$accessError = $this->validateAdminAccess($draft, $loginAdminUuid);
 			if ($accessError !== null) {
+				Logger::warning('日報の完了処理で管理者アクセス権限エラーが発生しました', array(
+					'report_uuid' => (string) ($draft['report_uuid'] ?? ''),
+					'admin_uuid' => $loginAdminUuid,
+				));
 				$this->storeErrors($accessError, $draft);
 				return false;
 			}
@@ -186,6 +195,11 @@ final class ReportFormService
 			if ($loginAuth > 0 && ($draft['report_uuid'] ?? '') === '') {
 				$count = $this->reportRepository->countReportsByUserAndDate((string) $draft['user_uuid'], (string) $draft['report_date']);
 				if ($count > 1) {
+					Logger::warning('日報の完了処理で同一ユーザー・同一日付の重複が検出されました', array(
+						'user_uuid' => (string) $draft['user_uuid'],
+						'report_date' => (string) $draft['report_date'],
+						'count' => $count,
+					));
 					$this->storeErrors(
 						array('report_date' => '同一ユーザー・同一日付の日報が複数件あります。重複データを整理してから登録してください。'),
 						$draft
