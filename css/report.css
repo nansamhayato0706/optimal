@@ -655,3 +655,13 @@ input.date {
 tr.report_daily_unsubmitted > td {
   background: #f3f4f6;
 }
+
+.report_comment_time {
+  margin-top: var(--sp-1);
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+}
+
+.data-table.report_list td.report_align_top {
+  vertical-align: top;
+}

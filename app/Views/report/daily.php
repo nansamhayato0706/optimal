@@ -10,6 +10,14 @@ $formatTime = static function (?string $time) use ($h): string {
 	return date('H:i', strtotime('today ' . $time));
 };
 
+$formatDateTime = static function (?string $dateTime): string {
+	if ($dateTime === null || $dateTime === '' || strtotime($dateTime) === false) {
+		return '';
+	}
+
+	return date('n/j H:i', strtotime($dateTime));
+};
+
 $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 $dateTimestamp = strtotime((string) $date);
 $dateLabel = $dateTimestamp === false
@@ -63,9 +71,9 @@ $dateLabel = $dateTimestamp === false
 						<td><?= $h($row['user_name']) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_start_time'])) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_end_time'])) ?></td>
-						<td><?= nl2br($h($row['remark'] ?? '')) ?></td>
-						<td><?= nl2br($h($row['reply'] ?? '')) ?></td>
-						<td><?= nl2br($h($row['charge_comment'] ?? '')) ?></td>
+						<td class="report_align_top"><?= nl2br($h($row['remark'] ?? '')) ?></td>
+						<td class="report_align_top"><?= nl2br($h($row['reply'] ?? '')) ?></td>
+						<td class="report_align_top"><?= nl2br($h($row['charge_comment'] ?? '')) ?><?php if (!empty($row['report_admin_uuid'])): ?><div class="report_comment_time text-nowrap"><?= $h($formatDateTime($row['update_date'] ?? null)) ?></div><?php endif; ?></td>
 <?php if ($isUnsubmitted): ?>
 						<td class="report_nowrap text-nowrap">未提出</td>
 <?php elseif (empty($row['report_admin_uuid'])): ?>

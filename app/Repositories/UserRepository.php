@@ -117,7 +117,7 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
     {
         $sql = 'SELECT m2.user_uuid, m2.user_id, m2.user_name, m2.work_style_div,'
              . ' r.report_uuid, r.admin_uuid AS report_admin_uuid,'
-             . ' r.training_start_time, r.training_end_time, r.remark, r.reply, r.charge_comment'
+             . ' r.training_start_time, r.training_end_time, r.remark, r.reply, r.charge_comment, r.update_date'
              . ' FROM mst_user_admin m1'
              . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
              . ' LEFT JOIN tbl_report r ON r.report_uuid = ('
