@@ -74,7 +74,7 @@ final class ReportAccessibleLabels
 			'rethink_pm_short' => '午後',
 			'achieve_pm' => '午後の達成度',
 			'fatigue_pm' => '午後の疲労度',
-			'remark' => '備考欄',
+			'remark' => '疑問・質問・困っていることや日常のことなど何でもかまいません。',
 			'reply' => '返信',
 			'charge_comment' => '支援記録と評価',
 			'consent_heading' => '利用の確認',
