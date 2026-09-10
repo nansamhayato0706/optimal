@@ -51,7 +51,11 @@ $dateLabel = $dateTimestamp === false
 			<div class="page-header">
 				<h3 class="page-title"><?= $h($title) ?>：<?= $h($dateLabel) ?></h3>
 				<form id="frm" action="report_daily.php" method="post" class="toolbar-form">
-					<input type="text" class="date" name="date" value="<?= $h($date) ?>">
+					<span class="mp-nav-wrap">
+						<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前日">&#8249;</button>
+						<input type="text" class="date" name="date" value="<?= $h($date) ?>">
+						<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌日">&#8250;</button>
+					</span>
 				</form>
 			</div>
 			<div class="report-table-scroll">

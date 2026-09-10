@@ -109,7 +109,8 @@ input.date {
   align-items: center;
 }
 
-.mp-nav-wrap input.month-picker {
+.mp-nav-wrap input.month-picker,
+.mp-nav-wrap input.date {
   border-radius: 0;
   border-left: none;
   border-right: none;
