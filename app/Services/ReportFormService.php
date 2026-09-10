@@ -396,19 +396,23 @@ final class ReportFormService
 			'training_am_1' => 255, 'training_am_2' => 255, 'training_am_3' => 255,
 			'training_pm_1' => 255, 'training_pm_2' => 255, 'training_pm_3' => 255,
 			'medicine_reason' => 255, 'rethink_am' => 255, 'rethink_pm' => 255,
-			'remark' => 255, 'reply' => 255, 'charge_comment' => 255,
+			'remark' => 500, 'reply' => 500, 'charge_comment' => 500,
 		) as $field => $length) {
 			if (!$this->isMaxLength($form[$field] ?? '', $length)) {
 				$errors[$field] = $length . '文字以内で入力してください。';
 			}
 		}
 
-		if (!$this->isMaxLineCount($form['reply'] ?? '', 5)) {
-			$errors['reply'] = '5行以内で入力してください。';
+		if (!$this->isMaxLineCount($form['remark'] ?? '', 10)) {
+			$errors['remark'] = '10行以内で入力してください。';
 		}
 
-		if (!$this->isMaxLineCount($form['charge_comment'] ?? '', 5)) {
-			$errors['charge_comment'] = '5行以内で入力してください。';
+		if (!$this->isMaxLineCount($form['reply'] ?? '', 10)) {
+			$errors['reply'] = '10行以内で入力してください。';
+		}
+
+		if (!$this->isMaxLineCount($form['charge_comment'] ?? '', 10)) {
+			$errors['charge_comment'] = '10行以内で入力してください。';
 		}
 
 		$trainingFields = array('training_am_1', 'training_am_2', 'training_am_3', 'training_pm_1', 'training_pm_2', 'training_pm_3');

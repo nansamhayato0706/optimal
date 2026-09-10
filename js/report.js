@@ -58,9 +58,9 @@ $(function(){
 		changeYear:true
 	});
 
-	var maxLines = 6;
-	var maxLength = 255;
-	var targetSelector = 'textarea[name="remark"]:not([readonly]), textarea[name="charge_comment"]:not([readonly])';
+	var maxLines = 10;
+	var maxLength = 500;
+	var targetSelector = 'textarea[name="remark"]:not([readonly]), textarea[name="reply"]:not([readonly]), textarea[name="charge_comment"]:not([readonly])';
 	var $lineLimitMessage = $('#report_line_limit_message');
 	var lineLimitMessageText = '入力は' + maxLines + '行までです。';
 	var lengthLimitMessageText = '入力は' + maxLength + '文字までです。';
