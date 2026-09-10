@@ -12,17 +12,42 @@ $(function(){
 	});
 
 	$(document).on('click', '.mp-nav-btn', function(){
-		var delta = $(this).hasClass('mp-nav-prev') ? -1 : 1;
-		var $input = delta === -1
-			? $(this).next('input.month-picker')
-			: $(this).prev('input.month-picker');
-		var val = $input.val();
-		if (!val || !/^\d{4}-\d{2}/.test(val)) { return; }
-		var y = parseInt(val.substring(0, 4), 10);
-		var m = parseInt(val.substring(5, 7), 10) - 1 + delta;
-		y += Math.floor(m / 12);
-		m = ((m % 12) + 12) % 12;
-		$input.val(y + '-' + (m + 1 < 10 ? '0' : '') + (m + 1)).trigger('change');
+		var $btn = $(this);
+		var delta = $btn.hasClass('mp-nav-prev') ? -1 : 1;
+
+		var $monthInput = delta === -1 ? $btn.next('input.month-picker') : $btn.prev('input.month-picker');
+		if ($monthInput.length) {
+			var val = $monthInput.val();
+			if (!val || !/^\d{4}-\d{2}/.test(val)) { return; }
+			var y = parseInt(val.substring(0, 4), 10);
+			var m = parseInt(val.substring(5, 7), 10) - 1 + delta;
+			y += Math.floor(m / 12);
+			m = ((m % 12) + 12) % 12;
+			$monthInput.val(y + '-' + (m + 1 < 10 ? '0' : '') + (m + 1)).trigger('change');
+			return;
+		}
+
+		var $dateInput = delta === -1 ? $btn.next('input.date') : $btn.prev('input.date');
+		if ($dateInput.length) {
+			var dval = $dateInput.val();
+			if (!dval || !/^\d{4}-\d{2}-\d{2}$/.test(dval)) { return; }
+			var parts = dval.split('-');
+			var d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+			d.setDate(d.getDate() + delta);
+			var yy = d.getFullYear();
+			var mm = String(d.getMonth() + 1).padStart(2, '0');
+			var dd = String(d.getDate()).padStart(2, '0');
+			$dateInput.val(yy + '-' + mm + '-' + dd);
+			return;
+		}
+
+		var $select = delta === -1 ? $btn.next('select') : $btn.prev('select');
+		if ($select.length) {
+			var idx = $select.prop('selectedIndex') + delta;
+			if (idx >= 0 && idx < $select.find('option').length) {
+				$select.prop('selectedIndex', idx).trigger('change');
+			}
+		}
 	});
 
 	$('.date').datepicker({

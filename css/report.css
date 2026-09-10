@@ -43,7 +43,7 @@
 /* ツールバー行：検索・追加・PDF を横並び */
 .report_index_toolbar {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: var(--sp-2) var(--sp-4);
   width: 100%;
@@ -73,6 +73,28 @@
   font-weight: 700;
   color: var(--color-text-soft);
   white-space: nowrap;
+}
+
+/* CSV / PDF 出力エリアを枠で分けて視覚的に区別する */
+.report_index_action_group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+}
+
+.report_index_action_group-pdf {
+  background: var(--color-accent-soft);
+}
+
+.report_index_action_label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-accent-strong);
 }
 
 .report_index_separator {
@@ -110,10 +132,15 @@ input.date {
 }
 
 .mp-nav-wrap input.month-picker,
-.mp-nav-wrap input.date {
+.mp-nav-wrap input.date,
+.mp-nav-wrap select {
   border-radius: 0;
   border-left: none;
   border-right: none;
+}
+
+.mp-nav-wrap select {
+  height: 36px;
 }
 
 .mp-nav-btn {
