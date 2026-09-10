@@ -63,11 +63,15 @@ $formatTime = static function (?string $time): string {
 <?php if ($loginAuth > 0 && !empty($userOptions)): ?>
 					<div class="report_detail_user_switch">
 						<label for="report_detail_user_select">利用者</label>
-						<select id="report_detail_user_select" onchange="if (this.value) { location.href = this.value; }">
+						<span class="mp-nav-wrap">
+							<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前の利用者">&#8249;</button>
+							<select id="report_detail_user_select" onchange="if (this.value) { location.href = this.value; }">
 <?php foreach ($userOptions as $option): ?>
-							<option value="<?= $h($option['link']) ?>"<?= $option['user_uuid'] === $currentUserUuid ? ' selected' : '' ?>><?= $h($option['user_name']) ?></option>
+								<option value="<?= $h($option['link']) ?>"<?= $option['user_uuid'] === $currentUserUuid ? ' selected' : '' ?>><?= $h($option['user_name']) ?></option>
 <?php endforeach; ?>
-						</select>
+							</select>
+							<button type="button" class="mp-nav-btn mp-nav-next" aria-label="次の利用者">&#8250;</button>
+						</span>
 					</div>
 <?php endif; ?>
 				</div>
