@@ -10,8 +10,9 @@ final class ReportPdfGenerator
 	private const PAGE_R       = 200;
 	private const PAGE_W       = 190;
 
-	private const FONT_GOTHIC  = 'kozgopromedium';
-	private const FONT_MINCHO  = 'kozminproregular';
+	private const FONT_GOTHIC  = 'notosansjp';
+	private const FONT_MINCHO  = 'notoserifjp';
+	private const FONT_LATIN   = 'helvetica';
 
 	private const ORG_NAME     = '就労継続支援B型　在宅就労支援事業団';
 
@@ -86,7 +87,7 @@ final class ReportPdfGenerator
 			// 呼び出すたびに無効化し直す（有効のままだと下端余白への描画が
 			// 「はみ出し」と判定され、余分な白紙ページが追加されてしまう）。
 			$this->pdf->SetAutoPageBreak(false);
-			$this->font(self::FONT_GOTHIC, '', 8);
+			$this->font(self::FONT_LATIN, '', 8);
 			$this->textColor(self::INK_FAINT);
 			$this->pdf->SetXY(self::PAGE_X, $this->pdf->getPageHeight() - 12);
 			$this->pdf->Cell(self::PAGE_W, 5, $i . ' / ' . $totalPages, 0, 0, 'C');
@@ -178,15 +179,14 @@ final class ReportPdfGenerator
 		$this->pdf->Cell(120, 5, '在宅就労　訓練日報', 0, 0, 'L');
 		$this->pdf->Cell(self::PAGE_W - 120, 5, '記入者', 0, 1, 'R');
 
-		$this->font(self::FONT_MINCHO, 'B', 19);
 		$this->textColor(self::INK);
-		$this->pdf->Cell(120, 10, $this->formatDateWithWeekday((string) ($report['report_date'] ?? '')), 0, 0, 'L');
+		$this->mixedCell(120, 10, $this->formatDateWithWeekday((string) ($report['report_date'] ?? '')), 'L', self::FONT_MINCHO, 'B', 19);
 		$this->font(self::FONT_MINCHO, 'B', 13);
 		$this->pdf->Cell(self::PAGE_W - 120, 10, (string) ($report['user_name'] ?? ''), 0, 1, 'R');
 
-		$this->font(self::FONT_GOTHIC, '', 7.5);
 		$this->textColor(self::INK_FAINT);
-		$this->pdf->Cell(self::PAGE_W, 5, '出力日時　' . date('Y-m-d H:i:s'), 0, 1, 'L');
+		$this->mixedCell(self::PAGE_W, 5, '出力日時　' . date('Y-m-d H:i:s'), 'L', self::FONT_GOTHIC, '', 7.5);
+		$this->pdf->Ln(5);
 
 		$this->pdf->Ln(1);
 		$this->drawColor(self::INK);
@@ -247,10 +247,9 @@ final class ReportPdfGenerator
 		}
 
 		$this->pdf->SetXY($x0, $y0 + 4.3);
-		$this->font(self::FONT_MINCHO, 'B', 11.5);
 		$this->textColor(self::INK);
 		foreach ($fields as $field) {
-			$this->pdf->Cell($field['width'], 6.5, $field['value'] !== '' ? $field['value'] : '―', 0, 0, 'L');
+			$this->mixedCell($field['width'], 6.5, $field['value'] !== '' ? $field['value'] : '―', 'L', self::FONT_MINCHO, 'B', 11.5);
 		}
 		$this->pdf->SetXY($x0, $y0 + 4.3 + 6.5);
 	}
@@ -334,9 +333,9 @@ final class ReportPdfGenerator
 		$this->textColor(self::INK);
 		$this->pdf->Cell($questionWidth, 5.5, $question, 0, 0, 'L');
 
-		$this->font(self::FONT_MINCHO, 'B', 10);
 		$this->textColor(self::ACCENT_DEEP);
-		$this->pdf->Cell($answerWidth, 5.5, $answer !== '' ? $answer : '―', 0, 1, 'L');
+		$this->mixedCell($answerWidth, 5.5, $answer !== '' ? $answer : '―', 'L', self::FONT_MINCHO, 'B', 10);
+		$this->pdf->Ln(5.5);
 	}
 
 	/**
@@ -441,10 +440,9 @@ final class ReportPdfGenerator
 		$this->pdf->SetXY($x, $y);
 		$this->pdf->Cell($width * 0.6, 4, $label, 0, 0, 'L');
 
-		$this->font(self::FONT_GOTHIC, 'B', 9);
 		$this->textColor(self::INK);
 		$this->pdf->SetXY($x + ($width * 0.6), $y);
-		$this->pdf->Cell($width * 0.4, 4, ($rawValue !== '' ? $rawValue : '―') . ($rawValue !== '' ? '%' : ''), 0, 0, 'R');
+		$this->mixedCell($width * 0.4, 4, ($rawValue !== '' ? $rawValue : '―') . ($rawValue !== '' ? '%' : ''), 'R', self::FONT_GOTHIC, 'B', 9);
 
 		$barY = $y + 4.6;
 		$barH = 1.6;
@@ -487,6 +485,53 @@ final class ReportPdfGenerator
 	private function font(string $family, string $style, float $size): void
 	{
 		$this->pdf->SetFont($family, $style, $size);
+	}
+
+	/**
+	 * 半角数字・記号（0-9 : . - / %）だけ欧文フォントに切り替え、それ以外は
+	 * 指定した和文フォントで描画する（和欧混植）。位置揃え（L/C/R）に対応するため、
+	 * 事前に全セグメントの幅を計算してから描画し、呼び出し前後の見た目は
+	 * 通常の Cell() と揃える（呼び出し後、X は $width ぶん進む）。
+	 */
+	private function mixedCell(float $width, float $height, string $text, string $align, string $cjkFamily, string $cjkStyle, float $size): void
+	{
+		$originX = $this->pdf->GetX();
+		$y = $this->pdf->GetY();
+
+		$segments = preg_split('/([0-9:.\-\/%]+)/u', $text, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+		if ($segments === false || count($segments) === 0) {
+			$segments = array($text);
+		}
+
+		$widths = array();
+		$totalWidth = 0.0;
+		foreach ($segments as $segment) {
+			$this->font($this->isNumericSegment($segment) ? self::FONT_LATIN : $cjkFamily, $cjkStyle, $size);
+			$w = $this->pdf->GetStringWidth($segment);
+			$widths[] = $w;
+			$totalWidth += $w;
+		}
+
+		$x = $originX;
+		if ($align === 'R') {
+			$x += $width - $totalWidth;
+		} elseif ($align === 'C') {
+			$x += ($width - $totalWidth) / 2;
+		}
+
+		foreach ($segments as $i => $segment) {
+			$this->font($this->isNumericSegment($segment) ? self::FONT_LATIN : $cjkFamily, $cjkStyle, $size);
+			$this->pdf->SetXY($x, $y);
+			$this->pdf->Cell($widths[$i], $height, $segment, 0, 0, 'L');
+			$x += $widths[$i];
+		}
+
+		$this->pdf->SetXY($originX + $width, $y);
+	}
+
+	private function isNumericSegment(string $segment): bool
+	{
+		return preg_match('/^[0-9:.\-\/%]+$/u', $segment) === 1;
 	}
 
 	private function textColor(array $rgb): void
