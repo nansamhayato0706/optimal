@@ -50,13 +50,15 @@ $(function(){
 		}
 	});
 
-	$('.date').datepicker({
-		yearRange:'2016:+1',
-		dateFormat:'yy-mm-dd',
-		showButtonPanel:false,
-		changeMonth:true,
-		changeYear:true
-	});
+	if (typeof $.fn.datepicker === 'function') {
+		$('.date').datepicker({
+			yearRange:'2016:+1',
+			dateFormat:'yy-mm-dd',
+			showButtonPanel:false,
+			changeMonth:true,
+			changeYear:true
+		});
+	}
 
 	var maxLines = 10;
 	var maxLength = 500;
@@ -68,6 +70,50 @@ $(function(){
 	function exceedsVisibleLines(field){
 		return field.scrollHeight > field.clientHeight + 1;
 	}
+
+	function autosizeField(field){
+		field.style.height = 'auto';
+		// box-sizing: border-box のため、style.height には border 分も含める必要がある。
+		// scrollHeight は border を含まないので、そのまま height に代入すると
+		// clientHeight が border 分だけ scrollHeight を下回り、exceedsVisibleLines() が
+		// 常に true 判定になってしまう（＝1文字目から「行数オーバー」扱いで入力が巻き戻る）。
+		var style = window.getComputedStyle(field);
+		var borderY = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+		var contentHeight = field.scrollHeight + borderY;
+
+		var maxLinesAttr = field.getAttribute('data-max-lines');
+		if (!maxLinesAttr) {
+			field.style.height = contentHeight + 'px';
+			return;
+		}
+		var lineHeight = parseFloat(style.lineHeight);
+		if (isNaN(lineHeight)) {
+			lineHeight = parseFloat(style.fontSize) * 1.4;
+		}
+		var paddingY = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+		var maxHeight = lineHeight * parseInt(maxLinesAttr, 10) + paddingY + borderY;
+		if (contentHeight > maxHeight){
+			field.style.height = maxHeight + 'px';
+			field.style.overflowY = 'auto';
+		} else {
+			field.style.height = contentHeight + 'px';
+			field.style.overflowY = 'hidden';
+		}
+	}
+
+	$('textarea.rf-autosize').each(function(){
+		autosizeField(this);
+	});
+
+	$(document).on('input', 'textarea.rf-autosize', function(){
+		autosizeField(this);
+	});
+
+	$(window).on('resize', function(){
+		$('textarea.rf-autosize').each(function(){
+			autosizeField(this);
+		});
+	});
 
 	$(targetSelector).each(function(){
 		$(this).data('lastValidValue', $(this).val());
@@ -85,12 +131,12 @@ $(function(){
 	});
 
 	var trainingSelector = [
-		'input[name="training_am_1"]',
-		'input[name="training_am_2"]',
-		'input[name="training_am_3"]',
-		'input[name="training_pm_1"]',
-		'input[name="training_pm_2"]',
-		'input[name="training_pm_3"]'
+		'[name="training_am_1"]',
+		'[name="training_am_2"]',
+		'[name="training_am_3"]',
+		'[name="training_pm_1"]',
+		'[name="training_pm_2"]',
+		'[name="training_pm_3"]'
 	].join(',');
 	var $trainingSectionErr = $('.rf-section-err');
 
@@ -109,11 +155,14 @@ $(function(){
 		var lineCount = value.split(/\r\n|\r|\n/).length;
 		if(value.length > maxLength){
 			$field.val($field.data('lastValidValue'));
+			autosizeField(this);
 			$lineLimitMessage.text(lengthLimitMessageText).show();
 			return;
 		}
+		autosizeField(this);
 		if(lineCount > maxLines || exceedsVisibleLines(this)){
 			$field.val($field.data('lastValidValue'));
+			autosizeField(this);
 			$lineLimitMessage.text(lineLimitMessageText).show();
 			return;
 		}

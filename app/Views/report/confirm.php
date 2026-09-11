@@ -28,6 +28,7 @@ $fieldLabel = static function (string $key): string {
 		<link rel="stylesheet" href="<?= $h($cssBase) ?>report_confirm.css?v=<?= $h($assetVer) ?>" type="text/css" media="screen">
 		<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
 		<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
+		<script type="text/javascript" src="<?= $h($jsBase) ?>report.js?v=<?= $h($assetVer) ?>"></script>
 		<script>
 		$(function(){
 			$(document).on('keydown', '.report_edit_form', function(e){

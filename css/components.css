@@ -392,6 +392,17 @@ td.user_contact_f_3 {
   box-sizing: border-box;
 }
 
+/* 訓練内容など、入力が増えたぶんだけ高さが伸びる textarea */
+.rf-field textarea.rf-autosize {
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  resize: none;
+  overflow: hidden;
+  min-height: 32px;
+  line-height: 1.4;
+}
+
 .rf-check-body {
   display: flex;
   flex-wrap: wrap;
@@ -482,6 +493,12 @@ td.user_contact_f_3 {
   flex: 1;
   box-sizing: border-box;
   resize: vertical;
+}
+
+.rf-split-col textarea.rf-autosize {
+  flex: none;
+  resize: none;
+  overflow: hidden;
 }
 
 .rf-section-err {
