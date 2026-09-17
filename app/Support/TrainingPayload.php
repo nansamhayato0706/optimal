@@ -28,6 +28,7 @@ final class TrainingPayload
 
     public function token(): string { return $this->token; }
     public function chatText(): string { return $this->chatText; }
+    public function targetMonth(): string { return $this->hookValue; }
 
     public function hookDiv(): int
     {

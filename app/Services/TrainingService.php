@@ -81,7 +81,7 @@ final class TrainingService
         $result   = TrainingResponses::eventFailed();
         $newToken = $token;
 
-        if (!in_array($eventType, [4, 7, 8, 11, 12], true)) {
+        if (!in_array($eventType, [4, 7, 8, 11, 12, 13, 14], true)) {
             $newToken = $eventType === 6 ? '' : Uuid::v4();
             $updated  = $this->trainingRepository->updateUserLogin([
                 'user_uuid'  => $userUuid,
@@ -98,6 +98,14 @@ final class TrainingService
 
         if ($eventType === 11 || $eventType === 12) {
             return $this->handleChatEvent($eventType, $userUuid, $payload->chatText());
+        }
+
+        if ($eventType === 13) {
+            return $this->handleChatHistory($userUuid, $payload->targetMonth());
+        }
+
+        if ($eventType === 14) {
+            return ['earliest_date' => $this->trainingRepository->findEarliestChatDate($userUuid)];
         }
 
         if ($eventType <= 5) {
@@ -162,6 +170,18 @@ final class TrainingService
         }, $messages);
         $this->trainingRepository->markUserChatsRead($chatUuids);
         return $messages;
+    }
+
+    private function handleChatHistory(string $userUuid, string $targetMonth): array
+    {
+        if (!preg_match('/^\d{4}-\d{2}$/', $targetMonth)) {
+            $targetMonth = date('Y-m');
+        }
+
+        $from  = $targetMonth . '-01 00:00:00';
+        $until = date('Y-m-01 00:00:00', strtotime($from . ' +1 month'));
+
+        return $this->trainingRepository->findChatsInRange($userUuid, $from, $until);
     }
 
     private function insertSend(string $userUuid, int $eventType, int $hookDiv): bool

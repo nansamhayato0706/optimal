@@ -136,6 +136,34 @@ final class TrainingRepository extends AbstractRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findChatsInRange(string $userUuid, string $from, string $until): array
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT c.*, u.user_name, a.admin_name'
+            . ' FROM tbl_chat c'
+            . ' LEFT JOIN mst_user u ON c.insert_uuid = u.user_uuid'
+            . ' LEFT JOIN mst_admin a ON c.insert_uuid = a.admin_uuid'
+            . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :from AND c.insert_date < :until'
+            . ' ORDER BY c.insert_date, c.chat_uuid'
+        );
+        $stmt->execute([
+            'user_uuid' => $userUuid,
+            'from' => $from,
+            'until' => $until,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findEarliestChatDate(string $userUuid): ?string
+    {
+        $stmt = $this->pdo->prepare(
+            'SELECT MIN(insert_date) FROM tbl_chat WHERE user_uuid = :user_uuid'
+        );
+        $stmt->execute(['user_uuid' => $userUuid]);
+        $value = $stmt->fetchColumn();
+        return $value === false || $value === null ? null : (string) $value;
+    }
+
     public function markUserChatsRead(array $chatUuids): void
     {
         if ($chatUuids === []) {

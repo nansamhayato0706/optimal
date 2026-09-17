@@ -89,6 +89,8 @@ $routes->add(['POST'], '/training_keyboard.php', static function (): void { app_
 $routes->add(['POST'], '/training_mouse.php',    static function (): void { app_container()->get(TrainingController::class)->handleEvent(8); });
 $routes->add(['POST'], '/training_insert.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(11); });
 $routes->add(['POST'], '/training_update.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(12); });
+$routes->add(['POST'], '/training_history.php',  static function (): void { app_container()->get(TrainingController::class)->handleEvent(13); });
+$routes->add(['POST'], '/training_history_earliest.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(14); });
 
 // --- WPF初期データ ---
 $routes->add(['POST'], '/first.php', static function (): void { app_container()->get(FirstIndexController::class)->handle(); });
