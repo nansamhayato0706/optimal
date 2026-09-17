@@ -8,6 +8,8 @@ use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
 use App\Controllers\ChatIndexController;
+use App\Controllers\ChatDeleteController;
+use App\Controllers\ChatEditController;
 use App\Controllers\ErrorIndexController;
 use App\Controllers\FirstIndexController;
 use App\Controllers\TrainingController;

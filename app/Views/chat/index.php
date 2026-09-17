@@ -28,10 +28,11 @@ $chat = $chatData['chat'] ?? array();
 				<h3 class="page-title"><?= $h($title) ?><?php if (($chatData['user_name'] ?? '') !== ''): ?>：<?= $h($chatData['user_name']) ?><?php endif; ?></h3>
 			</div>
 			<div id="chat">
+				<p class="rf-help" id="chat_text_help">255文字以内、8行以内で入力してください。</p>
 				<form class="chat-send-form" action="chat_send.php" method="post" enctype="multipart/form-data">
 					<?= csrf_field() ?>
 					<input type="hidden" name="insert_date" value="<?= $h($chatData['date'] ?? '') ?>">
-					<input type="text" name="chat_text" id="chat_text" placeholder="メッセージを入力...">
+					<textarea class="rf-autosize" name="chat_text" id="chat_text" placeholder="メッセージを入力..." rows="1" data-max-lines="8" aria-describedby="chat_text_help"></textarea>
 					<input type="file" name="chat_file" id="chat_file">
 					<input type="submit" name="send" class="h_link" value="送信">
 				</form>
@@ -49,6 +50,8 @@ $chat = $chatData['chat'] ?? array();
 		</div>
 	</div>
 </div>
+<script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
+<script type="text/javascript" src="<?= $h($jsBase) ?>report.js?v=<?= $h($assetVer) ?>"></script>
 <script>
 function jigyodanChatEditSubmit(form) {
 	var current = form.getAttribute('data-current-text') || '';
