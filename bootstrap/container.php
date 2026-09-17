@@ -11,6 +11,8 @@ use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
 use App\Controllers\ChatIndexController;
+use App\Controllers\ChatDeleteController;
+use App\Controllers\ChatEditController;
 use App\Controllers\ErrorIndexController;
 use App\Controllers\FirstIndexController;
 use App\Controllers\TrainingController;
@@ -72,6 +74,7 @@ use App\Services\TrainingService;
 use App\Services\UserFormService;
 use App\Services\UserListService;
 use App\Support\TrainingImageStorage;
+use App\Support\ChatFileStorage;
 use App\Support\InquiryMailer;
 use App\Support\InquirySlackNotifier;
 use App\Support\AppConfig;
@@ -133,9 +136,9 @@ $container->singleton(LinkService::class, static function () {
 $container->singleton(LogService::class, static function (Container $c) {
     return new LogService(new LogRepository(Database::connection()), $c->get(AppConfig::class));
 });
-$container->singleton(ChatService::class, static function () {
+$container->singleton(ChatService::class, static function (Container $c) {
     $pdo = Database::connection();
-    return new ChatService(new ChatRepository($pdo), new UserStatusSummaryRepository($pdo));
+    return new ChatService(new ChatRepository($pdo), new UserStatusSummaryRepository($pdo), $c->get(ChatFileStorage::class));
 });
 $container->singleton(ReportListService::class, static function (Container $c) {
     return new ReportListService($c->get(ReportRepository::class), $c->get(UserRepositoryInterface::class), $c->get(AppConfig::class));
@@ -233,6 +236,12 @@ $container->bind(ChatIndexController::class, static function (Container $c) {
 $container->bind(ChatSendController::class, static function (Container $c) {
     return new ChatSendController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class), $c->get(View::class));
 });
+$container->bind(ChatDeleteController::class, static function (Container $c) {
+    return new ChatDeleteController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class));
+});
+$container->bind(ChatEditController::class, static function (Container $c) {
+    return new ChatEditController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class));
+});
 $container->bind(ContactIndexController::class, static function (Container $c) {
     return new ContactIndexController($c->get(UserAdminAuth::class), $c->get(ContactService::class), $c->get(RequestContext::class), $c->get(View::class));
 });
@@ -274,12 +283,16 @@ $container->singleton(InquiryMailer::class, static function (Container $c) {
 $container->singleton(InquirySlackNotifier::class, static function (Container $c) {
     return new InquirySlackNotifier($c->get(AppConfig::class));
 });
+$container->singleton(ChatFileStorage::class, static function (Container $c) {
+    return new ChatFileStorage($c->get(AppConfig::class));
+});
 $container->singleton(TrainingService::class, static function (Container $c) {
     $pdo = Database::connection();
     return new TrainingService(
         new TrainingRepository($pdo),
         new UserStatusSummaryRepository($pdo),
         new TrainingImageStorage($c->get(AppConfig::class)),
+        $c->get(ChatFileStorage::class),
         $c->get(InquiryMailer::class),
         $c->get(InquirySlackNotifier::class)
     );

@@ -65,6 +65,8 @@ $routes->add(['GET'], '/user_confirm.php', static function (): void { app_contai
 $routes->add(['GET'], '/user_complete.php', static function (): void { app_container()->get(UserCompleteController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/chat.php', static function (): void { app_container()->get(ChatIndexController::class)->handle(); });
 $routes->add(['POST'], '/chat_send.php', static function (): void { app_container()->get(ChatSendController::class)->handle(); });
+$routes->add(['POST'], '/chat_delete.php', static function (): void { app_container()->get(ChatDeleteController::class)->handle(); });
+$routes->add(['POST'], '/chat_edit.php', static function (): void { app_container()->get(ChatEditController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/contact.php', static function (): void { app_container()->get(ContactIndexController::class)->handle(); });
 $routes->add(['GET'], '/contact_detail.php', static function (): void { app_container()->get(ContactDetailController::class)->handle(); });
 $routes->add(['POST'], '/contact_update.php', static function (): void { app_container()->get(ContactUpdateController::class)->handle(); });
@@ -91,6 +93,7 @@ $routes->add(['POST'], '/training_insert.php',   static function (): void { app_
 $routes->add(['POST'], '/training_update.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(12); });
 $routes->add(['POST'], '/training_history.php',  static function (): void { app_container()->get(TrainingController::class)->handleEvent(13); });
 $routes->add(['POST'], '/training_history_earliest.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(14); });
+$routes->add(['POST'], '/training_chat_upload.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(15); });
 
 // --- WPF初期データ ---
 $routes->add(['POST'], '/first.php', static function (): void { app_container()->get(FirstIndexController::class)->handle(); });

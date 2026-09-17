@@ -25,7 +25,7 @@ final class ChatRepository extends AbstractRepository
             . ' FROM tbl_chat c'
             . ' LEFT JOIN mst_user u ON c.insert_uuid = u.user_uuid'
             . ' LEFT JOIN mst_admin a ON c.insert_uuid = a.admin_uuid'
-            . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :insert_date'
+            . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :insert_date AND c.delete_flg = 0'
             . ' ORDER BY c.insert_date DESC, c.chat_uuid DESC';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
@@ -33,6 +33,32 @@ final class ChatRepository extends AbstractRepository
             'insert_date' => $insertDate,
         ]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function findMessageById(string $chatUuid): ?array
+    {
+        $stmt = $this->pdo->prepare('SELECT * FROM tbl_chat WHERE chat_uuid = :chat_uuid AND delete_flg = 0 LIMIT 1');
+        $stmt->execute(['chat_uuid' => $chatUuid]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row === false ? null : $row;
+    }
+
+    public function deleteMessage(string $chatUuid): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE tbl_chat SET delete_flg = 1, update_date = NOW() WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
+        );
+        $stmt->execute(['chat_uuid' => $chatUuid]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function updateMessageText(string $chatUuid, string $chatText): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE tbl_chat SET chat_text = :chat_text, update_date = NOW() WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
+        );
+        $stmt->execute(['chat_text' => $chatText, 'chat_uuid' => $chatUuid]);
+        return $stmt->rowCount() > 0;
     }
 
     public function markAdminMessagesRead(array $chatUuids): bool

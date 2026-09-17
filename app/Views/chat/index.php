@@ -28,10 +28,11 @@ $chat = $chatData['chat'] ?? array();
 				<h3 class="page-title"><?= $h($title) ?><?php if (($chatData['user_name'] ?? '') !== ''): ?>：<?= $h($chatData['user_name']) ?><?php endif; ?></h3>
 			</div>
 			<div id="chat">
-				<form class="chat-send-form" action="chat_send.php" method="post">
+				<form class="chat-send-form" action="chat_send.php" method="post" enctype="multipart/form-data">
 					<?= csrf_field() ?>
 					<input type="hidden" name="insert_date" value="<?= $h($chatData['date'] ?? '') ?>">
 					<input type="text" name="chat_text" id="chat_text" placeholder="メッセージを入力...">
+					<input type="file" name="chat_file" id="chat_file">
 					<input type="submit" name="send" class="h_link" value="送信">
 				</form>
 <?php if ($errorMessage !== ''): ?>
@@ -48,6 +49,21 @@ $chat = $chatData['chat'] ?? array();
 		</div>
 	</div>
 </div>
+<script>
+function jigyodanChatEditSubmit(form) {
+	var current = form.getAttribute('data-current-text') || '';
+	var next = prompt('メッセージを修正', current);
+	if (next === null) {
+		return false;
+	}
+	next = next.trim();
+	if (next === '') {
+		return false;
+	}
+	form.querySelector('input[name="chat_text"]').value = next;
+	return true;
+}
+</script>
 </body>
 </html>
 

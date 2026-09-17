@@ -45,6 +45,7 @@ final class ChatIndexController
             'chatData' => $page,
             'headerLinks' => $this->auth->buildHeaderLinks(),
             'loginAdminId' => $this->auth->getLoginAdminId(),
+            'loginAdminUuid' => $this->auth->getLoginAdminUuid(),
             'errorMessage' => '',
         ]);
     }

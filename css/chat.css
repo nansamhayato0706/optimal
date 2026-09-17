@@ -74,6 +74,37 @@
   border-bottom-left-radius: 4px;
 }
 
+.chat-bubble a {
+  color: inherit;
+  text-decoration: underline;
+  word-break: break-all;
+}
+
+.chat-message-actions {
+  display: flex;
+  gap: var(--sp-2);
+  margin-top: 2px;
+}
+
+.chat-edit-btn,
+.chat-delete-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.72rem;
+  color: var(--color-text-soft);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.chat-edit-btn:hover {
+  color: var(--color-accent);
+}
+
+.chat-delete-btn:hover {
+  color: var(--color-danger, #d33);
+}
+
 /* 履歴取得エリア */
 .chat-history-area {
   display: flex;

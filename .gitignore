@@ -12,3 +12,4 @@ storage/transcribe/*
 node_modules/
 img/
 wpf/
+chat_files/

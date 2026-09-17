@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Repositories\TrainingRepository;
 use App\Repositories\UserStatusSummaryRepository;
+use App\Support\ChatFileStorage;
 use App\Support\InquiryMailer;
 use App\Support\InquirySlackNotifier;
 use App\Support\TrainingImageStorage;
@@ -19,6 +20,7 @@ final class TrainingService
     private $trainingRepository;
     private $summaryRepository;
     private $imageStorage;
+    private $chatFileStorage;
     private $inquiryMailer;
     private $slackNotifier;
 
@@ -26,12 +28,14 @@ final class TrainingService
         TrainingRepository $trainingRepository,
         UserStatusSummaryRepository $summaryRepository,
         TrainingImageStorage $imageStorage,
+        ChatFileStorage $chatFileStorage,
         InquiryMailer $inquiryMailer,
         InquirySlackNotifier $slackNotifier
     ) {
         $this->trainingRepository = $trainingRepository;
         $this->summaryRepository  = $summaryRepository;
         $this->imageStorage       = $imageStorage;
+        $this->chatFileStorage    = $chatFileStorage;
         $this->inquiryMailer      = $inquiryMailer;
         $this->slackNotifier      = $slackNotifier;
     }
@@ -81,7 +85,7 @@ final class TrainingService
         $result   = TrainingResponses::eventFailed();
         $newToken = $token;
 
-        if (!in_array($eventType, [4, 7, 8, 11, 12, 13, 14], true)) {
+        if (!in_array($eventType, [4, 7, 8, 11, 12, 13, 14, 15], true)) {
             $newToken = $eventType === 6 ? '' : Uuid::v4();
             $updated  = $this->trainingRepository->updateUserLogin([
                 'user_uuid'  => $userUuid,
@@ -106,6 +110,10 @@ final class TrainingService
 
         if ($eventType === 14) {
             return ['earliest_date' => $this->trainingRepository->findEarliestChatDate($userUuid)];
+        }
+
+        if ($eventType === 15) {
+            return $this->handleChatFileEvent($userUuid, $files, $payload->originalFileName());
         }
 
         if ($eventType <= 5) {
@@ -164,6 +172,37 @@ final class TrainingService
             }
         }
 
+        return $this->fetchAndMarkNewChats($userUuid);
+    }
+
+    private function handleChatFileEvent(string $userUuid, array $files, string $originalFileName): array
+    {
+        if (!isset($files['file'])) {
+            return ['error' => 'ファイルが指定されていません。'];
+        }
+
+        $stored = $this->chatFileStorage->store($files['file'], $userUuid, $originalFileName);
+        if ($stored === null) {
+            return ['error' => 'ファイルを送信できませんでした。対応形式・サイズ（10MBまで）をご確認ください。'];
+        }
+
+        $inserted = $this->trainingRepository->insertChat([
+            'chat_uuid'      => Uuid::v4(),
+            'user_uuid'      => $userUuid,
+            'chat_text'      => $this->chatFileStorage->buildMessageText($stored),
+            'user_chat_div'  => 1,
+            'admin_chat_div' => 1,
+            'insert_uuid'    => $userUuid,
+        ]);
+        if ($inserted) {
+            $this->summaryRepository->refreshUserStatusSummary($userUuid);
+        }
+
+        return $this->fetchAndMarkNewChats($userUuid);
+    }
+
+    private function fetchAndMarkNewChats(string $userUuid): array
+    {
         $messages  = $this->trainingRepository->findNewChats($userUuid);
         $chatUuids = array_map(static function (array $row): string {
             return (string) $row['chat_uuid'];

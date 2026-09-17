@@ -153,4 +153,5 @@ define('TRANSCRIBE_DAILY_SECONDS', (int) ($localConfig['transcribe_daily_seconds
 // ファイルパス
 define('UPLOAD_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'img/');
 define('LIB_DIR',    ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'lib/');
+define('CHAT_FILE_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'chat_files/');
 define('MAX_USER',   (int) ($localConfig['max_user'] ?? 80));

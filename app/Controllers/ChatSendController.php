@@ -39,10 +39,12 @@ final class ChatSendController
             exit;
         }
 
+        $files = $this->request->allFiles();
         $result = $this->chatService->sendMessage(
             $userUuid,
             (string) $this->request->post('chat_text', ''),
-            $this->auth->getLoginAdminUuid()
+            $this->auth->getLoginAdminUuid(),
+            $files['chat_file'] ?? null
         );
         if ($result['success']) {
             header('Location: chat.php?i=' . rawurlencode($userUuid));
@@ -60,6 +62,7 @@ final class ChatSendController
             'chatData' => $page,
             'headerLinks' => $this->auth->buildHeaderLinks(),
             'loginAdminId' => $this->auth->getLoginAdminId(),
+            'loginAdminUuid' => $this->auth->getLoginAdminUuid(),
             'errorMessage' => $result['error'],
         ]);
     }
