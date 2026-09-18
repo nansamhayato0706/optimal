@@ -45,8 +45,10 @@ final class ChatRepository extends AbstractRepository
 
     public function deleteMessage(string $chatUuid): bool
     {
+        // user_chat_div を未配信に戻し、WPFアプリの次回ポーリングで削除を検知させる
         $stmt = $this->pdo->prepare(
-            'UPDATE tbl_chat SET delete_flg = 1, update_date = NOW() WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
+            'UPDATE tbl_chat SET delete_flg = 1, user_chat_div = 1, update_date = NOW()'
+            . ' WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
         );
         $stmt->execute(['chat_uuid' => $chatUuid]);
         return $stmt->rowCount() > 0;
@@ -54,8 +56,10 @@ final class ChatRepository extends AbstractRepository
 
     public function updateMessageText(string $chatUuid, string $chatText): bool
     {
+        // user_chat_div を未配信に戻し、WPFアプリの次回ポーリングで編集後の内容を再配信させる
         $stmt = $this->pdo->prepare(
-            'UPDATE tbl_chat SET chat_text = :chat_text, update_date = NOW() WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
+            'UPDATE tbl_chat SET chat_text = :chat_text, user_chat_div = 1, update_date = NOW()'
+            . ' WHERE chat_uuid = :chat_uuid AND delete_flg = 0'
         );
         $stmt->execute(['chat_text' => $chatText, 'chat_uuid' => $chatUuid]);
         return $stmt->rowCount() > 0;

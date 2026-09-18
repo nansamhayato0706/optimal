@@ -32,9 +32,17 @@ $chat = $chatData['chat'] ?? array();
 				<form class="chat-send-form" action="chat_send.php" method="post" enctype="multipart/form-data">
 					<?= csrf_field() ?>
 					<input type="hidden" name="insert_date" value="<?= $h($chatData['date'] ?? '') ?>">
-					<textarea class="rf-autosize" name="chat_text" id="chat_text" placeholder="メッセージを入力..." rows="1" data-max-lines="8" aria-describedby="chat_text_help"></textarea>
-					<input type="file" name="chat_file" id="chat_file">
-					<input type="submit" name="send" class="h_link" value="送信">
+					<div class="chat-input-row">
+						<div class="chat-input-wrap">
+							<label class="chat-attach-btn" for="chat_file" title="ファイルを添付">
+								<span aria-hidden="true">＋</span>
+							</label>
+							<input type="file" name="chat_file" id="chat_file" class="chat-file-input">
+							<textarea class="rf-autosize" name="chat_text" id="chat_text" placeholder="メッセージを入力..." rows="1" data-max-lines="8" aria-describedby="chat_text_help"></textarea>
+						</div>
+						<input type="submit" name="send" class="h_link chat-send-btn" value="送信">
+					</div>
+					<span class="chat-file-name" id="chat_file_name"></span>
 				</form>
 <?php if ($errorMessage !== ''): ?>
 				<p class="err"><?= $h($errorMessage) ?></p>
@@ -66,6 +74,19 @@ function jigyodanChatEditSubmit(form) {
 	form.querySelector('input[name="chat_text"]').value = next;
 	return true;
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+	var fileInput = document.getElementById('chat_file');
+	var fileNameLabel = document.getElementById('chat_file_name');
+	if (!fileInput || !fileNameLabel) {
+		return;
+	}
+	fileInput.addEventListener('change', function () {
+		fileNameLabel.textContent = fileInput.files && fileInput.files.length > 0
+			? fileInput.files[0].name
+			: '';
+	});
+});
 </script>
 </body>
 </html>

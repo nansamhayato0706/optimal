@@ -12,8 +12,8 @@
 /* 送信フォーム */
 .chat-send-form {
   display: flex;
-  gap: var(--sp-3);
-  align-items: flex-end;
+  flex-direction: column;
+  gap: var(--sp-2);
   padding: var(--sp-4);
   background: var(--color-surface-alt);
   border: 1px solid var(--color-border);
@@ -21,18 +21,115 @@
   margin-bottom: var(--sp-4);
 }
 
-.chat-send-form textarea.rf-autosize {
+/* 入力欄行：左＝＋付き入力ボックス、右＝送信ボタン（入力欄の外） */
+.chat-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-3);
+}
+
+/* ＋ボタンとテキストエリアを1つの入力ボックスに見せる */
+.chat-input-wrap {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-1);
+  padding: var(--sp-1) var(--sp-3) var(--sp-1) var(--sp-1);
+  background: var(--ctrl-bg, var(--color-surface));
+  border: var(--ctrl-border, 1px solid var(--color-border));
+  border-radius: 999px;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.chat-input-wrap:focus-within {
+  background-color: #e8f1ff;
+  border-color: #4a90d9;
+}
+
+/* ＋ボタン：入力ボックスの内側・左端 */
+.chat-attach-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-bottom: 1px;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-soft);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.chat-attach-btn:hover {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* ネイティブのファイル入力は非表示にし、＋ボタン経由でのみ開かせる */
+.chat-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chat-input-wrap textarea.rf-autosize {
+  flex: 1;
+  min-width: 0;
   width: auto;
   box-sizing: border-box;
-  min-height: 40px;
-  border-radius: var(--r-md);
-  padding: var(--sp-2) var(--sp-4);
+  min-height: 32px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  border-radius: var(--r-sm);
+  padding: var(--sp-2) 0;
   font-size: 0.95rem;
   font-family: inherit;
   line-height: 1.4;
   resize: none;
   overflow: hidden;
+}
+
+.chat-input-wrap textarea.rf-autosize:focus {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* common.cssの:focus-visibleアウトラインを消し、外側の.chat-input-wrapの色変化のみでフォーカスを示す */
+.chat-input-wrap textarea.rf-autosize:focus-visible {
+  outline: none;
+}
+
+/* 送信ボタン：入力ボックスの外・右側 */
+.chat-send-btn {
+  flex-shrink: 0;
+}
+
+/* 選択中ファイル名（入力欄の下に表示。未選択時は高さ0に折りたたむ） */
+.chat-file-name {
+  display: block;
+  padding-left: var(--sp-4);
+  font-size: 0.78rem;
+  color: var(--color-text-soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chat-file-name:empty {
+  display: none;
 }
 
 /* メッセージ */

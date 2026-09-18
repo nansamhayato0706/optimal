@@ -54,6 +54,10 @@ $(function(){
 		return document.querySelectorAll('td.user_contact_5').length;
 	}
 
+	function countUnreadChats() {
+		return document.querySelectorAll('td.user_chat').length;
+	}
+
 	function startFlash(label, urgent) {
 		var interval = urgent ? 400 : 800;
 		var flashTitle = label + ' | ' + originalTitle;
@@ -83,6 +87,7 @@ $(function(){
 
 	var lastInquiryCount = -1;
 	var lastEmergencyCount = -1;
+	var lastChatCount = -1;
 	var activeNotification = null;
 	var audioCtx = null;
 	var inquiryAckStorageKey = 'zaitaku_user_inquiry_ack_v1';
@@ -229,6 +234,35 @@ $(function(){
 		} catch (e) {}
 	}
 
+	function fireChatNotification(count) {
+		if (!notificationsGranted()) {
+			return;
+		}
+		try {
+			if (activeNotification) {
+				activeNotification.close();
+				activeNotification = null;
+			}
+			var notification = new Notification('チャットが届きました', {
+				body: '未読のチャットが' + count + '件あります。クリックで一覧へ。',
+				icon: alertFaviconHref,
+				tag:  'zaitaku-chat',
+				renotify: true,
+				requireInteraction: false
+			});
+			notification.onclick = function() {
+				try {
+					window.focus();
+					if (window.parent && window.parent !== window) {
+						window.parent.focus();
+					}
+				} catch (e) {}
+				notification.close();
+			};
+			activeNotification = notification;
+		} catch (e) {}
+	}
+
 	function fireEmergencyNotification(count) {
 		if (!notificationsGranted()) {
 			return;
@@ -305,11 +339,14 @@ $(function(){
 		var pendingInquiryIds = getPendingInquiryIds();
 		var inquiryCount = pendingInquiryIds.length;
 		var unacknowledgedInquiryCount = countUnacknowledgedInquiryIds(pendingInquiryIds);
-		var isFirstRun = lastInquiryCount < 0 && lastEmergencyCount < 0;
+		var chatCount = countUnreadChats();
+		var isFirstRun = lastInquiryCount < 0 && lastEmergencyCount < 0 && lastChatCount < 0;
 		var wasEmergencyIncreased = !isFirstRun && emergencyCount > lastEmergencyCount;
 		var wasInquiryIncreased = !isFirstRun && inquiryCount > lastInquiryCount;
+		var wasChatIncreased = !isFirstRun && chatCount > lastChatCount;
 		lastEmergencyCount = emergencyCount;
 		lastInquiryCount = inquiryCount;
+		lastChatCount = chatCount;
 
 		if (emergencyCount > 0) {
 			startFlash('🚨 緊急' + emergencyCount + '件', true);
@@ -321,6 +358,11 @@ $(function(){
 			startFlash('🔴 問い合わせ' + unacknowledgedInquiryCount + '件', false);
 			if (wasInquiryIncreased) {
 				fireInquiryNotification(unacknowledgedInquiryCount);
+			}
+		} else if (chatCount > 0 && document.hidden) {
+			startFlash('💬 チャット' + chatCount + '件', false);
+			if (wasChatIncreased) {
+				fireChatNotification(chatCount);
 			}
 		} else {
 			if (!document.hidden && inquiryCount > 0) {

@@ -138,12 +138,14 @@ final class TrainingRepository extends AbstractRepository
 
     public function findChatsInRange(string $userUuid, string $from, string $until): array
     {
+        // 月次履歴は毎回全件を描画し直すビューのため、削除済みメッセージは除外して返す
         $stmt = $this->pdo->prepare(
             'SELECT c.*, u.user_name, a.admin_name'
             . ' FROM tbl_chat c'
             . ' LEFT JOIN mst_user u ON c.insert_uuid = u.user_uuid'
             . ' LEFT JOIN mst_admin a ON c.insert_uuid = a.admin_uuid'
             . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :from AND c.insert_date < :until'
+            . ' AND c.delete_flg = 0'
             . ' ORDER BY c.insert_date, c.chat_uuid'
         );
         $stmt->execute([
@@ -157,7 +159,7 @@ final class TrainingRepository extends AbstractRepository
     public function findEarliestChatDate(string $userUuid): ?string
     {
         $stmt = $this->pdo->prepare(
-            'SELECT MIN(insert_date) FROM tbl_chat WHERE user_uuid = :user_uuid'
+            'SELECT MIN(insert_date) FROM tbl_chat WHERE user_uuid = :user_uuid AND delete_flg = 0'
         );
         $stmt->execute(['user_uuid' => $userUuid]);
         $value = $stmt->fetchColumn();
