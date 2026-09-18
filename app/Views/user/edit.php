@@ -226,10 +226,162 @@ $booleanOptions = array(
 							<input type="submit" name="act" value="登録" class="h_link">
 						</div>
 					</form>
+
+<?php if (($form['user_uuid'] ?? '') !== ''): ?>
+					<div class="rf-card" id="screenshot-card">
+						<div class="rf-title">リモート操作</div>
+						<div class="rf-body">
+							<div class="rf-field rf-field-xl">
+								<button type="button" id="screenshot-request-btn" class="h_link" style="background:#e08a1e;border-color:#e08a1e;" data-user-uuid="<?= $h($form['user_uuid']) ?>" data-login-admin-id="<?= $h($loginAdminId) ?>">このユーザーの画面をキャプチャ</button>
+								<p id="screenshot-status" role="status" style="margin-top:8px;"></p>
+							</div>
+						</div>
+					</div>
+
+					<div class="rf-card" id="screenshot-history-card">
+						<div class="rf-title">キャプチャ履歴</div>
+						<div class="rf-body">
+							<ul id="screenshot-history-list" style="list-style:none;margin:0;padding:0;">
+<?php foreach ($screenshotHistory as $item): ?>
+								<li class="screenshot-history-item" style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #eee;">
+									<span style="white-space:nowrap;"><?= $h($item['requested_date']) ?></span>
+									<span style="white-space:nowrap;"><?= $h($item['admin_name']) ?></span>
+									<span><?= $h(array('pending' => '取得中', 'done' => '完了', 'failed' => '失敗')[$item['status']] ?? $item['status']) ?></span>
+<?php if ($item['image_url'] !== null): ?>
+									<a href="<?= $h($item['image_url']) ?>" target="_blank" rel="noopener"><img src="<?= $h($item['image_url']) ?>" alt="スクリーンショット" style="max-width:120px;max-height:80px;border:1px solid #ccc;"></a>
+<?php endif; ?>
+								</li>
+<?php endforeach; ?>
+							</ul>
+							<p id="screenshot-history-empty" style="<?= $screenshotHistory === array() ? '' : 'display:none;' ?>">まだ取得履歴はありません。</p>
+						</div>
+					</div>
+<?php endif; ?>
+
 				</div>
 			</div>
 			<div id="footer"></div>
 		</div>
+<?php if (($form['user_uuid'] ?? '') !== ''): ?>
+		<script>
+		(function () {
+			var btn = document.getElementById('screenshot-request-btn');
+			if (!btn) { return; }
+			var statusEl = document.getElementById('screenshot-status');
+			var csrfToken = document.querySelector('.user_edit_form input[name="_token"]').value;
+			var userUuid = btn.getAttribute('data-user-uuid');
+			var loginAdminId = btn.getAttribute('data-login-admin-id');
+			var historyList = document.getElementById('screenshot-history-list');
+			var historyEmpty = document.getElementById('screenshot-history-empty');
+			var pollTimer = null;
+
+			function stopPolling() {
+				if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+			}
+
+			function loadImageWithRetry(img, url, attemptsLeft) {
+				img.onerror = function () {
+					if (attemptsLeft > 0) {
+						attemptsLeft -= 1;
+						setTimeout(function () {
+							img.src = url + (url.indexOf('?') === -1 ? '?' : '&') + 'retry=' + Date.now();
+						}, 1000);
+					} else {
+						img.onerror = null;
+					}
+				};
+				img.src = url;
+			}
+
+			function prependHistoryItem(imageUrl) {
+				if (!historyList) { return; }
+				if (historyEmpty) { historyEmpty.style.display = 'none'; }
+				var li = document.createElement('li');
+				li.className = 'screenshot-history-item';
+				li.style.cssText = 'display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #eee;';
+
+				var dateSpan = document.createElement('span');
+				dateSpan.style.whiteSpace = 'nowrap';
+				dateSpan.textContent = new Date().toLocaleString('ja-JP');
+
+				var adminSpan = document.createElement('span');
+				adminSpan.style.whiteSpace = 'nowrap';
+				adminSpan.textContent = loginAdminId || '';
+
+				var statusSpan = document.createElement('span');
+				statusSpan.textContent = '完了';
+
+				var link = document.createElement('a');
+				link.href = imageUrl;
+				link.target = '_blank';
+				link.rel = 'noopener';
+				var img = document.createElement('img');
+				img.alt = 'スクリーンショット';
+				img.style.cssText = 'max-width:120px;max-height:80px;border:1px solid #ccc;';
+				loadImageWithRetry(img, imageUrl, 3);
+				link.appendChild(img);
+
+				li.appendChild(dateSpan);
+				li.appendChild(adminSpan);
+				li.appendChild(statusSpan);
+				li.appendChild(link);
+				historyList.insertBefore(li, historyList.firstChild);
+			}
+
+			function pollStatus(requestUuid) {
+				pollTimer = setInterval(function () {
+					fetch('screenshot_status.php?user_uuid=' + encodeURIComponent(userUuid) + '&request_uuid=' + encodeURIComponent(requestUuid), {
+						credentials: 'same-origin'
+					}).then(function (res) { return res.json(); }).then(function (data) {
+						if (data.status === 'done') {
+							stopPolling();
+							statusEl.textContent = '取得が完了しました。キャプチャ履歴の先頭に追加しました。';
+							prependHistoryItem(data.image_url);
+							btn.disabled = false;
+						} else if (data.status === 'failed' || data.error) {
+							stopPolling();
+							statusEl.textContent = '取得に失敗しました。クライアントが起動しているか確認してください。';
+							btn.disabled = false;
+						}
+					}).catch(function () {
+						stopPolling();
+						statusEl.textContent = '状態確認に失敗しました。';
+						btn.disabled = false;
+					});
+				}, 3000);
+			}
+
+			btn.addEventListener('click', function () {
+				if (!window.confirm('このユーザーの画面をキャプチャしてサーバーに保存します。よろしいですか？')) {
+					return;
+				}
+				btn.disabled = true;
+				statusEl.textContent = '要求を送信しています…';
+
+				var body = new URLSearchParams();
+				body.set('_token', csrfToken);
+				body.set('user_uuid', userUuid);
+
+				fetch('screenshot_request.php', {
+					method: 'POST',
+					credentials: 'same-origin',
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: body.toString()
+				}).then(function (res) { return res.json(); }).then(function (data) {
+					if (data.error || !data.request_uuid) {
+						statusEl.textContent = '要求の送信に失敗しました。';
+						btn.disabled = false;
+						return;
+					}
+					statusEl.textContent = 'クライアントからの応答を待っています…';
+					pollStatus(data.request_uuid);
+				}).catch(function () {
+					statusEl.textContent = '要求の送信に失敗しました。';
+					btn.disabled = false;
+				});
+			});
+		})();
+		</script>
+<?php endif; ?>
 	</body>
 </html>
-

@@ -95,6 +95,7 @@ final class AppConfig
     public function imgBase(): string { return $this->appUrl . '/img/'; }
     public function chatFileDir(): string { return (string) (defined('CHAT_FILE_DIR') ? CHAT_FILE_DIR : $this->rootPath() . 'chat_files/'); }
     public function chatFileBase(): string { return $this->appUrl . '/chat_files/'; }
+    public function screenshotDir(): string { return (string) (defined('SCREENSHOT_DIR') ? SCREENSHOT_DIR : dirname(rtrim($this->rootPath(), '/')) . '/screenshots_storage/'); }
     public function dummyImage(): string { return 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMjAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMzIwIDI0MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJObyBpbWFnZSI+PHJlY3Qgd2lkdGg9IjMyMCIgaGVpZ2h0PSIyNDAiIGZpbGw9IiNmM2Y0ZjYiLz48cGF0aCBkPSJNNjQgMTc2bDU2LTY0IDQwIDQ4IDMyLTMyIDY0IDQ4IiBmaWxsPSJub25lIiBzdHJva2U9IiM5Y2EzYWYiIHN0cm9rZS13aWR0aD0iMTIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48Y2lyY2xlIGN4PSIyMTYiIGN5PSI4MCIgcj0iMjQiIGZpbGw9IiNjYmQ1ZTEiLz48dGV4dCB4PSIxNjAiIHk9IjIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmaWxsPSIjNmI3MjgwIj5ObyBpbWFnZTwvdGV4dD48L3N2Zz4='; }
     public function remoteImageBase(): string { return ''; }
     public function charset(): string { return 'UTF-8'; }

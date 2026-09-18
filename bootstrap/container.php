@@ -40,6 +40,10 @@ use App\Controllers\UserCompleteController;
 use App\Controllers\UserConfirmController;
 use App\Controllers\UserEditController;
 use App\Controllers\UserStatusController;
+use App\Controllers\ScreenshotRequestController;
+use App\Controllers\ScreenshotStatusController;
+use App\Controllers\ScreenshotImageController;
+use App\Controllers\TrainingScreenshotController;
 use App\Repositories\AdminRepository;
 use App\Repositories\ChatRepository;
 use App\Repositories\ContactRepository;
@@ -52,6 +56,7 @@ use App\Repositories\LinkRepository;
 use App\Repositories\LogRepository;
 use App\Repositories\NoticeRepository;
 use App\Repositories\ReportRepository;
+use App\Repositories\ScreenshotRequestRepository;
 use App\Repositories\TrainingRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\UserStatusSummaryRepository;
@@ -70,10 +75,12 @@ use App\Services\ReportDailyListService;
 use App\Services\ReportDetailService;
 use App\Services\ReportFormService;
 use App\Services\ReportListService;
+use App\Services\ScreenshotService;
 use App\Services\TrainingService;
 use App\Services\UserFormService;
 use App\Services\UserListService;
 use App\Support\TrainingImageStorage;
+use App\Support\ScreenshotStorage;
 use App\Support\ChatFileStorage;
 use App\Support\InquiryMailer;
 use App\Support\InquirySlackNotifier;
@@ -110,6 +117,7 @@ $container->singleton(AdminRepositoryInterface::class, static function () { retu
 $container->singleton(GroupRepositoryInterface::class, static function () { return new GroupRepository(Database::connection()); });
 $container->singleton(UserRepositoryInterface::class,  static function () { return new UserRepository(Database::connection()); });
 $container->singleton(ReportRepository::class, static function () { return new ReportRepository(Database::connection()); });
+$container->singleton(ScreenshotRequestRepository::class, static function () { return new ScreenshotRequestRepository(Database::connection()); });
 
 // --- Services ---
 $container->singleton(LoginService::class, static function (Container $c) {
@@ -216,7 +224,7 @@ $container->bind(UserStatusController::class, static function (Container $c) {
     return new UserStatusController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserListService::class), new UserStatusSummaryRepository(Database::connection()), $c->get(RequestContext::class));
 });
 $container->bind(UserEditController::class, static function (Container $c) {
-    return new UserEditController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserFormService::class), $c->get(RequestContext::class), $c->get(View::class));
+    return new UserEditController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserFormService::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class), $c->get(View::class));
 });
 $container->bind(UserConfirmController::class, static function (Container $c) {
     return new UserConfirmController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(UserFormService::class), $c->get(View::class));
@@ -286,6 +294,9 @@ $container->singleton(InquirySlackNotifier::class, static function (Container $c
 $container->singleton(ChatFileStorage::class, static function (Container $c) {
     return new ChatFileStorage($c->get(AppConfig::class));
 });
+$container->singleton(ScreenshotStorage::class, static function (Container $c) {
+    return new ScreenshotStorage($c->get(AppConfig::class));
+});
 $container->singleton(TrainingService::class, static function (Container $c) {
     $pdo = Database::connection();
     return new TrainingService(
@@ -297,11 +308,30 @@ $container->singleton(TrainingService::class, static function (Container $c) {
         $c->get(InquirySlackNotifier::class)
     );
 });
+$container->singleton(ScreenshotService::class, static function (Container $c) {
+    return new ScreenshotService(
+        $c->get(ScreenshotRequestRepository::class),
+        new TrainingRepository(Database::connection()),
+        $c->get(ScreenshotStorage::class)
+    );
+});
 $container->singleton(FirstService::class, static function () {
     return new FirstService(new FirstRepository(Database::connection()));
 });
 $container->bind(TrainingController::class, static function (Container $c) {
     return new TrainingController($c->get(TrainingService::class), $c->get(RequestContext::class));
+});
+$container->bind(TrainingScreenshotController::class, static function (Container $c) {
+    return new TrainingScreenshotController($c->get(ScreenshotService::class), $c->get(RequestContext::class));
+});
+$container->bind(ScreenshotRequestController::class, static function (Container $c) {
+    return new ScreenshotRequestController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class));
+});
+$container->bind(ScreenshotStatusController::class, static function (Container $c) {
+    return new ScreenshotStatusController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class));
+});
+$container->bind(ScreenshotImageController::class, static function (Container $c) {
+    return new ScreenshotImageController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class));
 });
 $container->bind(FirstIndexController::class, static function (Container $c) {
     return new FirstIndexController($c->get(FirstService::class), $c->get(RequestContext::class));

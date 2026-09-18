@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Auth\UserAdminAuth;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\ScreenshotService;
 use App\Services\UserFormService;
 use App\Support\RequestContext;
 use App\Views\View;
@@ -15,6 +16,7 @@ final class UserEditController
     private $auth;
     private $userRepository;
     private $userFormService;
+    private $screenshotService;
     private $request;
     private $view;
 
@@ -22,12 +24,14 @@ final class UserEditController
         UserAdminAuth $auth,
         UserRepositoryInterface $userRepository,
         UserFormService $userFormService,
+        ScreenshotService $screenshotService,
         RequestContext $request,
         View $view
     ) {
         $this->auth = $auth;
         $this->userRepository = $userRepository;
         $this->userFormService = $userFormService;
+        $this->screenshotService = $screenshotService;
         $this->request = $request;
         $this->view = $view;
     }
@@ -58,6 +62,7 @@ final class UserEditController
 
     private function render(array $form, array $errors): void
     {
+        $userUuid = (string) ($form['user_uuid'] ?? '');
         $this->view->render('user/edit', [
             'title' => 'ユーザー登録',
             'form' => $form,
@@ -66,6 +71,7 @@ final class UserEditController
             'loginAdminId' => $this->auth->getLoginAdminId(),
             'divMap' => $this->userRepository->findDivMap(),
             'assignableAdmins' => $this->userRepository->findAssignableAdmins($this->auth->getLoginGroupId(), $this->auth->getLoginAdminUuid()),
+            'screenshotHistory' => $userUuid !== '' ? $this->screenshotService->getHistory($userUuid) : [],
         ]);
     }
 }

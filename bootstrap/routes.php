@@ -37,6 +37,10 @@ use App\Controllers\UserCompleteController;
 use App\Controllers\UserConfirmController;
 use App\Controllers\UserEditController;
 use App\Controllers\UserStatusController;
+use App\Controllers\ScreenshotRequestController;
+use App\Controllers\ScreenshotStatusController;
+use App\Controllers\ScreenshotImageController;
+use App\Controllers\TrainingScreenshotController;
 use App\Support\RouteRegistry;
 
 $routes = new RouteRegistry();
@@ -81,6 +85,11 @@ $routes->add(['GET', 'POST'], '/report_complete.php', static function (): void {
 $routes->add(['GET'], '/report_detail.php', static function (): void { app_container()->get(ReportDetailController::class)->handle(); });
 $routes->add(['GET'], '/report_pdf.php', static function (): void { app_container()->get(ReportPdfController::class)->handle(); });
 
+// --- リモートスクリーンショット取得（管理画面） ---
+$routes->add(['POST'], '/screenshot_request.php', static function (): void { app_container()->get(ScreenshotRequestController::class)->handle(); });
+$routes->add(['GET'],  '/screenshot_status.php',  static function (): void { app_container()->get(ScreenshotStatusController::class)->handle(); });
+$routes->add(['GET'],  '/screenshot_image.php',   static function (): void { app_container()->get(ScreenshotImageController::class)->handle(); });
+
 // --- WPF連携（Training） ---
 $routes->add(['POST'], '/training_login.php',    static function (): void { app_container()->get(TrainingController::class)->login(); });
 $routes->add(['POST'], '/training_logout.php',   static function (): void { app_container()->get(TrainingController::class)->handleEvent(6); });
@@ -96,6 +105,8 @@ $routes->add(['POST'], '/training_update.php',   static function (): void { app_
 $routes->add(['POST'], '/training_history.php',  static function (): void { app_container()->get(TrainingController::class)->handleEvent(13); });
 $routes->add(['POST'], '/training_history_earliest.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(14); });
 $routes->add(['POST'], '/training_chat_upload.php', static function (): void { app_container()->get(TrainingController::class)->handleEvent(15); });
+$routes->add(['POST'], '/training_screenshot_check.php',  static function (): void { app_container()->get(TrainingScreenshotController::class)->checkCommand(); });
+$routes->add(['POST'], '/training_screenshot_upload.php', static function (): void { app_container()->get(TrainingScreenshotController::class)->upload(); });
 
 // --- WPF初期データ ---
 $routes->add(['POST'], '/first.php', static function (): void { app_container()->get(FirstIndexController::class)->handle(); });
