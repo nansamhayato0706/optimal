@@ -59,7 +59,11 @@ final class ScreenshotService
         }
 
         $pending = $this->screenshotRepository->findPendingForUser((string) $user['user_uuid']);
-        if ($pending === null || $this->isStale($pending)) {
+        if ($pending === null) {
+            return null;
+        }
+        if ($this->isStale($pending)) {
+            $this->screenshotRepository->markFailed((string) $pending['request_uuid']);
             return null;
         }
 
@@ -83,6 +87,10 @@ final class ScreenshotService
         ) {
             return ['error' => 'invalid request'];
         }
+        if ($this->isStale($request)) {
+            $this->screenshotRepository->markFailed($requestUuid);
+            return ['error' => 'expired request'];
+        }
 
         $relativePath = $this->storage->store($files['file'] ?? [], (string) $user['user_uuid'], $requestUuid);
         if ($relativePath === null) {
@@ -90,7 +98,9 @@ final class ScreenshotService
             return ['error' => '保存に失敗しました。'];
         }
 
-        $this->screenshotRepository->markDone($requestUuid, $relativePath);
+        if (!$this->screenshotRepository->markDone($requestUuid, $relativePath)) {
+            return ['error' => '保存状態の更新に失敗しました。'];
+        }
         return ['result' => 'ok'];
     }
 
@@ -120,6 +130,7 @@ final class ScreenshotService
         if ($status === 'done') {
             $result['image_url'] = 'screenshot_image.php?user_uuid=' . rawurlencode($userUuid)
                 . '&request_uuid=' . rawurlencode($requestUuid);
+            $result['requested_date'] = (string) $request['requested_date'];
         }
         return $result;
     }
@@ -170,6 +181,28 @@ final class ScreenshotService
 
         $path = $this->storage->absolutePath((string) $request['image_path']);
         return is_file($path) ? $path : null;
+    }
+
+    /**
+     * 管理画面の履歴から要求を論理削除し、保存済み画像も削除する。
+     */
+    public function deleteCapture(string $requestUuid, string $userUuid, string $adminUuid): array
+    {
+        $request = $this->screenshotRepository->find($requestUuid);
+        if ($request === null || (string) $request['user_uuid'] !== $userUuid) {
+            return ['error' => 'not found'];
+        }
+
+        if (!$this->screenshotRepository->markDeleted($requestUuid, $adminUuid)) {
+            return ['error' => '削除に失敗しました。'];
+        }
+
+        $imagePath = (string) ($request['image_path'] ?? '');
+        if ($imagePath !== '' && !$this->storage->delete($imagePath)) {
+            return ['result' => 'ok', 'warning' => '履歴を削除しましたが、画像ファイルの削除に失敗しました。'];
+        }
+
+        return ['result' => 'ok'];
     }
 
     private function isStale(array $request): bool

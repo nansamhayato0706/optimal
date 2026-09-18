@@ -69,6 +69,7 @@ final class UserEditController
             'errors' => $errors,
             'headerLinks' => $this->auth->buildHeaderLinks(),
             'loginAdminId' => $this->auth->getLoginAdminId(),
+            'loginAdminName' => $this->auth->getLoginAdminName(),
             'divMap' => $this->userRepository->findDivMap(),
             'assignableAdmins' => $this->userRepository->findAssignableAdmins($this->auth->getLoginGroupId(), $this->auth->getLoginAdminUuid()),
             'screenshotHistory' => $userUuid !== '' ? $this->screenshotService->getHistory($userUuid) : [],

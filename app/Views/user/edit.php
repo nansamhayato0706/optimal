@@ -232,7 +232,7 @@ $booleanOptions = array(
 						<div class="rf-title">リモート操作</div>
 						<div class="rf-body">
 							<div class="rf-field rf-field-xl">
-								<button type="button" id="screenshot-request-btn" class="h_link" style="background:#e08a1e;border-color:#e08a1e;" data-user-uuid="<?= $h($form['user_uuid']) ?>" data-login-admin-id="<?= $h($loginAdminId) ?>">このユーザーの画面をキャプチャ</button>
+								<button type="button" id="screenshot-request-btn" class="h_link" style="background:#e08a1e;border-color:#e08a1e;" data-user-uuid="<?= $h($form['user_uuid']) ?>" data-login-admin-name="<?= $h($loginAdminName) ?>">このユーザーの画面をキャプチャ</button>
 								<p id="screenshot-status" role="status" style="margin-top:8px;"></p>
 							</div>
 						</div>
@@ -243,13 +243,14 @@ $booleanOptions = array(
 						<div class="rf-body">
 							<ul id="screenshot-history-list" style="list-style:none;margin:0;padding:0;">
 <?php foreach ($screenshotHistory as $item): ?>
-								<li class="screenshot-history-item" style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #eee;">
+								<li id="screenshot-history-<?= $h($item['request_uuid']) ?>" class="screenshot-history-item" style="display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #eee;">
 									<span style="white-space:nowrap;"><?= $h($item['requested_date']) ?></span>
 									<span style="white-space:nowrap;"><?= $h($item['admin_name']) ?></span>
 									<span><?= $h(array('pending' => '取得中', 'done' => '完了', 'failed' => '失敗')[$item['status']] ?? $item['status']) ?></span>
 <?php if ($item['image_url'] !== null): ?>
 									<a href="<?= $h($item['image_url']) ?>" target="_blank" rel="noopener"><img src="<?= $h($item['image_url']) ?>" alt="スクリーンショット" style="max-width:120px;max-height:80px;border:1px solid #ccc;"></a>
 <?php endif; ?>
+									<button type="button" class="screenshot-delete-btn" data-request-uuid="<?= $h($item['request_uuid']) ?>" style="margin-left:auto;color:#b42318;">削除</button>
 								</li>
 <?php endforeach; ?>
 							</ul>
@@ -270,13 +271,13 @@ $booleanOptions = array(
 			var statusEl = document.getElementById('screenshot-status');
 			var csrfToken = document.querySelector('.user_edit_form input[name="_token"]').value;
 			var userUuid = btn.getAttribute('data-user-uuid');
-			var loginAdminId = btn.getAttribute('data-login-admin-id');
+			var loginAdminName = btn.getAttribute('data-login-admin-name');
 			var historyList = document.getElementById('screenshot-history-list');
 			var historyEmpty = document.getElementById('screenshot-history-empty');
 			var pollTimer = null;
 
 			function stopPolling() {
-				if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+				if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
 			}
 
 			function loadImageWithRetry(img, url, attemptsLeft) {
@@ -293,20 +294,22 @@ $booleanOptions = array(
 				img.src = url;
 			}
 
-			function prependHistoryItem(imageUrl) {
+			function prependHistoryItem(imageUrl, requestUuid, requestedDate) {
 				if (!historyList) { return; }
+				if (document.getElementById('screenshot-history-' + requestUuid)) { return; }
 				if (historyEmpty) { historyEmpty.style.display = 'none'; }
 				var li = document.createElement('li');
+				li.id = 'screenshot-history-' + requestUuid;
 				li.className = 'screenshot-history-item';
 				li.style.cssText = 'display:flex;align-items:center;gap:12px;padding:6px 0;border-bottom:1px solid #eee;';
 
 				var dateSpan = document.createElement('span');
 				dateSpan.style.whiteSpace = 'nowrap';
-				dateSpan.textContent = new Date().toLocaleString('ja-JP');
+				dateSpan.textContent = requestedDate || new Date().toLocaleString('ja-JP');
 
 				var adminSpan = document.createElement('span');
 				adminSpan.style.whiteSpace = 'nowrap';
-				adminSpan.textContent = loginAdminId || '';
+				adminSpan.textContent = loginAdminName || '';
 
 				var statusSpan = document.createElement('span');
 				statusSpan.textContent = '完了';
@@ -325,30 +328,82 @@ $booleanOptions = array(
 				li.appendChild(adminSpan);
 				li.appendChild(statusSpan);
 				li.appendChild(link);
+				var deleteButton = document.createElement('button');
+				deleteButton.type = 'button';
+				deleteButton.className = 'screenshot-delete-btn';
+				deleteButton.setAttribute('data-request-uuid', requestUuid);
+				deleteButton.style.cssText = 'margin-left:auto;color:#b42318;';
+				deleteButton.textContent = '削除';
+				li.appendChild(deleteButton);
 				historyList.insertBefore(li, historyList.firstChild);
 			}
 
+			if (historyList) {
+				historyList.addEventListener('click', function (event) {
+					var deleteButton = event.target;
+					if (!deleteButton.classList || !deleteButton.classList.contains('screenshot-delete-btn')) { return; }
+					if (!window.confirm('このキャプチャ履歴と保存画像を削除します。よろしいですか？')) { return; }
+
+					var requestUuid = deleteButton.getAttribute('data-request-uuid');
+					var historyItem = deleteButton.closest('.screenshot-history-item');
+					deleteButton.disabled = true;
+					var body = new URLSearchParams();
+					body.set('_token', csrfToken);
+					body.set('user_uuid', userUuid);
+					body.set('request_uuid', requestUuid);
+
+					fetch('screenshot_delete.php', {
+						method: 'POST',
+						credentials: 'same-origin',
+						headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+						body: body.toString()
+					}).then(function (res) {
+						return res.json().then(function (data) {
+							return { ok: res.ok, data: data };
+						}).catch(function () {
+							return { ok: false, data: { error: 'サーバー応答を確認できません（HTTP ' + res.status + '）。' } };
+						});
+					}).then(function (response) {
+						var data = response.data || {};
+						if (!response.ok || data.result !== 'ok') {
+							statusEl.textContent = 'キャプチャ履歴を削除できません: ' + (data.error || '不明なエラーです。');
+							deleteButton.disabled = false;
+							return;
+						}
+						if (historyItem) { historyItem.remove(); }
+						if (historyEmpty && historyList.children.length === 0) { historyEmpty.style.display = ''; }
+						statusEl.textContent = data.warning || 'キャプチャ履歴を削除しました。';
+					}).catch(function () {
+						statusEl.textContent = 'キャプチャ履歴の削除に失敗しました。';
+						deleteButton.disabled = false;
+					});
+				});
+			}
+
 			function pollStatus(requestUuid) {
-				pollTimer = setInterval(function () {
+				function checkStatus() {
 					fetch('screenshot_status.php?user_uuid=' + encodeURIComponent(userUuid) + '&request_uuid=' + encodeURIComponent(requestUuid), {
 						credentials: 'same-origin'
 					}).then(function (res) { return res.json(); }).then(function (data) {
 						if (data.status === 'done') {
 							stopPolling();
 							statusEl.textContent = '取得が完了しました。キャプチャ履歴の先頭に追加しました。';
-							prependHistoryItem(data.image_url);
+							prependHistoryItem(data.image_url, requestUuid, data.requested_date);
 							btn.disabled = false;
 						} else if (data.status === 'failed' || data.error) {
 							stopPolling();
 							statusEl.textContent = '取得に失敗しました。クライアントが起動しているか確認してください。';
 							btn.disabled = false;
+						} else {
+							pollTimer = setTimeout(checkStatus, 3000);
 						}
 					}).catch(function () {
 						stopPolling();
 						statusEl.textContent = '状態確認に失敗しました。';
 						btn.disabled = false;
 					});
-				}, 3000);
+				}
+				checkStatus();
 			}
 
 			btn.addEventListener('click', function () {

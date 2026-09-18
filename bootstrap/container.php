@@ -43,6 +43,7 @@ use App\Controllers\UserStatusController;
 use App\Controllers\ScreenshotRequestController;
 use App\Controllers\ScreenshotStatusController;
 use App\Controllers\ScreenshotImageController;
+use App\Controllers\ScreenshotDeleteController;
 use App\Controllers\TrainingScreenshotController;
 use App\Repositories\AdminRepository;
 use App\Repositories\ChatRepository;
@@ -332,6 +333,9 @@ $container->bind(ScreenshotStatusController::class, static function (Container $
 });
 $container->bind(ScreenshotImageController::class, static function (Container $c) {
     return new ScreenshotImageController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class));
+});
+$container->bind(ScreenshotDeleteController::class, static function (Container $c) {
+    return new ScreenshotDeleteController($c->get(UserAdminAuth::class), $c->get(UserRepositoryInterface::class), $c->get(ScreenshotService::class), $c->get(RequestContext::class));
 });
 $container->bind(FirstIndexController::class, static function (Container $c) {
     return new FirstIndexController($c->get(FirstService::class), $c->get(RequestContext::class));

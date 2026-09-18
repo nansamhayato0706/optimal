@@ -154,6 +154,6 @@ define('TRANSCRIBE_DAILY_SECONDS', (int) ($localConfig['transcribe_daily_seconds
 define('UPLOAD_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'img/');
 define('LIB_DIR',    ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'lib/');
 define('CHAT_FILE_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'chat_files/');
-// スクリーンショットはWebルート外（プロジェクトディレクトリの外側）に保存し、認証付きコントローラー経由でのみ配信する
-define('SCREENSHOT_DIR', $localConfig['screenshot_dir'] ?? dirname(rtrim($localConfig['sv_root'] ?? dirname(__DIR__) . '/', '/')) . '/screenshots_storage/');
+// スクリーンショットはWebルート外に保存し、認証付きコントローラー経由でのみ配信する
+define('SCREENSHOT_DIR', $localConfig['screenshot_dir'] ?? dirname(dirname(rtrim($localConfig['sv_root'] ?? dirname(__DIR__) . '/', '/'))) . '/screenshots_storage/');
 define('MAX_USER',   (int) ($localConfig['max_user'] ?? 80));

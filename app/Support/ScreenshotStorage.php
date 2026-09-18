@@ -38,6 +38,15 @@ final class ScreenshotStorage
             return null;
         }
 
+        $imageInfo = @getimagesize((string) $file['tmp_name']);
+        if ($imageInfo === false) {
+            return null;
+        }
+        $expectedType = $extension === 'png' ? IMAGETYPE_PNG : IMAGETYPE_JPEG;
+        if ((int) $imageInfo[2] !== $expectedType) {
+            return null;
+        }
+
         $relativeDir = $userUuid . '/';
         $dir = $this->config->screenshotDir() . $relativeDir;
         if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
@@ -55,5 +64,21 @@ final class ScreenshotStorage
     public function absolutePath(string $relativePath): string
     {
         return $this->config->screenshotDir() . $relativePath;
+    }
+
+    public function delete(string $relativePath): bool
+    {
+        $normalized = ltrim(str_replace('\\', '/', $relativePath), '/');
+        if ($normalized === '' || strpos($normalized, '../') !== false || strpos($normalized, "\0") !== false) {
+            return false;
+        }
+
+        $path = rtrim($this->config->screenshotDir(), '/\\') . DIRECTORY_SEPARATOR
+            . str_replace('/', DIRECTORY_SEPARATOR, $normalized);
+        if (!is_file($path)) {
+            return true;
+        }
+
+        return @unlink($path);
     }
 }

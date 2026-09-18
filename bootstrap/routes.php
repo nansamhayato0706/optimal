@@ -40,6 +40,7 @@ use App\Controllers\UserStatusController;
 use App\Controllers\ScreenshotRequestController;
 use App\Controllers\ScreenshotStatusController;
 use App\Controllers\ScreenshotImageController;
+use App\Controllers\ScreenshotDeleteController;
 use App\Controllers\TrainingScreenshotController;
 use App\Support\RouteRegistry;
 
@@ -89,6 +90,7 @@ $routes->add(['GET'], '/report_pdf.php', static function (): void { app_containe
 $routes->add(['POST'], '/screenshot_request.php', static function (): void { app_container()->get(ScreenshotRequestController::class)->handle(); });
 $routes->add(['GET'],  '/screenshot_status.php',  static function (): void { app_container()->get(ScreenshotStatusController::class)->handle(); });
 $routes->add(['GET'],  '/screenshot_image.php',   static function (): void { app_container()->get(ScreenshotImageController::class)->handle(); });
+$routes->add(['POST'], '/screenshot_delete.php',  static function (): void { app_container()->get(ScreenshotDeleteController::class)->handle(); });
 
 // --- WPF連携（Training） ---
 $routes->add(['POST'], '/training_login.php',    static function (): void { app_container()->get(TrainingController::class)->login(); });

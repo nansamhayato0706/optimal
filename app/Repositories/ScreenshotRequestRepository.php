@@ -70,24 +70,41 @@ final class ScreenshotRequestRepository extends AbstractRepository
         $stmt = $this->pdo->prepare(
             'UPDATE tbl_screenshot_request SET'
             . ' status_div = :status_div, image_path = :image_path, completed_date = NOW(), update_date = NOW()'
-            . ' WHERE request_uuid = :request_uuid'
+            . ' WHERE request_uuid = :request_uuid AND status_div = :pending_status_div'
         );
-        return $stmt->execute([
+        $stmt->execute([
             'status_div'   => self::STATUS_DONE,
             'image_path'   => $imagePath,
             'request_uuid' => $requestUuid,
+            'pending_status_div' => self::STATUS_PENDING,
         ]);
+        return $stmt->rowCount() === 1;
     }
 
     public function markFailed(string $requestUuid): bool
     {
         $stmt = $this->pdo->prepare(
             'UPDATE tbl_screenshot_request SET status_div = :status_div, completed_date = NOW(), update_date = NOW()'
-            . ' WHERE request_uuid = :request_uuid'
+            . ' WHERE request_uuid = :request_uuid AND status_div = :pending_status_div'
         );
-        return $stmt->execute([
+        $stmt->execute([
             'status_div'   => self::STATUS_FAILED,
             'request_uuid' => $requestUuid,
+            'pending_status_div' => self::STATUS_PENDING,
         ]);
+        return $stmt->rowCount() === 1;
+    }
+
+    public function markDeleted(string $requestUuid, string $adminUuid): bool
+    {
+        $stmt = $this->pdo->prepare(
+            'UPDATE tbl_screenshot_request SET delete_flg = 1, update_date = NOW(), update_uuid = :update_uuid'
+            . ' WHERE request_uuid = :request_uuid AND delete_flg = 0'
+        );
+        $stmt->execute([
+            'request_uuid' => $requestUuid,
+            'update_uuid'  => $adminUuid,
+        ]);
+        return $stmt->rowCount() === 1;
     }
 }
