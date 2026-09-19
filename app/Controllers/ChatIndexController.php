@@ -47,6 +47,7 @@ final class ChatIndexController
             'loginAdminId' => $this->auth->getLoginAdminId(),
             'loginAdminUuid' => $this->auth->getLoginAdminUuid(),
             'errorMessage' => '',
+            'chatPollSince' => date('Y-m-d H:i:s'),
         ]);
     }
 }

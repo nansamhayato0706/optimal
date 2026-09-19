@@ -47,7 +47,9 @@ $chat = $chatData['chat'] ?? array();
 <?php if ($errorMessage !== ''): ?>
 				<p class="err"><?= $h($errorMessage) ?></p>
 <?php endif; ?>
-<?php require __DIR__ . '/partials/message_list.php'; ?>
+				<div id="chat-messages" data-poll-since="<?= $h($chatPollSince) ?>" data-login-admin-uuid="<?= $h($loginAdminUuid) ?>">
+				<?php require __DIR__ . '/partials/message_list.php'; ?>
+				</div>
 				<div class="chat-history-area">
 					<form action="chat.php" method="post">
 						<input type="hidden" name="insert_date" value="<?= $h($chatData['date'] ?? '') ?>">
@@ -60,6 +62,7 @@ $chat = $chatData['chat'] ?? array();
 </div>
 <script type="text/javascript" src="<?= $h($jsBase) ?>jquery.min.js?v=<?= $h($assetVer) ?>"></script>
 <script type="text/javascript" src="<?= $h($jsBase) ?>report.js?v=<?= $h($assetVer) ?>"></script>
+<script type="text/javascript" src="<?= $h($jsBase) ?>chat.js?v=<?= $h($assetVer) ?>"></script>
 <script>
 function jigyodanChatEditSubmit(form) {
 	var current = form.getAttribute('data-current-text') || '';

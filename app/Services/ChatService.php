@@ -80,6 +80,27 @@ final class ChatService
         return ['success' => $result, 'error' => $result ? '' : '送信に失敗しました。'];
     }
 
+    public function pollMessages(string $userUuid, string $since): array
+    {
+        $messages = $this->chatRepository->findMessagesSince($userUuid, $since);
+        $unreadChatUuids = [];
+        foreach ($messages as $message) {
+            if ((int) ($message['admin_chat_div'] ?? 0) === 1) {
+                $unreadChatUuids[] = (string) $message['chat_uuid'];
+            }
+        }
+
+        if ($this->chatRepository->markAdminMessagesRead($unreadChatUuids)) {
+            $this->userStatusSummaryRepository->refreshUserStatusSummary($userUuid);
+        }
+
+        return [
+            'messages' => $messages,
+            // 同一秒内の送信も次回照会で取りこぼさないよう、境界時刻は再照会する。
+            'since' => date('Y-m-d H:i:s'),
+        ];
+    }
+
     public function deleteMessage(string $userUuid, string $chatUuid): array
     {
         $message = $this->chatRepository->findMessageById($chatUuid);

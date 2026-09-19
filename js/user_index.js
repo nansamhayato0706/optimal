@@ -58,6 +58,96 @@ $(function(){
 		return document.querySelectorAll('td.user_chat').length;
 	}
 
+	function mobileRowMatches(row, filter) {
+		if (filter === 'urgent') {
+			return row.querySelector('td.user_contact_5') !== null;
+		}
+		if (filter === 'pending') {
+			return row.querySelector('td.user_contact_3') !== null;
+		}
+		if (filter === 'chat') {
+			return row.querySelector('td.user_chat') !== null;
+		}
+		return true;
+	}
+
+	function updateMobileFilters() {
+		var activeButton = document.querySelector('.user-mobile-filters button.is-active');
+		var activeFilter = activeButton ? activeButton.getAttribute('data-mobile-filter') : 'all';
+		var counts = {
+			urgent: countActiveEmergencies(),
+			pending: countPendingInquiries(),
+			chat: countUnreadChats()
+		};
+
+		document.querySelectorAll('[data-mobile-filter-count]').forEach(function(count) {
+			var filter = count.getAttribute('data-mobile-filter-count');
+			count.textContent = counts[filter] || 0;
+		});
+
+		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
+			row.classList.toggle('has-mobile-urgent', mobileRowMatches(row, 'urgent'));
+			row.classList.toggle('has-mobile-pending', mobileRowMatches(row, 'pending'));
+			row.classList.toggle('has-mobile-chat', mobileRowMatches(row, 'chat'));
+			row.hidden = !mobileRowMatches(row, activeFilter);
+		});
+	}
+
+	function initMobileUserList() {
+		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
+			row.tabIndex = 0;
+			row.setAttribute('aria-expanded', 'false');
+			row.addEventListener('click', function(event) {
+				if (event.target.closest('a, button, input, select, textarea, label')) {
+					return;
+				}
+				row.classList.toggle('is-expanded');
+				row.setAttribute('aria-expanded', row.classList.contains('is-expanded') ? 'true' : 'false');
+			});
+			row.addEventListener('keydown', function(event) {
+				if (event.key === 'Enter' || event.key === ' ') {
+					event.preventDefault();
+					row.click();
+				}
+			});
+		});
+
+		document.querySelectorAll('.user-mobile-filters button').forEach(function(button) {
+			button.addEventListener('click', function() {
+				document.querySelectorAll('.user-mobile-filters button').forEach(function(item) {
+					item.classList.toggle('is-active', item === button);
+				});
+				updateMobileFilters();
+			});
+		});
+	}
+
+	function initMobileNavigation() {
+		var menuButton = document.getElementById('mobile-nav-toggle');
+		var links = document.getElementById('h_link_area');
+		if (!menuButton || !links) {
+			return;
+		}
+
+		$wrapper.addClass('mobile-nav-ready');
+		menuButton.addEventListener('click', function() {
+			var isOpen = $wrapper.toggleClass('mobile-nav-open').hasClass('mobile-nav-open');
+			menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+		});
+		links.querySelectorAll('a').forEach(function(link) {
+			link.addEventListener('click', function() {
+				$wrapper.removeClass('mobile-nav-open');
+				menuButton.setAttribute('aria-expanded', 'false');
+			});
+		});
+		document.addEventListener('keydown', function(event) {
+			if (event.key === 'Escape') {
+				$wrapper.removeClass('mobile-nav-open');
+				menuButton.setAttribute('aria-expanded', 'false');
+			}
+		});
+	}
+
 	function startFlash(label, urgent) {
 		var interval = urgent ? 400 : 800;
 		var flashTitle = label + ' | ' + originalTitle;
@@ -616,6 +706,7 @@ $(function(){
 				});
 
 				refreshUrgentNotification();
+				updateMobileFilters();
 			})
 			.catch(function() {});
 	}
@@ -687,6 +778,9 @@ $(function(){
 	$('#notify-toggle').on('click', requestNotificationPermission);
 	updateNotifyToggleButton();
 	refreshUrgentNotification();
+	initMobileUserList();
+	updateMobileFilters();
+	initMobileNavigation();
 
 	document.addEventListener('click', initAudioContext, { once: true });
 	document.addEventListener('keydown', initAudioContext, { once: true });

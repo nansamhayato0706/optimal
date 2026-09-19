@@ -35,6 +35,22 @@ final class ChatRepository extends AbstractRepository
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function findMessagesSince(string $userUuid, string $since): array
+    {
+        $sql = 'SELECT c.*, u.user_name, a.admin_name'
+            . ' FROM tbl_chat c'
+            . ' LEFT JOIN mst_user u ON c.insert_uuid = u.user_uuid'
+            . ' LEFT JOIN mst_admin a ON c.insert_uuid = a.admin_uuid'
+            . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :since AND c.delete_flg = 0'
+            . ' ORDER BY c.insert_date ASC, c.chat_uuid ASC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'user_uuid' => $userUuid,
+            'since' => $since,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function findMessageById(string $chatUuid): ?array
     {
         $stmt = $this->pdo->prepare('SELECT * FROM tbl_chat WHERE chat_uuid = :chat_uuid AND delete_flg = 0 LIMIT 1');

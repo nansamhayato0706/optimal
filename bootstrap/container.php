@@ -11,6 +11,7 @@ use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
 use App\Controllers\ChatIndexController;
+use App\Controllers\ChatPollController;
 use App\Controllers\ChatDeleteController;
 use App\Controllers\ChatEditController;
 use App\Controllers\ErrorIndexController;
@@ -241,6 +242,9 @@ $container->bind(LinkIndexController::class, static function (Container $c) {
 });
 $container->bind(ChatIndexController::class, static function (Container $c) {
     return new ChatIndexController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class), $c->get(View::class));
+});
+$container->bind(ChatPollController::class, static function (Container $c) {
+    return new ChatPollController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class));
 });
 $container->bind(ChatSendController::class, static function (Container $c) {
     return new ChatSendController($c->get(UserAdminAuth::class), $c->get(ChatService::class), $c->get(RequestContext::class), $c->get(View::class));

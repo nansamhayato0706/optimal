@@ -8,7 +8,7 @@ declare(strict_types=1);
 <?php $name = \App\Support\ChatViewHelpers::displayName($message); ?>
 <?php $cssClass = \App\Support\ChatViewHelpers::cssClass($message); ?>
 <?php $canEdit = \App\Support\ChatViewHelpers::canEdit($message, $loginAdminUuid ?? ''); ?>
-<div class="chat-message <?= $h($cssClass) ?>">
+<div class="chat-message <?= $h($cssClass) ?>" data-chat-uuid="<?= $h($message['chat_uuid'] ?? '') ?>">
 	<div class="chat-meta"><?= $h($name) ?> · <?= $h($message['insert_date'] ?? '') ?></div>
 	<div class="chat-bubble"><?= nl2br(\App\Support\ChatViewHelpers::linkify($h($message['chat_text'] ?? '')), false) ?></div>
 	<div class="chat-message-actions">

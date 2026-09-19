@@ -45,9 +45,9 @@ $dateLabel = $dateTimestamp === false
 </head>
 <body>
 <div id="wrapper">
-	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><button type="button" id="mobile-nav-toggle" aria-controls="h_link_area" aria-expanded="false">メニュー</button><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
 	<div id="main">
-		<div class="page-card panel-stack">
+		<div class="page-card panel-stack report-daily-page">
 			<div class="page-header">
 				<h3 class="page-title"><?= $h($title) ?>：<?= $h($dateLabel) ?></h3>
 				<form id="frm" action="report_daily.php" method="post" class="toolbar-form">
@@ -57,6 +57,12 @@ $dateLabel = $dateTimestamp === false
 						<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌日">&#8250;</button>
 					</span>
 				</form>
+			</div>
+			<div class="report-daily-mobile-filters" aria-label="日報の絞り込み">
+				<button type="button" class="is-active" data-daily-filter="all">すべて <span data-daily-filter-count="all">0</span></button>
+				<button type="button" data-daily-filter="unsubmitted">未提出 <span data-daily-filter-count="unsubmitted">0</span></button>
+				<button type="button" data-daily-filter="pending">確認待ち <span data-daily-filter-count="pending">0</span></button>
+				<button type="button" data-daily-filter="confirmed">確認済み <span data-daily-filter-count="confirmed">0</span></button>
 			</div>
 			<div class="report-table-scroll">
 				<table class="data-table report_list">
@@ -88,6 +94,38 @@ $dateLabel = $dateTimestamp === false
 					</tr>
 <?php endforeach; ?>
 				</table>
+			</div>
+			<div class="report-daily-mobile-list" aria-label="全員の日報一覧">
+<?php foreach ($rows as $row): ?>
+<?php
+$isUnsubmitted = empty($row['report_uuid']);
+$status = $isUnsubmitted ? 'unsubmitted' : (empty($row['report_admin_uuid']) ? 'pending' : 'confirmed');
+$statusLabel = $isUnsubmitted ? '未提出' : ($status === 'pending' ? '確認待ち' : '確認済み');
+?>
+				<article class="report-daily-mobile-card<?= $isUnsubmitted ? ' report_daily_unsubmitted' : '' ?>" data-daily-status="<?= $h($status) ?>">
+					<div class="report-mobile-card-header">
+						<div>
+							<div class="report-mobile-date"><?= $h($row['user_name']) ?></div>
+							<div class="report-mobile-time"><?= $h($formatTime($row['training_start_time'])) ?> ～ <?= $h($formatTime($row['training_end_time'])) ?></div>
+						</div>
+						<?php if ($isUnsubmitted): ?>
+							<span class="report-daily-mobile-status is-unsubmitted"><?= $h($statusLabel) ?></span>
+						<?php elseif ($status === 'pending'): ?>
+							<a class="report-mobile-detail-link" href="report_edit.php?i=<?= $h($row['report_uuid']) ?>">編集</a>
+						<?php else: ?>
+							<a class="report-mobile-detail-link" href="report_detail.php?i=<?= $h($row['report_uuid']) ?>">確認</a>
+						<?php endif; ?>
+					</div>
+					<?php if (($row['remark'] ?? '') !== '' || ($row['reply'] ?? '') !== '' || ($row['charge_comment'] ?? '') !== ''): ?>
+						<details class="report-mobile-details">
+							<summary>内容を表示</summary>
+							<?php if (($row['remark'] ?? '') !== ''): ?><div class="report-mobile-field"><strong>備考</strong><div><?= nl2br($h($row['remark'])) ?></div></div><?php endif; ?>
+							<?php if (($row['reply'] ?? '') !== ''): ?><div class="report-mobile-field"><strong>返信</strong><div><?= nl2br($h($row['reply'])) ?></div></div><?php endif; ?>
+							<?php if (($row['charge_comment'] ?? '') !== ''): ?><div class="report-mobile-field"><strong>支援記録及び評価</strong><div><?= nl2br($h($row['charge_comment'])) ?><?php if (!empty($row['report_admin_uuid'])): ?><div class="report_comment_time"><?= $h($formatDateTime($row['update_date'] ?? null)) ?></div><?php endif; ?></div></div><?php endif; ?>
+						</details>
+					<?php endif; ?>
+				</article>
+<?php endforeach; ?>
 			</div>
 		</div>
 	</div>

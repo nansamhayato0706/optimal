@@ -24,7 +24,7 @@
 /* 入力欄行：左＝＋付き入力ボックス、右＝送信ボタン（入力欄の外） */
 .chat-input-row {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   gap: var(--sp-3);
 }
 
@@ -134,6 +134,12 @@
 }
 
 /* メッセージ */
+#chat-messages {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 .chat-message {
   display: flex;
   flex-direction: column;

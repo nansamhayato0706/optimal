@@ -89,7 +89,86 @@
   color: #475569;
 }
 
+.user-mobile-filters {
+  display: none;
+}
+
+#mobile-nav-toggle {
+  display: none;
+}
+
 @media (max-width: 640px) {
+  #mobile-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin-left: auto;
+    padding: 0 var(--sp-3);
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    border-radius: var(--r-sm);
+    background: transparent;
+    color: #fff;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  #wrapper.mobile-nav-ready #h_link_area {
+    display: none;
+  }
+
+  #wrapper.mobile-nav-ready.mobile-nav-open #h_link_area {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: var(--sp-2);
+    padding-top: var(--sp-2);
+  }
+
+  #wrapper.mobile-nav-ready.mobile-nav-open #h_link_area .h_link {
+    min-width: 0;
+    padding: 0 var(--sp-2);
+    font-size: 0.78rem;
+  }
+
+  .user-mobile-filters {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 2px;
+    margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
+    padding: var(--sp-2) 0;
+    background: var(--color-bg);
+  }
+
+  #wrapper.mobile-nav-open .user-mobile-filters {
+    position: static;
+  }
+
+  .user-mobile-filters button {
+    min-height: 36px;
+    padding: 2px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background: var(--color-surface);
+    color: var(--color-text-soft);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .user-mobile-filters button.is-active {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .user-mobile-filters [data-mobile-filter-count] {
+    font-size: 0.85rem;
+  }
+
   .summary-cards {
     gap: var(--sp-2);
   }
@@ -259,6 +338,137 @@
   margin-left: 6px;
   font-size: 0.76rem;
   border-radius: 999px;
+}
+
+/* スマホでは横スクロールの一覧を、利用者ごとのカードとして表示する */
+@media (max-width: 640px) {
+  .user-list-scroll {
+    overflow: visible;
+  }
+
+  .user_list,
+  .user_list tbody {
+    display: block;
+  }
+
+  .user_list tr:first-child {
+    display: none;
+  }
+
+  .user_list tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      "name name name name"
+      "status status status status"
+      "report chat log settings";
+    margin-bottom: var(--sp-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .user_list td {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: 46px;
+    padding: var(--sp-2) var(--sp-3);
+    border: 0;
+    border-right: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    text-align: left;
+  }
+
+  .user_list td::before {
+    margin-bottom: 2px;
+    color: var(--color-text-soft);
+    font-size: 0.7rem;
+    font-weight: 600;
+  }
+
+  .user_list td:nth-child(1),
+  .user_list td:nth-child(2),
+  .user_list td:nth-child(3),
+  .user_list td:nth-child(5),
+  .user_list td:nth-child(6) {
+    display: none;
+  }
+
+  .user_list td:nth-child(4) {
+    grid-area: name;
+    min-height: 52px;
+    border-right: 0;
+    background: var(--color-surface-alt);
+    color: var(--color-accent-strong);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+  .user_list td:nth-child(7) { grid-area: status; border-right: 0; }
+  .user_list td:nth-child(7)::before { content: "利用状況"; }
+  .user_list td:nth-child(8) { grid-area: report; }
+  .user_list td:nth-child(8)::before { content: "日報"; }
+  .user_list td:nth-child(9) { grid-area: chat; }
+  .user_list td:nth-child(9)::before { content: "チャット"; }
+  .user_list td:nth-child(10) { grid-area: log; }
+  .user_list td:nth-child(10)::before { content: "ログ"; }
+  .user_list td:nth-child(11) { grid-area: settings; border-right: 0; }
+  .user_list td:nth-child(11)::before { content: "設定"; }
+
+  .user_list td:nth-child(8),
+  .user_list td:nth-child(9),
+  .user_list td:nth-child(10),
+  .user_list td:nth-child(11) {
+    min-height: 42px;
+    padding: var(--sp-2);
+    border-bottom: 0;
+    font-size: 0.82rem;
+  }
+
+  .user_list tr:not(.is-expanded) td:nth-child(8),
+  .user_list tr:not(.is-expanded) td:nth-child(9),
+  .user_list tr:not(.is-expanded) td:nth-child(10),
+  .user_list tr:not(.is-expanded) td:nth-child(11) {
+    display: none;
+  }
+
+  .user_list tr.has-mobile-chat td:nth-child(4)::before,
+  .user_list tr.has-mobile-pending td:nth-child(4)::before,
+  .user_list tr.has-mobile-urgent td:nth-child(4)::before {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .user_list tr.has-mobile-chat td:nth-child(4)::before {
+    content: "チャット未読";
+    color: #6d28d9;
+  }
+
+  .user_list tr.has-mobile-pending td:nth-child(4)::before {
+    content: "未確認の連絡あり";
+    color: #b45309;
+  }
+
+  .user_list tr.has-mobile-urgent td:nth-child(4)::before {
+    content: "緊急・未確認";
+    color: #b91c1c;
+  }
+
+  .user_list td.text-center,
+  .user_list td.text-right {
+    text-align: left;
+  }
+
+  .user_list td a:not(.h_link) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    font-weight: 600;
+  }
 }
 
 /* ============================================================

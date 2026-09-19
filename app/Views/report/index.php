@@ -56,6 +56,7 @@ $formatDateWithWeekday = static function (?string $date): string {
 		<div id="header">
 			<div id="header-inner">
 				<div id="header-brand"><?= $h($loginAdminId) ?></div>
+				<button type="button" id="mobile-nav-toggle" aria-controls="h_link_area" aria-expanded="false">メニュー</button>
 				<div id="h_link_area">
 					<?php foreach ($headerLinks as $link): ?>
 						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
@@ -64,7 +65,7 @@ $formatDateWithWeekday = static function (?string $date): string {
 			</div>
 		</div>
 		<div id="main">
-			<div class="page-card panel-stack">
+			<div class="page-card panel-stack report-index-page">
 				<div class="page-header report_index_header">
 					<div class="report_index_title_row">
 						<h3 class="page-title report_index_title"><?= $h($title) ?><?php if ($pageData['user_name'] !== ''): ?><span class="page-username"><?= $h($pageData['user_name']) ?></span><?php endif; ?></h3>
@@ -167,6 +168,27 @@ $formatDateWithWeekday = static function (?string $date): string {
 							</tr>
 						<?php endforeach; ?>
 					</table>
+				</div>
+				<div class="report-mobile-list" aria-label="日報一覧">
+					<?php foreach ($pageData['report'] as $report): ?>
+						<article class="report-mobile-card">
+							<div class="report-mobile-card-header">
+								<div>
+									<div class="report-mobile-date"><?= $h($formatDateWithWeekday($report['report_date'])) ?></div>
+									<div class="report-mobile-time"><?= $h($formatTime($report['training_start_time'])) ?> ～ <?= $h($formatTime($report['training_end_time'])) ?></div>
+								</div>
+								<a class="report-mobile-detail-link" href="<?= !empty($report['admin_uuid']) ? 'report_detail.php' : 'report_edit.php' ?>?i=<?= $h($report['report_uuid']) ?>">確認</a>
+							</div>
+							<?php if ($report['remark'] !== '' || $report['reply'] !== '' || ($loginAuth > 0 && $report['charge_comment'] !== '')): ?>
+								<details class="report-mobile-details">
+									<summary>内容を表示</summary>
+									<?php if ($report['remark'] !== ''): ?><div class="report-mobile-field"><strong>備考</strong><div><?= nl2br($h($report['remark'])) ?></div></div><?php endif; ?>
+									<?php if ($report['reply'] !== ''): ?><div class="report-mobile-field"><strong>返信</strong><div><?= nl2br($h($report['reply'])) ?></div></div><?php endif; ?>
+									<?php if ($loginAuth > 0 && $report['charge_comment'] !== ''): ?><div class="report-mobile-field"><strong>支援記録及び評価</strong><div><?= nl2br($h($report['charge_comment'])) ?></div></div><?php endif; ?>
+								</details>
+							<?php endif; ?>
+						</article>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>

@@ -29,7 +29,7 @@ $h = array(Esc::class, 'h');
 	data-contact-detail-url="contact_detail.php"
 	data-contact-update-url="contact_update.php"
 	data-dummy-image="<?= $h($dummyImage) ?>">
-	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><button type="button" id="mobile-nav-toggle" aria-controls="h_link_area" aria-expanded="false">メニュー</button><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
 	<div id="main">
 		<form id="frm" action="user.php" method="post" class="toolbar-form">
 			<?= csrf_field() ?>
@@ -50,13 +50,19 @@ $h = array(Esc::class, 'h');
 				</div>
 			</div>
 		</form>
+		<div class="user-mobile-filters" aria-label="利用者の絞り込み">
+			<button type="button" class="is-active" data-mobile-filter="all">すべて</button>
+			<button type="button" data-mobile-filter="urgent">緊急 <span data-mobile-filter-count="urgent">0</span></button>
+			<button type="button" data-mobile-filter="pending">未確認 <span data-mobile-filter-count="pending">0</span></button>
+			<button type="button" data-mobile-filter="chat">チャット <span data-mobile-filter-count="chat">0</span></button>
+		</div>
 
 <?php if ($statusSummaryRefreshCount !== ''): ?>
 <?php require __DIR__ . '/partials/summary_cards.php'; ?>
 <?php endif; ?>
 
 		<div class="page-card panel-stack">
-			<div style="overflow-x:auto;">
+			<div class="user-list-scroll">
 				<table class="data-table table-compact user_list">
 					<tr><th>No</th><th>ユーザーID</th><th>区分</th><th>名前</th><th class="col-sex">性別</th><th class="col-age">年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
 <?php require __DIR__ . '/partials/user_rows.php'; ?>

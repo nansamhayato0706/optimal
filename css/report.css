@@ -402,6 +402,19 @@ input.date {
   font-weight: 700;
 }
 
+.report-mobile-list {
+  display: none;
+}
+
+.report-daily-mobile-filters,
+.report-daily-mobile-list {
+  display: none;
+}
+
+#mobile-nav-toggle {
+  display: none;
+}
+
 /* ============================================================
    frm_row_title の後方互換（report-form-body 外でも機能させる）
    ============================================================ */
@@ -422,6 +435,256 @@ input.date {
     font-size: 0.85rem;
   }
 }
+
+@media (max-width: 640px) {
+  #mobile-nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0 var(--sp-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  #wrapper.mobile-nav-ready #h_link_area {
+    display: none;
+  }
+
+  #wrapper.mobile-nav-ready.mobile-nav-open #h_link_area {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    padding-top: var(--sp-2);
+  }
+
+  #wrapper.mobile-nav-ready.mobile-nav-open #h_link_area .h_link {
+    min-width: 0;
+    padding: 0 var(--sp-2);
+    font-size: 0.78rem;
+  }
+
+  .report_index_header {
+    gap: var(--sp-3);
+    padding: var(--sp-3);
+  }
+
+  .report_index_title_row,
+  .report_index_title_actions,
+  .report_index_toolbar,
+  .report_index_search_form,
+  .report_index_create_form {
+    align-items: stretch;
+  }
+
+  .report_index_title_row {
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .report_index_title_actions {
+    width: 100%;
+    gap: var(--sp-2);
+  }
+
+  .report_detail_user_switch,
+  .report_index_create_form {
+    width: 100%;
+  }
+
+  .report_detail_user_switch .mp-nav-wrap,
+  .report_index_create_form .mp-nav-wrap {
+    flex: 1 1 auto;
+  }
+
+  .report_detail_user_switch select,
+  .report_index_create_form input.date {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .report_index_toolbar {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .report_index_action_group {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .report_index_search_form {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .report_index_search_form .mp-nav-wrap,
+  .report_index_action_group-pdf .mp-nav-wrap {
+    width: 100%;
+  }
+
+  .report_index_search_form input.month-picker,
+  .report_index_action_group-pdf input.month-picker {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .report_index_search_form .report_index_separator,
+  .report_index_action_group-pdf .report_index_separator {
+    display: none;
+  }
+
+  .report_index_button {
+    width: 100%;
+  }
+
+  .report-index-page .report-table-scroll,
+  .report-daily-page .report-table-scroll {
+    display: none;
+  }
+
+  .report-mobile-list {
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  .report-mobile-card {
+    padding: var(--sp-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .report-mobile-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--sp-3);
+  }
+
+  .report-mobile-date {
+    font-weight: 700;
+  }
+
+  .report-mobile-time {
+    margin-top: var(--sp-1);
+    color: var(--color-text-soft);
+    font-size: 0.88rem;
+  }
+
+  .report-mobile-detail-link {
+    flex: 0 0 auto;
+    min-height: 36px;
+    padding: 8px var(--sp-3);
+    border-radius: var(--r-sm);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+    font-weight: 700;
+    text-decoration: none;
+    box-sizing: border-box;
+  }
+
+  .report-mobile-details {
+    margin-top: var(--sp-3);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .report-mobile-details summary {
+    padding-top: var(--sp-3);
+    color: var(--color-accent-strong);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .report-mobile-field {
+    display: grid;
+    gap: var(--sp-1);
+    margin-top: var(--sp-3);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .report-mobile-field strong {
+    color: var(--color-text-soft);
+    font-size: 0.82rem;
+  }
+
+  .report-daily-page .page-header {
+    align-items: stretch;
+  }
+
+  .report-daily-page .toolbar-form,
+  .report-daily-page .mp-nav-wrap,
+  .report-daily-page input.date {
+    width: 100%;
+  }
+
+  .report-daily-page input.date {
+    min-width: 0;
+  }
+
+  .report-daily-mobile-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-2);
+    margin-bottom: var(--sp-3);
+  }
+
+  .report-daily-mobile-filters button {
+    min-height: 36px;
+    padding: 2px var(--sp-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .report-daily-mobile-filters button.is-active {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .report-daily-mobile-list {
+    display: grid;
+    gap: var(--sp-3);
+  }
+
+  .report-daily-mobile-card {
+    padding: var(--sp-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .report-daily-mobile-card.is-hidden {
+    display: none;
+  }
+
+  .report-daily-mobile-card.report_daily_unsubmitted {
+    background: #f3f4f6;
+  }
+
+  .report-daily-mobile-status {
+    flex: 0 0 auto;
+    padding: 8px var(--sp-3);
+    border-radius: var(--r-sm);
+    color: var(--color-text-soft);
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+}
+
 .accessible-page-header {
   margin-bottom: var(--sp-4);
 }

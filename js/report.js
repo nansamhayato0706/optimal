@@ -1,6 +1,34 @@
 $(function(){
 	var $wrapper = $('#wrapper');
 
+	function initMobileNavigation(){
+		var menuButton = document.getElementById('mobile-nav-toggle');
+		var links = document.getElementById('h_link_area');
+		if (!menuButton || !links) {
+			return;
+		}
+
+		$wrapper.addClass('mobile-nav-ready');
+		menuButton.addEventListener('click', function(){
+			var isOpen = $wrapper.toggleClass('mobile-nav-open').hasClass('mobile-nav-open');
+			menuButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+		});
+		links.querySelectorAll('a').forEach(function(link){
+			link.addEventListener('click', function(){
+				$wrapper.removeClass('mobile-nav-open');
+				menuButton.setAttribute('aria-expanded', 'false');
+			});
+		});
+		document.addEventListener('keydown', function(event){
+			if (event.key === 'Escape') {
+				$wrapper.removeClass('mobile-nav-open');
+				menuButton.setAttribute('aria-expanded', 'false');
+			}
+		});
+	}
+
+	initMobileNavigation();
+
 	$(document).on('keydown', '.report_edit_form', function(e){
 		if(e.key === 'Enter' && e.target.tagName !== 'TEXTAREA'){
 			e.preventDefault();

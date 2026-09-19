@@ -8,6 +8,7 @@ use App\Controllers\AdminConfirmController;
 use App\Controllers\AdminEditController;
 use App\Controllers\AdminIndexController;
 use App\Controllers\ChatIndexController;
+use App\Controllers\ChatPollController;
 use App\Controllers\ChatDeleteController;
 use App\Controllers\ChatEditController;
 use App\Controllers\ErrorIndexController;
@@ -71,6 +72,7 @@ $routes->add(['GET', 'POST'], '/user_edit.php', static function (): void { app_c
 $routes->add(['GET'], '/user_confirm.php', static function (): void { app_container()->get(UserConfirmController::class)->handle(); });
 $routes->add(['GET'], '/user_complete.php', static function (): void { app_container()->get(UserCompleteController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/chat.php', static function (): void { app_container()->get(ChatIndexController::class)->handle(); });
+$routes->add(['GET'], '/chat_poll.php', static function (): void { app_container()->get(ChatPollController::class)->handle(); });
 $routes->add(['POST'], '/chat_send.php', static function (): void { app_container()->get(ChatSendController::class)->handle(); });
 $routes->add(['POST'], '/chat_delete.php', static function (): void { app_container()->get(ChatDeleteController::class)->handle(); });
 $routes->add(['POST'], '/chat_edit.php', static function (): void { app_container()->get(ChatEditController::class)->handle(); });
