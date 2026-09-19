@@ -358,6 +358,10 @@ hr {
 
   #header-inner {
     padding: 0 var(--sp-4);
+    height: auto;
+    min-height: var(--header-h);
+    padding-top: var(--sp-2);
+    padding-bottom: var(--sp-2);
   }
 }
 
