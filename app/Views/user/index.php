@@ -29,7 +29,7 @@ $h = array(Esc::class, 'h');
 	data-contact-detail-url="contact_detail.php"
 	data-contact-update-url="contact_update.php"
 	data-dummy-image="<?= $h($dummyImage) ?>">
-	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><button type="button" id="mobile-nav-toggle" aria-controls="h_link_area" aria-expanded="false">メニュー</button><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+	<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 	<div id="main">
 		<form id="frm" action="user.php" method="post" class="toolbar-form">
 			<?= csrf_field() ?>

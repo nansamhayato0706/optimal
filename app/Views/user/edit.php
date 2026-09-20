@@ -43,16 +43,7 @@ $booleanOptions = array(
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="header">
-				<div id="header-inner">
-					<div id="header-brand"><?= $h($loginAdminId) ?></div>
-					<div id="h_link_area">
-<?php foreach ($headerLinks as $link): ?>
-						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
-<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
+			<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 			<div id="main">
 				<div class="page-card panel-stack">
 					<div class="page-header">

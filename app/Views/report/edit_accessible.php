@@ -98,16 +98,7 @@ $checkboxGroup = static function (string $name, array $map, array $selected, boo
 <body>
 	<a class="skip-link" href="#main-content">本文へ移動</a>
 	<div id="wrapper" data-report-accessible="1">
-		<header id="header" role="banner">
-			<div id="header-inner">
-				<h1 id="header-brand"><?= $h($loginAdminId) ?></h1>
-				<nav id="h_link_area" aria-label="管理メニュー">
-					<?php foreach ($headerLinks as $link): ?>
-						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
-					<?php endforeach; ?>
-				</nav>
-			</div>
-		</header>
+		<?php $headerBrandTag = 'h1'; require dirname(__DIR__) . '/partials/header.php'; ?>
 		<main id="main" role="main">
 			<div class="accessible-page-header">
 				<h3><?= $h($title) ?></h3>
@@ -152,4 +143,3 @@ $checkboxGroup = static function (string $name, array $map, array $selected, boo
 	</div>
 </body>
 </html>
-

@@ -41,16 +41,7 @@ $errorSummary = array_filter($errors, static function ($value, $key): bool {
 <body>
 	<a class="skip-link" href="#main-content">本文へ移動</a>
 	<div id="wrapper">
-		<header id="header" role="banner">
-			<div id="header-inner">
-				<h1 id="header-brand"><?= $h($loginAdminId) ?></h1>
-				<nav id="h_link_area" aria-label="管理メニュー">
-					<?php foreach ($headerLinks as $link): ?>
-						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
-					<?php endforeach; ?>
-				</nav>
-			</div>
-		</header>
+		<?php $headerBrandTag = 'h1'; require dirname(__DIR__) . '/partials/header.php'; ?>
 		<main id="main" role="main">
 			<div class="confirm-warning-banner" role="status" aria-live="polite">入力は完了していません。内容を上から順番に確認し、最後に登録してください。</div>
 			<div class="accessible-page-header">

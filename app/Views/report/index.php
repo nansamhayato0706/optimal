@@ -53,17 +53,7 @@ $formatDateWithWeekday = static function (?string $date): string {
 
 <body>
 	<div id="wrapper">
-		<div id="header">
-			<div id="header-inner">
-				<div id="header-brand"><?= $h($loginAdminId) ?></div>
-				<button type="button" id="mobile-nav-toggle" aria-controls="h_link_area" aria-expanded="false">メニュー</button>
-				<div id="h_link_area">
-					<?php foreach ($headerLinks as $link): ?>
-						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-		</div>
+		<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 		<div id="main">
 			<div class="page-card panel-stack report-index-page">
 				<div class="page-header report_index_header">

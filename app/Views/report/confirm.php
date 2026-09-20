@@ -59,16 +59,7 @@ $fieldLabel = static function (string $key): string {
 	</head>
 	<body>
 		<div id="wrapper">
-			<div id="header">
-				<div id="header-inner">
-					<div id="header-brand"><?= $h($loginAdminId) ?></div>
-					<div id="h_link_area">
-<?php foreach ($headerLinks as $link): ?>
-						<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
-<?php endforeach; ?>
-					</div>
-				</div>
-			</div>
+			<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 			<div id="main">
 				<div class="confirm-warning-banner">入力は完了していません。確認して問題なければ下の登録ボタンを押してください。</div>
 				<h3><?= $h($title) ?></h3>

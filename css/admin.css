@@ -25,3 +25,287 @@ table th {
   background: var(--color-surface);
   margin-bottom: var(--sp-4);
 }
+
+/* 管理者一覧（スマホではカード表示） */
+.admin-mobile-nav {
+  display: none;
+}
+
+.admin-count {
+  margin-top: var(--sp-1);
+  color: var(--color-text-soft);
+  font-size: 0.85rem;
+}
+
+.admin-create-link {
+  min-height: 40px;
+}
+
+/* タブレットでは横長カードにして、一覧の横スクロールを防ぐ */
+@media (min-width: 641px) and (max-width: 1024px) {
+  #h_link_area {
+    justify-content: flex-end;
+    gap: var(--sp-1);
+  }
+
+  #h_link_area .h_link {
+    min-height: 34px;
+    padding: 0 var(--sp-3);
+    font-size: 0.82rem;
+  }
+
+  .admin-list-table,
+  .admin-list-table tbody,
+  .admin-list-table tr,
+  .admin-list-table td {
+    display: block;
+  }
+
+  .admin-list-table {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .admin-list-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .admin-list-table tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    margin-bottom: var(--sp-3);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .admin-list-table td {
+    min-width: 0;
+    padding: var(--sp-2) var(--sp-3);
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+
+  .admin-list-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--color-text-soft);
+    font-size: 0.75rem;
+  }
+
+  .admin-list-table td:nth-child(1) {
+    order: 2;
+  }
+
+  .admin-list-table td:nth-child(2) {
+    order: 1;
+    color: var(--color-accent-strong);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .admin-list-table td:nth-child(3),
+  .admin-list-table td:nth-child(4) {
+    order: 3;
+  }
+
+  .admin-list-table td:nth-child(5),
+  .admin-list-table td:nth-child(6) {
+    order: 4;
+    border-bottom: 0;
+  }
+
+  .admin-list-table td:nth-child(5) .btn,
+  .admin-list-table td:nth-child(6) .btn {
+    width: 100%;
+    min-height: 40px;
+    padding: 0 var(--sp-2);
+  }
+}
+
+@media (max-width: 640px) {
+  #header-inner {
+    position: relative;
+    flex-wrap: nowrap;
+  }
+
+  #h_link_area {
+    display: none;
+  }
+
+  .admin-mobile-nav {
+    display: block;
+    margin-left: auto;
+  }
+
+  .admin-mobile-nav summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--sp-3);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--r-md);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 700;
+    list-style: none;
+  }
+
+  .admin-mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .admin-mobile-nav summary:focus-visible,
+  .admin-mobile-nav-link:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .admin-mobile-nav-close,
+  .admin-mobile-nav[open] .admin-mobile-nav-open {
+    display: none;
+  }
+
+  .admin-mobile-nav[open] .admin-mobile-nav-close {
+    display: inline;
+  }
+
+  .admin-mobile-nav nav {
+    position: absolute;
+    top: calc(100% + var(--sp-2));
+    right: 0;
+    left: 0;
+    max-height: calc(100vh - var(--header-h) - var(--sp-4));
+    overflow-y: auto;
+    padding: var(--sp-2);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-md);
+  }
+
+  .admin-mobile-nav-user {
+    padding: var(--sp-2) var(--sp-3);
+    color: var(--color-text-soft);
+    font-size: 0.82rem;
+  }
+
+  .admin-mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: var(--sp-2) var(--sp-3);
+    border-radius: var(--r-sm);
+    color: var(--color-text);
+    font-weight: 700;
+  }
+
+  .admin-mobile-nav-link.is-current {
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+  }
+
+  .admin-mobile-nav-link span {
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+
+  .page-header {
+    align-items: flex-start;
+  }
+
+  .admin-create-link {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .admin-list-table,
+  .admin-list-table tbody,
+  .admin-list-table tr,
+  .admin-list-table td {
+    display: block;
+  }
+
+  .admin-list-table {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .admin-list-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .admin-list-table tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    margin-bottom: var(--sp-3);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .admin-list-table td {
+    min-width: 0;
+    padding: var(--sp-2) var(--sp-3);
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+    overflow-wrap: anywhere;
+  }
+
+  .admin-list-table td::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    color: var(--color-text-soft);
+    font-size: 0.75rem;
+  }
+
+  .admin-list-table td:nth-child(1) {
+    grid-column: 1 / -1;
+    order: 2;
+  }
+
+  .admin-list-table td:nth-child(2) {
+    grid-column: 1 / -1;
+    order: 1;
+    color: var(--color-accent-strong);
+    font-size: 1.05rem;
+    font-weight: 700;
+  }
+
+  .admin-list-table td:nth-child(3),
+  .admin-list-table td:nth-child(4) {
+    grid-column: 1 / -1;
+    order: 3;
+  }
+
+  .admin-list-table td:nth-child(5),
+  .admin-list-table td:nth-child(6) {
+    border-bottom: 0;
+    order: 4;
+  }
+
+  .admin-list-table td:nth-child(5) .btn,
+  .admin-list-table td:nth-child(6) .btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 0 var(--sp-2);
+  }
+}

@@ -34,7 +34,7 @@ $options = static function (array $map, $selected) use ($h): string {
 </head>
 <body>
 <div id="wrapper">
-	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+	<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 	<div id="main"><div class="page-card panel-stack"><div class="page-header"><h3 class="page-title"><?= $h($title) ?></h3></div>
 	<form action="admin_edit.php" method="post" class="admin_edit_form">
 		<?= $_csrf_field ?>

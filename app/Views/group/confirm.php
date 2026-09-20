@@ -15,7 +15,7 @@ $divName = static function (string $parent, $id) use ($divMap): string {
 </head>
 <body>
 <div id="wrapper">
-	<div id="header"><div id="header-inner"><div id="header-brand"><?= $h($loginAdminId) ?></div><div id="h_link_area"><?php foreach ($headerLinks as $link): ?><a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a><?php endforeach; ?></div></div></div>
+	<?php require dirname(__DIR__) . '/partials/header.php'; ?>
 	<div id="main"><div class="page-card panel-stack"><div class="page-header"><h3 class="page-title"><?= $h($title) ?></h3></div>
 	<div class="frm_row">
 		<div class="frm_parts_mm"><div class="frm_title">名前</div><div class="frm_input"><input type="text" value="<?= $h($form['group_name']) ?>" readonly></div></div>
