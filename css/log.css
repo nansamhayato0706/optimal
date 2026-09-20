@@ -25,3 +25,50 @@ input.log_date {
   padding: var(--sp-2) var(--sp-3);
   word-break: break-all;
 }
+
+.log-contact-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 640px) {
+  .log-table {
+    display: block;
+  }
+
+  .log-table tr {
+    display: block;
+    margin-bottom: var(--sp-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    overflow: hidden;
+  }
+
+  .log-table tr:first-child {
+    display: none;
+  }
+
+  .log-table td {
+    display: grid;
+    grid-template-columns: minmax(5.5em, 32%) 1fr;
+    gap: var(--sp-2);
+    padding: var(--sp-3);
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .log-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .log-table td::before {
+    content: attr(data-label);
+    color: var(--color-text-soft);
+    font-weight: 700;
+  }
+
+  .log-contact-image {
+    width: 100%;
+  }
+}

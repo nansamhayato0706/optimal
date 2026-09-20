@@ -56,7 +56,7 @@ $imageUrl = static function (array $contact): string {
 					<input type="submit" class="h_link" name="log" value="ログCSV">
 				</form>
 			</div>
-			<table>
+			<table class="log-table log-contact-table">
 				<tr>
 					<th>日時</th>
 					<th width="340">写真</th>
@@ -65,15 +65,15 @@ $imageUrl = static function (array $contact): string {
 				</tr>
 <?php foreach ($contacts as $contact): ?>
 				<tr>
-					<td><?= $h($contact['contact_date'] ?? '') ?><br>【<?= $h($divName('contact', $contact['contact_div'] ?? 0)) ?>】</td>
-					<td><img width="320" style="display: block;" src="<?= $h($imageUrl($contact)) ?>" onerror="this.onerror=null;this.src='<?= $h($dummyImage) ?>';"></td>
-					<td><?= $h($contact['confirm_date'] ?? '') ?><br>【<?= $h($divName('confirm', $contact['confirm_div'] ?? 0)) ?>】</td>
-					<td><?= nl2br($h($contact['comment'] ?? ''), false) ?></td>
+					<td data-label="日時"><?= $h($contact['contact_date'] ?? '') ?><br>【<?= $h($divName('contact', $contact['contact_div'] ?? 0)) ?>】</td>
+					<td data-label="写真"><img width="320" class="log-contact-image" src="<?= $h($imageUrl($contact)) ?>" onerror="this.onerror=null;this.src='<?= $h($dummyImage) ?>';"></td>
+					<td data-label="対応状態"><?= $h($contact['confirm_date'] ?? '') ?><br>【<?= $h($divName('confirm', $contact['confirm_div'] ?? 0)) ?>】</td>
+					<td data-label="コメント"><?= nl2br($h($contact['comment'] ?? ''), false) ?></td>
 				</tr>
 <?php endforeach; ?>
 			</table>
 			<h4>ログリスト</h4>
-			<table>
+			<table class="log-table log-send-table">
 				<tr>
 					<th>日時</th>
 					<th width="200">種別</th>
@@ -81,9 +81,9 @@ $imageUrl = static function (array $contact): string {
 				</tr>
 <?php foreach ($sends as $send): ?>
 				<tr>
-					<td><?= $h($send['send_date'] ?? '') ?></td>
-					<td><?= $h($divName('send', $send['send_div'] ?? 0)) ?></td>
-					<td><?= $h($divName('hook', $send['hook_div'] ?? 0)) ?></td>
+					<td data-label="日時"><?= $h($send['send_date'] ?? '') ?></td>
+					<td data-label="種別"><?= $h($divName('send', $send['send_div'] ?? 0)) ?></td>
+					<td data-label="状態"><?= $h($divName('hook', $send['hook_div'] ?? 0)) ?></td>
 				</tr>
 <?php endforeach; ?>
 			</table>
