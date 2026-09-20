@@ -62,12 +62,16 @@ $h = array(Esc::class, 'h');
 <?php endif; ?>
 
 		<div class="page-card panel-stack">
+			<?php if ($users === []): ?>
+				<p class="user-list-empty">選択中の管理者には、現在の表示条件に一致する利用者がいません。</p>
+			<?php else: ?>
 			<div class="user-list-scroll">
 				<table class="data-table table-compact user_list">
 					<tr><th>No</th><th>ユーザーID</th><th>区分</th><th>名前</th><th class="col-sex">性別</th><th class="col-age">年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
 <?php require __DIR__ . '/partials/user_rows.php'; ?>
 				</table>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>

@@ -7,6 +7,7 @@ namespace App\Repositories\Contracts;
 interface UserRepositoryInterface
 {
     public function adminExists(string $adminUuid): bool;
+    public function findActiveAdminGroupUuid(string $adminUuid): string;
     public function userAssignedToAdmin(string $userUuid, string $adminUuid): bool;
     public function findUsers(string $groupUuid, string $adminUuid, string $deleteFlag): array;
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array;

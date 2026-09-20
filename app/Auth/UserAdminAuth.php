@@ -34,16 +34,23 @@ final class UserAdminAuth
 
     public function resolveCurrentAdminUuid(?string $requestedAdminUuid): string
     {
+        $adminUuid = $this->getLoginAdminUuid();
         if ($this->getLoginAuth() === 1 && $requestedAdminUuid !== null && $requestedAdminUuid !== '') {
-            if ($this->userRepository->adminExists($requestedAdminUuid)) {
-                $this->session->put('login.admin_uuid', $requestedAdminUuid);
-            } else {
-                header('Location: login.php');
-                exit;
-            }
+            $adminUuid = $requestedAdminUuid;
         }
 
-        return $this->getLoginAdminUuid();
+        $groupUuid = $this->userRepository->findActiveAdminGroupUuid($adminUuid);
+        if ($groupUuid === '') {
+            header('Location: login.php');
+            exit;
+        }
+
+        // 管理者一覧から別事業所の管理者を選んだとき、以前の事業所IDで
+        // 利用者を絞り込んで0件になるのを防ぐ。
+        $this->session->put('login.admin_uuid', $adminUuid);
+        $this->session->put('login.group_id', $groupUuid);
+
+        return $adminUuid;
     }
 
     public function resolveCurrentUserUuid(?string $requestedUserUuid): string

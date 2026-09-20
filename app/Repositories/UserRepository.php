@@ -16,6 +16,19 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
         return $stmt->fetchColumn() !== false;
     }
 
+    public function findActiveAdminGroupUuid(string $adminUuid): string
+    {
+        if ($adminUuid === '') {
+            return '';
+        }
+        $stmt = $this->pdo->prepare(
+            'SELECT group_uuid FROM mst_admin WHERE admin_uuid = :admin_uuid AND delete_flg = 0 LIMIT 1'
+        );
+        $stmt->execute(['admin_uuid' => $adminUuid]);
+        $groupUuid = $stmt->fetchColumn();
+        return $groupUuid === false ? '' : (string) $groupUuid;
+    }
+
     public function userAssignedToAdmin(string $userUuid, string $adminUuid): bool
     {
         if ($userUuid === '' || $adminUuid === '') {
@@ -79,11 +92,11 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
              . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
              . ' LEFT JOIN tbl_user_status_summary s ON s.user_uuid = m2.user_uuid'
              . ' LEFT JOIN tbl_report r ON r.report_uuid = s.report_uuid AND r.delete_flg = 0'
-             . ' WHERE m2.group_uuid = :group_uuid AND m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             // 担当紐付けが一覧表示の権限基準。事業所をまたぐ既存の担当データも表示する。
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
              . ' ORDER BY m2.work_style_div ASC, m2.user_id ASC';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            'group_uuid'  => $groupUuid,
             'admin_uuid'  => $adminUuid,
             'delete_flg'  => $deleteFlag,
         ]);
@@ -102,11 +115,10 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
              . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
              . ' LEFT JOIN tbl_user_status_summary s ON s.user_uuid = m2.user_uuid'
              . ' LEFT JOIN tbl_report r ON r.report_uuid = s.report_uuid AND r.delete_flg = 0'
-             . ' WHERE m2.group_uuid = :group_uuid AND m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
              . ' ORDER BY m2.work_style_div ASC, m2.user_id ASC';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            'group_uuid' => $groupUuid,
             'admin_uuid' => $adminUuid,
             'delete_flg' => $deleteFlag,
         ]);
