@@ -28,7 +28,7 @@
 				</div>
 				<div class="contact-modal-field">
 					<label for="contact-modal-comment">コメント</label>
-					<textarea name="comment" id="contact-modal-comment"></textarea>
+					<textarea name="comment" id="contact-modal-comment" rows="1"></textarea>
 					<p class="err" id="contact-modal-comment-error"></p>
 				</div>
 			</div>

@@ -46,8 +46,12 @@ $(function(){
 		setFavicon(idleFaviconHref);
 	}
 
-	function countPendingInquiries() {
+	function countInquiries() {
 		return document.querySelectorAll('td.user_contact_3').length;
+	}
+
+	function countUnconfirmedContacts() {
+		return document.querySelectorAll('td[data-col="contact"] .user-status-link').length;
 	}
 
 	function countActiveEmergencies() {
@@ -62,8 +66,11 @@ $(function(){
 		if (filter === 'urgent') {
 			return row.querySelector('td.user_contact_5') !== null;
 		}
-		if (filter === 'pending') {
+		if (filter === 'inquiry') {
 			return row.querySelector('td.user_contact_3') !== null;
+		}
+		if (filter === 'unconfirmed') {
+			return row.querySelector('td[data-col="contact"] .user-status-link') !== null;
 		}
 		if (filter === 'chat') {
 			return row.querySelector('td.user_chat') !== null;
@@ -76,7 +83,8 @@ $(function(){
 		var activeFilter = activeButton ? activeButton.getAttribute('data-mobile-filter') : 'all';
 		var counts = {
 			urgent: countActiveEmergencies(),
-			pending: countPendingInquiries(),
+			inquiry: countInquiries(),
+			unconfirmed: countUnconfirmedContacts(),
 			chat: countUnreadChats()
 		};
 
@@ -87,7 +95,8 @@ $(function(){
 
 		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
 			row.classList.toggle('has-mobile-urgent', mobileRowMatches(row, 'urgent'));
-			row.classList.toggle('has-mobile-pending', mobileRowMatches(row, 'pending'));
+			row.classList.toggle('has-mobile-inquiry', mobileRowMatches(row, 'inquiry'));
+			row.classList.toggle('has-mobile-unconfirmed', mobileRowMatches(row, 'unconfirmed'));
 			row.classList.toggle('has-mobile-chat', mobileRowMatches(row, 'chat'));
 			row.hidden = !mobileRowMatches(row, activeFilter);
 		});
@@ -473,6 +482,21 @@ $(function(){
 		document.getElementById('contact-modal-cancel').disabled = loading;
 	}
 
+	function autosizeContactComment() {
+		var field = document.getElementById('contact-modal-comment');
+		var style = null;
+		var borderY = 0;
+
+		if (!field) {
+			return;
+		}
+
+		field.style.height = 'auto';
+		style = window.getComputedStyle(field);
+		borderY = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+		field.style.height = (field.scrollHeight + borderY) + 'px';
+	}
+
 	function closeModal() {
 		if (!getModalElements()) {
 			return;
@@ -527,6 +551,7 @@ $(function(){
 		setLoading(false);
 		modal.hidden = false;
 		overlay.hidden = false;
+		autosizeContactComment();
 	}
 
 	function updateContactCell(data) {
@@ -705,6 +730,8 @@ $(function(){
 	});
 
 	if (getModalElements()) {
+		$('#contact-modal-comment').on('input', autosizeContactComment);
+		$(window).on('resize', autosizeContactComment);
 		$('#contact-modal-close, #contact-modal-cancel').on('click', closeModal);
 		$(overlay).on('click', closeModal);
 		$(document).on('keydown', function(event) {

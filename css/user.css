@@ -189,7 +189,7 @@
     top: var(--header-h);
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 2px;
     margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
     padding: var(--sp-2) 0;
@@ -483,7 +483,8 @@
   }
 
   .user_list tr.has-mobile-chat td:nth-child(4)::before,
-  .user_list tr.has-mobile-pending td:nth-child(4)::before,
+  .user_list tr.has-mobile-inquiry td:nth-child(4)::before,
+  .user_list tr.has-mobile-unconfirmed td:nth-child(4)::before,
   .user_list tr.has-mobile-urgent td:nth-child(4)::before {
     display: block;
     margin-bottom: 2px;
@@ -496,8 +497,13 @@
     color: #6d28d9;
   }
 
-  .user_list tr.has-mobile-pending td:nth-child(4)::before {
-    content: "未確認の連絡あり";
+  .user_list tr.has-mobile-inquiry td:nth-child(4)::before {
+    content: "問合せあり";
+    color: #b45309;
+  }
+
+  .user_list tr.has-mobile-unconfirmed td:nth-child(4)::before {
+    content: "未確認あり";
     color: #b45309;
   }
 
@@ -705,6 +711,15 @@
   gap: 10px;
   background: var(--color-surface-alt);
   border-radius: 0 0 16px 16px;
+}
+
+@media (max-width: 640px) {
+  .contact-modal textarea {
+    min-height: 0;
+    overflow-y: hidden;
+    resize: none;
+    line-height: 1.4;
+  }
 }
 
 /* ============================================================
