@@ -62,6 +62,10 @@ $(function(){
 		return document.querySelectorAll('td.user_chat').length;
 	}
 
+	function countSubmittedReports() {
+		return document.querySelectorAll('td.user_report').length;
+	}
+
 	function mobileRowMatches(row, filter) {
 		if (filter === 'urgent') {
 			return row.querySelector('td.user_contact_5') !== null;
@@ -71,6 +75,9 @@ $(function(){
 		}
 		if (filter === 'unconfirmed') {
 			return row.querySelector('td[data-col="contact"] .user-status-link') !== null;
+		}
+		if (filter === 'report') {
+			return row.querySelector('td.user_report') !== null;
 		}
 		if (filter === 'chat') {
 			return row.querySelector('td.user_chat') !== null;
@@ -85,6 +92,7 @@ $(function(){
 			urgent: countActiveEmergencies(),
 			inquiry: countInquiries(),
 			unconfirmed: countUnconfirmedContacts(),
+			report: countSubmittedReports(),
 			chat: countUnreadChats()
 		};
 
@@ -97,6 +105,7 @@ $(function(){
 			row.classList.toggle('has-mobile-urgent', mobileRowMatches(row, 'urgent'));
 			row.classList.toggle('has-mobile-inquiry', mobileRowMatches(row, 'inquiry'));
 			row.classList.toggle('has-mobile-unconfirmed', mobileRowMatches(row, 'unconfirmed'));
+			row.classList.toggle('has-mobile-report', mobileRowMatches(row, 'report'));
 			row.classList.toggle('has-mobile-chat', mobileRowMatches(row, 'chat'));
 			row.hidden = !mobileRowMatches(row, activeFilter);
 		});

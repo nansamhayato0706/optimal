@@ -189,7 +189,7 @@
     top: var(--header-h);
     z-index: 10;
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2px;
     margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
     padding: var(--sp-2) 0;
@@ -485,6 +485,7 @@
   .user_list tr.has-mobile-chat td:nth-child(4)::before,
   .user_list tr.has-mobile-inquiry td:nth-child(4)::before,
   .user_list tr.has-mobile-unconfirmed td:nth-child(4)::before,
+  .user_list tr.has-mobile-report td:nth-child(4)::before,
   .user_list tr.has-mobile-urgent td:nth-child(4)::before {
     display: block;
     margin-bottom: 2px;
@@ -503,8 +504,13 @@
   }
 
   .user_list tr.has-mobile-unconfirmed td:nth-child(4)::before {
-    content: "未確認あり";
-    color: #b45309;
+	content: "未確認あり";
+	color: #b45309;
+  }
+
+  .user_list tr.has-mobile-report td:nth-child(4)::before {
+    content: "日報あり";
+    color: #0369a1;
   }
 
   .user_list tr.has-mobile-urgent td:nth-child(4)::before {

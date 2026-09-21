@@ -55,6 +55,7 @@ $h = array(Esc::class, 'h');
 			<button type="button" data-mobile-filter="urgent">緊急 <span data-mobile-filter-count="urgent">0</span></button>
 			<button type="button" data-mobile-filter="inquiry">問合せ <span data-mobile-filter-count="inquiry">0</span></button>
 			<button type="button" data-mobile-filter="unconfirmed">未確認 <span data-mobile-filter-count="unconfirmed">0</span></button>
+			<button type="button" data-mobile-filter="report">日報 <span data-mobile-filter-count="report">0</span></button>
 			<button type="button" data-mobile-filter="chat">チャット <span data-mobile-filter-count="chat">0</span></button>
 		</div>
 
