@@ -45,8 +45,15 @@ input.log_date {
     padding-left: var(--sp-3);
   }
 
-  .log-send-table {
+  .log-send-table,
+  .log-send-table tbody,
+  .log-send-table tr {
     width: 100%;
+    box-sizing: border-box;
+  }
+
+  .log-send-table tbody {
+    display: block;
   }
 
   .log-table {
