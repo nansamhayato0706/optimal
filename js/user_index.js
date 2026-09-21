@@ -111,6 +111,19 @@ $(function(){
 		});
 	}
 
+	function setMobileRowExpanded(row, expanded) {
+		row.classList.toggle('is-expanded', expanded);
+		row.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+	}
+
+	function collapseMobileUserRows(exceptRow) {
+		document.querySelectorAll('.user_list tr[data-user-uuid].is-expanded').forEach(function(row) {
+			if (row !== exceptRow) {
+				setMobileRowExpanded(row, false);
+			}
+		});
+	}
+
 	function initMobileUserList() {
 		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
 			row.tabIndex = 0;
@@ -119,8 +132,9 @@ $(function(){
 				if (event.target.closest('a, button, input, select, textarea, label')) {
 					return;
 				}
-				row.classList.toggle('is-expanded');
-				row.setAttribute('aria-expanded', row.classList.contains('is-expanded') ? 'true' : 'false');
+				var expand = !row.classList.contains('is-expanded');
+				collapseMobileUserRows(row);
+				setMobileRowExpanded(row, expand);
 			});
 			row.addEventListener('keydown', function(event) {
 				if (event.key === 'Enter' || event.key === ' ') {
@@ -132,6 +146,7 @@ $(function(){
 
 		document.querySelectorAll('.user-mobile-filters button').forEach(function(button) {
 			button.addEventListener('click', function() {
+				collapseMobileUserRows(null);
 				document.querySelectorAll('.user-mobile-filters button').forEach(function(item) {
 					item.classList.toggle('is-active', item === button);
 				});
