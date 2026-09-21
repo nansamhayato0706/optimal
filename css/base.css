@@ -374,8 +374,8 @@ hr {
   }
 }
 
-/* --- レスポンシブ：モバイル（640px以下） ---------------------- */
-@media (max-width: 640px) {
+/* --- レスポンシブ：モバイルナビゲーション（1000px以下） ------- */
+@media (max-width: 1000px) {
   #main {
     padding: var(--sp-3);
   }
@@ -528,6 +528,26 @@ hr {
 
   .page-card > .page-header {
     padding: var(--sp-3);
+  }
+}
+
+/* 641px 以上では本文のタブレット用余白を維持し、ナビゲーションのみモバイル化する。 */
+@media (min-width: 641px) and (max-width: 1000px) {
+  #main {
+    padding: var(--sp-4);
+  }
+
+  #header-inner {
+    padding: var(--sp-2) var(--sp-4);
+  }
+
+  .page-card {
+    padding: var(--sp-5);
+    border-radius: var(--r-lg);
+  }
+
+  .page-card > .page-header {
+    padding: var(--sp-3) var(--sp-5);
   }
 }
 
