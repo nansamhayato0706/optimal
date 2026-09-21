@@ -97,6 +97,169 @@
   display: none;
 }
 
+/* user.php はタブレット幅でもサイドナビを使い、リンクの横並びを避ける。 */
+@media (min-width: 641px) and (max-width: 1000px) {
+  .user-index-page .site-header #header-inner {
+    position: relative;
+    flex-wrap: nowrap;
+  }
+
+  .user-index-page .site-header #h_link_area {
+    display: none;
+  }
+
+  .user-index-page .site-mobile-nav {
+    display: block;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  .user-index-page .site-mobile-nav summary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 var(--sp-3);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--r-md);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 700;
+    list-style: none;
+  }
+
+  .user-index-page .site-mobile-nav summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .user-index-page .site-mobile-nav summary:focus-visible,
+  .user-index-page .site-mobile-nav-link:focus-visible,
+  .user-index-page .site-nav-dismiss:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  .user-index-page .site-mobile-nav nav {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 88vw);
+    z-index: 2;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: max(20px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom));
+    border-radius: 24px 0 0 24px;
+    background: var(--color-surface);
+    box-shadow: -12px 0 48px rgba(10, 35, 28, 0.22);
+    animation: site-nav-enter 180ms ease-out;
+  }
+
+  .user-index-page .site-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    background: rgba(10, 25, 22, 0.48);
+    cursor: pointer;
+  }
+
+  .user-index-page .site-nav-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .user-index-page .site-nav-heading small {
+    color: var(--color-text-soft);
+    font-size: 0.72rem;
+  }
+
+  .user-index-page .site-nav-dismiss {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 1.7rem;
+    cursor: pointer;
+  }
+
+  .user-index-page .site-mobile-nav-user {
+    margin: 20px 0;
+    padding: 12px;
+    overflow-wrap: anywhere;
+    border-radius: 12px;
+    background: var(--color-accent-soft);
+  }
+
+  .user-index-page .site-mobile-nav-user > span {
+    color: var(--color-accent);
+    font-size: 0.6rem;
+  }
+
+  .user-index-page .site-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .user-index-page .site-mobile-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    gap: 12px;
+    padding: var(--sp-2) var(--sp-3);
+    border-left: 3px solid transparent;
+    border-radius: var(--r-sm);
+    color: var(--color-text);
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .user-index-page .site-mobile-nav-link.is-current,
+  .user-index-page .site-mobile-nav-link.is-management.is-current {
+    border-left-color: var(--color-accent);
+    background: var(--color-accent-soft);
+    color: var(--color-accent-strong);
+  }
+
+  .user-index-page .site-mobile-nav-link.is-management {
+    background: var(--color-surface-alt);
+  }
+
+  .user-index-page .site-mobile-nav-link.is-logout {
+    margin-top: var(--sp-2);
+    border-top: 1px solid var(--color-border);
+    border-radius: 0;
+    color: var(--color-text-soft);
+  }
+
+  .user-index-page .site-nav-icon {
+    display: grid;
+    width: 28px;
+    flex-shrink: 0;
+    place-items: center;
+    color: var(--color-accent);
+  }
+
+  .user-index-page .site-nav-label {
+    flex: 1;
+    font-size: 0.9rem;
+  }
+
+  .user-index-page .site-nav-indicator {
+    font-size: 0.78rem;
+    font-weight: 400;
+  }
+}
+
 .user-list-empty {
   margin: 0;
   padding: var(--sp-4);

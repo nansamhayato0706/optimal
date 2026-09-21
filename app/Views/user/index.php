@@ -23,7 +23,7 @@ $h = array(Esc::class, 'h');
 	<script type="text/javascript" src="<?= $h($jsBase) ?>common.js?v=<?= $h($assetVer) ?>"></script>
 	<script type="text/javascript" src="<?= $h($jsBase) ?>user_index.js?v=<?= $h($assetVer) ?>"></script>
 </head>
-<body>
+<body class="user-index-page">
 <div id="wrapper"
 	data-status-url="user_status.php"
 	data-contact-detail-url="contact_detail.php"
