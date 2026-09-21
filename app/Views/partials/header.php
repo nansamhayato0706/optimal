@@ -34,7 +34,7 @@ usort($mobileHeaderLinks, static function ($left, $right) use ($mobileNavOrder) 
 			<summary aria-controls="site-mobile-panel"><span aria-hidden="true">☰</span> メニュー</summary>
 			<button type="button" class="site-nav-backdrop" aria-label="メニューを閉じる" tabindex="-1"></button>
 			<nav id="site-mobile-panel" aria-label="管理メニュー">
-				<div class="site-nav-heading"><div><small>在宅就労管理システム</small><strong>メニュー</strong></div><button type="button" class="site-nav-dismiss" aria-label="メニューを閉じる">×</button></div>
+				<div class="site-nav-heading"><small>在宅就労管理システム</small><button type="button" class="site-nav-dismiss" aria-label="メニューを閉じる">×</button></div>
 				<div class="site-mobile-nav-user"><span aria-hidden="true">●</span> ログイン中：<?= $h($loginAdminId) ?></div>
 				<div class="site-nav-links">
 <?php foreach ($mobileHeaderLinks as $link): ?>

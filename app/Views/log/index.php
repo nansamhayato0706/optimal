@@ -72,6 +72,7 @@ $imageUrl = static function (array $contact): string {
 				</tr>
 <?php endforeach; ?>
 			</table>
+			<div class="log-send-list">
 			<h4>ログリスト</h4>
 			<table class="log-table log-send-table">
 				<tr>
@@ -87,6 +88,7 @@ $imageUrl = static function (array $contact): string {
 				</tr>
 <?php endforeach; ?>
 			</table>
+			</div>
 		</div>
 	</div>
 </div>

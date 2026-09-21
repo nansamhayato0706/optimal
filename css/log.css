@@ -33,6 +33,22 @@ input.log_date {
 }
 
 @media (max-width: 640px) {
+  .log-send-list {
+    align-self: stretch;
+    width: calc(100% + (var(--sp-3) * 2));
+    margin-right: calc(var(--sp-3) * -1);
+    margin-left: calc(var(--sp-3) * -1);
+  }
+
+  .log-send-list h4 {
+    padding-right: var(--sp-3);
+    padding-left: var(--sp-3);
+  }
+
+  .log-send-table {
+    width: 100%;
+  }
+
   .log-table {
     display: block;
   }
