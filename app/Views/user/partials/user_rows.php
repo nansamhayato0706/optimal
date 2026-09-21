@@ -17,9 +17,9 @@ foreach ($users as $user):
 						<td class="text-center col-sex"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'sex', $user['sex_div'])) ?></td>
 						<td class="text-center col-age"><?= $h(\App\Support\UserViewHelpers::age($user['birthday'])) ?></td>
 <?php if ($confirmDiv === 1 || $confirmDiv === 2): ?>
-						<td class="user_contact_<?= $h($contactDiv) ?>" data-col="contact"><?= $h(\App\Support\UserViewHelpers::formatDateTime($user['contact_date'] ?? '', 'y/m/d H:i')) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'contact', $contactDiv)) ?> <a class="h_link user-status-link" href="contact.php?i=<?= $h($user['contact_uuid']) ?>">確認</a></td>
+						<td class="<?= $h($user['contact_class'] ?? ('user_contact_' . $contactDiv)) ?>" data-col="contact"><?= $h(\App\Support\UserViewHelpers::formatDateTime($user['contact_date'] ?? '', 'y/m/d H:i')) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'contact', $contactDiv)) ?> <a class="h_link user-status-link" href="contact.php?i=<?= $h($user['contact_uuid']) ?>">確認</a></td>
 <?php else: ?>
-						<td class="user_contact_f_<?= $h($contactDiv) ?>" data-col="contact"><?= $h(\App\Support\UserViewHelpers::formatDateTime($user['contact_date'] ?? '', 'y/m/d H:i')) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'contact', $contactDiv)) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'confirm', $confirmDiv)) ?></td>
+						<td class="<?= $h($user['contact_class'] ?? ('user_contact_f_' . $contactDiv)) ?>" data-col="contact"><?= $h(\App\Support\UserViewHelpers::formatDateTime($user['contact_date'] ?? '', 'y/m/d H:i')) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'contact', $contactDiv)) ?> <?= $h(\App\Support\UserViewHelpers::divName($divMap, 'confirm', $confirmDiv)) ?></td>
 <?php endif; ?>
 <?php if (empty($user['report_uuid'])): ?>
 						<td class="text-center" data-col="report"><a href="report.php?i=<?= $h($user['user_uuid']) ?>">一覧</a></td>

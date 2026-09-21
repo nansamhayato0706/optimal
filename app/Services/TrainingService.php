@@ -149,6 +149,10 @@ final class TrainingService
         }
 
         $sendInserted = $this->insertSend($userUuid, $eventType, $payload->hookDiv());
+        if ($eventType === 6 && $sendInserted) {
+            // ログアウト後は問合せの未確認状態を保ったまま、作業終了確認済みの色へ切り替える。
+            $this->summaryRepository->refreshUserStatusSummary($userUuid);
+        }
         if (!$sendInserted && $eventType !== 6) {
             return TrainingResponses::eventFailed();
         }

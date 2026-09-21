@@ -305,6 +305,11 @@
 .data-table td.user_contact_f_3 {
   background-color: #fdba74;
 }
+.data-table td.user_contact_3.user_contact_f_2,
+.data-table td.user_contact_f_3.user_contact_f_2 {
+  background-color: #60a5fa;
+  animation: none;
+}
 
 @keyframes user-contact-inquiry-pulse {
   0%, 100% {

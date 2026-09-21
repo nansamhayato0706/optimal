@@ -26,6 +26,10 @@ final class UserListService
 		}
 
 		$users = $this->userRepository->findUsers($groupUuid, $adminUuid, $deleteFlag);
+		foreach ($users as &$user) {
+			$user['contact_class'] = $this->contactClass($user);
+		}
+		unset($user);
 		$summary = $this->buildSummary($users);
 
 		return array(
@@ -94,10 +98,22 @@ final class UserListService
 	{
 		$confirmDiv = (int) ($user['confirm_div'] ?? 0);
 		$contactDiv = (int) ($user['contact_div'] ?? 0);
-		if ($confirmDiv === 1 || $confirmDiv === 2) {
-			return 'user_contact_' . $contactDiv;
+		$contactClass = $confirmDiv === 1 || $confirmDiv === 2
+			? 'user_contact_' . $contactDiv
+			: 'user_contact_f_' . $contactDiv;
+
+		if ($contactDiv === 3 && $this->isLogoutAfterContact($user)) {
+			return $contactClass . ' user_contact_f_2';
 		}
-		return 'user_contact_f_' . $contactDiv;
+
+		return $contactClass;
+	}
+
+	private function isLogoutAfterContact(array $user): bool
+	{
+		$logoutAt = (string) ($user['logout_at'] ?? '');
+		$contactDate = (string) ($user['contact_date'] ?? '');
+		return $logoutAt !== '' && $contactDate !== '' && $logoutAt >= $contactDate;
 	}
 
 	private function contactHtml(array $user, array $divMap): string

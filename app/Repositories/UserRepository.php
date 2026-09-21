@@ -83,7 +83,7 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
     {
         $sql = 'SELECT m1.user_uuid, m1.admin_uuid, m2.group_uuid, m2.user_id, m2.user_div, m2.work_style_div,'
              . ' m2.user_name, m2.sex_div, m2.birthday, m2.user_area, m2.user_address, m2.user_tel, m2.delete_flg,'
-             . ' s.contact_uuid, s.contact_div, s.confirm_div, s.contact_date,'
+             . ' s.contact_uuid, s.contact_div, s.confirm_div, s.contact_date, s.logout_at,'
              . ' CASE WHEN s.report_date = CURDATE() THEN s.report_uuid ELSE NULL END AS report_uuid,'
              . ' CASE WHEN s.report_date = CURDATE() THEN r.admin_uuid ELSE NULL END AS report_admin_uuid,'
              . ' CASE WHEN s.report_date = CURDATE() THEN s.charge_comment ELSE NULL END AS charge_comment,'
@@ -106,7 +106,7 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array
     {
         $sql = 'SELECT m2.user_uuid,'
-             . ' s.contact_uuid, s.contact_div, s.confirm_div, s.contact_date,'
+             . ' s.contact_uuid, s.contact_div, s.confirm_div, s.contact_date, s.logout_at,'
              . ' CASE WHEN s.report_date = CURDATE() THEN s.report_uuid ELSE NULL END AS report_uuid,'
              . ' CASE WHEN s.report_date = CURDATE() THEN r.admin_uuid ELSE NULL END AS report_admin_uuid,'
              . ' CASE WHEN s.report_date = CURDATE() THEN s.charge_comment ELSE NULL END AS charge_comment,'
