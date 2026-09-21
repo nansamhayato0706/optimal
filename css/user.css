@@ -611,6 +611,15 @@
     border-radius: var(--r-md);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    box-sizing: border-box;
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+  }
+
+  .user_list tr.is-expanded {
+    border-color: var(--color-accent);
+    border-left: 4px solid var(--color-accent);
+    background: #ecfdf5;
+    box-shadow: 0 0 0 1px var(--color-accent-soft), var(--shadow-md);
   }
 
   .user_list td {
@@ -644,11 +653,32 @@
   .user_list td:nth-child(4) {
     grid-area: name;
     min-height: 52px;
+    padding-right: 42px;
     border-right: 0;
     background: var(--color-surface-alt);
     color: var(--color-accent-strong);
     font-size: 1.05rem;
     font-weight: 700;
+    position: relative;
+  }
+
+  .user_list tr.is-expanded td:nth-child(4) {
+    background: #ecfdf5;
+  }
+
+  .user_list td:nth-child(4)::after {
+    content: "▼";
+    position: absolute;
+    top: 50%;
+    right: var(--sp-3);
+    transform: translateY(-50%);
+    color: var(--color-text-soft);
+    font-size: 0.9rem;
+  }
+
+  .user_list tr.is-expanded td:nth-child(4)::after {
+    content: "▲";
+    color: var(--color-accent-strong);
   }
   .user_list td:nth-child(7) { grid-area: status; border-right: 0; }
   .user_list td:nth-child(7)::before { content: "利用状況"; }
