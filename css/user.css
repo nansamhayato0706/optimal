@@ -99,6 +99,39 @@
 
 /* user.php はタブレット幅でもサイドナビを使い、リンクの横並びを避ける。 */
 @media (min-width: 641px) and (max-width: 1000px) {
+  .user-index-page .user-mobile-filters {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 10;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2px;
+    margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
+    padding: var(--sp-2) 0;
+    background: var(--color-bg);
+  }
+
+  .user-index-page .user-mobile-filters button {
+    min-height: 36px;
+    padding: 2px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    background: var(--color-surface);
+    color: var(--color-text-soft);
+    font-size: 0.72rem;
+    font-weight: 600;
+  }
+
+  .user-index-page .user-mobile-filters button.is-active {
+    border-color: var(--color-accent);
+    background: var(--color-accent);
+    color: #fff;
+  }
+
+  .user-index-page .user-mobile-filters [data-mobile-filter-count] {
+    font-size: 0.85rem;
+  }
+
   .user-index-page .site-header #header-inner {
     position: relative;
     flex-wrap: nowrap;
