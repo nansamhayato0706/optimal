@@ -97,8 +97,8 @@
   display: none;
 }
 
-/* user.php の絞り込みはタブレット幅でも表示する。 */
-@media (min-width: 641px) and (max-width: 1000px) {
+/* user.php の絞り込みはタブレット・PC幅でも表示する。 */
+@media (min-width: 641px) {
   .user-index-page .user-mobile-filters {
     position: sticky;
     top: var(--header-h);
@@ -130,6 +130,13 @@
 
   .user-index-page .user-mobile-filters [data-mobile-filter-count] {
     font-size: 0.85rem;
+  }
+}
+
+/* 横幅に余裕があるときは、全フィルターを1行に並べる。 */
+@media (min-width: 741px) {
+  .user-index-page .user-mobile-filters {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 }
 
