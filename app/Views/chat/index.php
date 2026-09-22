@@ -81,14 +81,26 @@ function jigyodanChatEditSubmit(form) {
 document.addEventListener('DOMContentLoaded', function () {
 	var fileInput = document.getElementById('chat_file');
 	var fileNameLabel = document.getElementById('chat_file_name');
-	if (!fileInput || !fileNameLabel) {
+	if (fileInput && fileNameLabel) {
+		fileInput.addEventListener('change', function () {
+			fileNameLabel.textContent = fileInput.files && fileInput.files.length > 0
+				? fileInput.files[0].name
+				: '';
+		});
+	}
+
+	var chatInput = document.getElementById('chat_text');
+	var chatInputWrap = chatInput ? chatInput.parentNode : null;
+	if (!chatInput || !chatInputWrap) {
 		return;
 	}
-	fileInput.addEventListener('change', function () {
-		fileNameLabel.textContent = fileInput.files && fileInput.files.length > 0
-			? fileInput.files[0].name
-			: '';
-	});
+
+	function updateChatInputShape() {
+		chatInputWrap.classList.toggle('chat-input-wrap--multiline', /[\r\n]/.test(chatInput.value));
+	}
+
+	chatInput.addEventListener('input', updateChatInputShape);
+	updateChatInputShape();
 });
 </script>
 </body>

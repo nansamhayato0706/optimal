@@ -457,6 +457,7 @@
     overflow: hidden;
     box-shadow: var(--shadow-sm);
     box-sizing: border-box;
+    scroll-margin-top: calc(var(--header-h) + 104px);
     transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
   }
 

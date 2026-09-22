@@ -665,6 +665,15 @@ input.date {
     border-radius: var(--r-md);
     background: var(--color-surface);
     box-shadow: var(--shadow-sm);
+    scroll-margin-top: calc(var(--header-h) + var(--sp-3));
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+  }
+
+  .report-daily-mobile-card.is-expanded {
+    border-color: var(--color-accent);
+    border-left: 4px solid var(--color-accent);
+    background: #ecfdf5;
+    box-shadow: 0 0 0 1px var(--color-accent-soft), var(--shadow-md);
   }
 
   .report-daily-mobile-card.is-hidden {

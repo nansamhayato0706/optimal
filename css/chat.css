@@ -47,6 +47,11 @@
   border-color: #4a90d9;
 }
 
+/* 改行を含む入力時は、縦長の入力欄に合う通常の角丸にする */
+.chat-input-wrap.chat-input-wrap--multiline {
+  border-radius: var(--r-md);
+}
+
 /* ＋ボタン：入力ボックスの内側・左端 */
 .chat-attach-btn {
   display: inline-flex;

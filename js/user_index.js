@@ -124,6 +124,15 @@ $(function(){
 		});
 	}
 
+	function scrollMobileUserRowIntoView(row) {
+		if (!window.matchMedia('(max-width: 640px)').matches) {
+			return;
+		}
+		window.requestAnimationFrame(function() {
+			row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+	}
+
 	function initMobileUserList() {
 		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
 			row.tabIndex = 0;
@@ -135,6 +144,9 @@ $(function(){
 				var expand = !row.classList.contains('is-expanded');
 				collapseMobileUserRows(row);
 				setMobileRowExpanded(row, expand);
+				if (expand) {
+					scrollMobileUserRowIntoView(row);
+				}
 			});
 			row.addEventListener('keydown', function(event) {
 				if (event.key === 'Enter' || event.key === ' ') {

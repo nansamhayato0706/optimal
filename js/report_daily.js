@@ -45,6 +45,7 @@ $(function(){
 
 		document.querySelectorAll('[data-daily-filter]').forEach(function(button){
 			button.addEventListener('click', function(){
+				collapseMobileReportDetails(null);
 				var filter = button.getAttribute('data-daily-filter');
 				document.querySelectorAll('[data-daily-filter]').forEach(function(item){
 					item.classList.toggle('is-active', item === button);
@@ -56,8 +57,52 @@ $(function(){
 		});
 	}
 
+	function setMobileReportDetailExpanded(details, expanded){
+		var card = details.closest('.report-daily-mobile-card');
+		var summary = details.querySelector('summary');
+		details.open = expanded;
+		if (card) {
+			card.classList.toggle('is-expanded', expanded);
+		}
+		if (summary) {
+			summary.textContent = expanded ? '内容を閉じる' : '内容を表示';
+		}
+	}
+
+	function collapseMobileReportDetails(exceptDetails){
+		document.querySelectorAll('.report-daily-mobile-card .report-mobile-details[open]').forEach(function(details){
+			if (details !== exceptDetails) {
+				setMobileReportDetailExpanded(details, false);
+			}
+		});
+	}
+
+	function scrollMobileReportCardIntoView(details){
+		var card = details.closest('.report-daily-mobile-card');
+		if (!card) {
+			return;
+		}
+		window.requestAnimationFrame(function(){
+			card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		});
+	}
+
+	function initMobileReportDetails(){
+		document.querySelectorAll('.report-daily-mobile-card .report-mobile-details').forEach(function(details){
+			setMobileReportDetailExpanded(details, details.open);
+			details.addEventListener('toggle', function(){
+				if (details.open) {
+					collapseMobileReportDetails(details);
+					scrollMobileReportCardIntoView(details);
+				}
+				setMobileReportDetailExpanded(details, details.open);
+			});
+		});
+	}
+
 	initMobileNavigation();
 	initMobileFilters();
+	initMobileReportDetails();
 
 	$('.date').datepicker({
 		yearRange:'2016:+1',
