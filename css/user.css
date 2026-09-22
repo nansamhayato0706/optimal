@@ -107,7 +107,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2px;
     margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
-    padding: var(--sp-2) 0;
+    padding: var(--sp-3) 0 var(--sp-2);
     background: var(--color-bg);
   }
 
@@ -235,7 +235,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 2px;
     margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
-    padding: var(--sp-2) 0;
+    padding: var(--sp-3) 0 var(--sp-2);
     background: var(--color-bg);
   }
 
@@ -838,6 +838,12 @@
 
 @media (max-width: 899px) {
   .col-age {
+    display: none;
+  }
+}
+
+@media (max-width: 809px) {
+  .col-work-style {
     display: none;
   }
 }

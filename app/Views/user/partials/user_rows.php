@@ -12,7 +12,7 @@ foreach ($users as $user):
 					<tr data-user-uuid="<?= $h($user['user_uuid']) ?>" data-user-name="<?= $h($user['user_name']) ?>">
 						<td class="row_no text-right"><?= $h($rowNumbersByWorkStyle[$workStyleDiv]) ?></td>
 						<td class="text-center"><?= $h($user['user_id']) ?></td>
-						<td class="text-center"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'work_style', $user['work_style_div'])) ?></td>
+						<td class="text-center col-work-style"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'work_style', $user['work_style_div'])) ?></td>
 						<td<?= $nameTitle !== '' ? ' title="' . $h($nameTitle) . '"' : '' ?>><?= $h($user['user_name']) ?></td>
 						<td class="text-center col-sex"><?= $h(\App\Support\UserViewHelpers::divName($divMap, 'sex', $user['sex_div'])) ?></td>
 						<td class="text-center col-age"><?= $h(\App\Support\UserViewHelpers::age($user['birthday'])) ?></td>

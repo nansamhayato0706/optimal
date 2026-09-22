@@ -69,7 +69,7 @@ $h = array(Esc::class, 'h');
 			<?php else: ?>
 			<div class="user-list-scroll">
 				<table class="data-table table-compact user_list">
-					<tr><th>No</th><th>ユーザーID</th><th>区分</th><th>名前</th><th class="col-sex">性別</th><th class="col-age">年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
+					<tr><th>No</th><th>ユーザーID</th><th class="col-work-style">区分</th><th>名前</th><th class="col-sex">性別</th><th class="col-age">年齢</th><th>利用状況</th><th>日報</th><th>チャット</th><th>ログ</th><th>設定</th></tr>
 <?php require __DIR__ . '/partials/user_rows.php'; ?>
 				</table>
 			</div>
