@@ -11,7 +11,7 @@ final class ChatFileStorage
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
         'zip', 'txt', 'csv',
     ];
-    private const MAX_SIZE_BYTES = 10 * 1024 * 1024;
+    private const MAX_SIZE_BYTES = 300 * 1024 * 1024;
 
     private $config;
 
