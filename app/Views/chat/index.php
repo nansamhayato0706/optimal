@@ -43,6 +43,12 @@ $chat = $chatData['chat'] ?? array();
 						<input type="submit" name="send" class="h_link chat-send-btn" value="送信">
 					</div>
 					<span class="chat-file-name" id="chat_file_name"></span>
+					<span class="chat-drop-hint">ファイルをここにドラッグして添付できます（1件）</span>
+					<span class="chat-file-error" id="chat_file_error" role="alert"></span>
+					<div class="chat-upload-progress" id="chat_upload_progress" hidden>
+						<progress id="chat_upload_bar" max="100" value="0" aria-label="ファイル送信の進捗"></progress>
+						<span id="chat_upload_status" role="status">送信中 0%</span>
+					</div>
 				</form>
 <?php if ($errorMessage !== ''): ?>
 				<p class="err"><?= $h($errorMessage) ?></p>
@@ -81,11 +87,142 @@ function jigyodanChatEditSubmit(form) {
 document.addEventListener('DOMContentLoaded', function () {
 	var fileInput = document.getElementById('chat_file');
 	var fileNameLabel = document.getElementById('chat_file_name');
-	if (fileInput && fileNameLabel) {
-		fileInput.addEventListener('change', function () {
+	var fileError = document.getElementById('chat_file_error');
+	var sendForm = document.querySelector('.chat-send-form');
+	if (fileInput && fileNameLabel && fileError && sendForm) {
+		var dragDepth = 0;
+		var uploadProgress = document.getElementById('chat_upload_progress');
+		var uploadBar = document.getElementById('chat_upload_bar');
+		var uploadStatus = document.getElementById('chat_upload_status');
+		var sendButton = sendForm.querySelector('input[name="send"]');
+		var uploading = false;
+		function hasDraggedFiles(event) {
+			var types = event.dataTransfer && event.dataTransfer.types;
+			return types && Array.prototype.indexOf.call(types, 'Files') !== -1;
+		}
+		function updateFileName() {
 			fileNameLabel.textContent = fileInput.files && fileInput.files.length > 0
 				? fileInput.files[0].name
 				: '';
+			fileError.textContent = '';
+		}
+		fileInput.addEventListener('change', function () {
+			updateFileName();
+		});
+		sendForm.addEventListener('submit', function (event) {
+			if (uploading) {
+				event.preventDefault();
+				return;
+			}
+			if (!fileInput.files || fileInput.files.length === 0 || !window.XMLHttpRequest || !window.FormData) {
+				return;
+			}
+			event.preventDefault();
+			var formData = new FormData(sendForm);
+			var xhr = new XMLHttpRequest();
+			uploading = true;
+			sendButton.disabled = true;
+			fileError.textContent = '';
+			uploadProgress.hidden = false;
+			uploadBar.value = 0;
+			uploadStatus.textContent = '送信中 0%';
+			xhr.open('POST', sendForm.getAttribute('action'));
+			xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+			xhr.upload.addEventListener('progress', function (progressEvent) {
+				if (progressEvent.lengthComputable) {
+					var percent = Math.min(100, Math.round(progressEvent.loaded / progressEvent.total * 100));
+					uploadBar.value = percent;
+					uploadStatus.textContent = percent === 100 ? 'アップロード完了・処理中' : '送信中 ' + percent + '%';
+				} else {
+					uploadBar.removeAttribute('value');
+					uploadStatus.textContent = '送信中';
+				}
+			});
+			function finishWithError(message) {
+				uploading = false;
+				sendButton.disabled = false;
+				uploadProgress.hidden = true;
+				fileError.textContent = message;
+			}
+			xhr.addEventListener('load', function () {
+				var result;
+				try {
+					result = JSON.parse(xhr.responseText);
+				} catch (error) {
+					finishWithError('送信結果を確認できませんでした。チャットを再表示して確認してください。');
+					return;
+				}
+				if (xhr.status === 200 && result.success && result.redirect) {
+					window.location.assign(result.redirect);
+					return;
+				}
+				finishWithError(result.error || 'ファイルの送信に失敗しました。');
+			});
+			xhr.addEventListener('error', function () {
+				finishWithError('通信が途切れました。チャットを再表示して送信結果を確認してください。');
+			});
+			try {
+				xhr.send(formData);
+			} catch (error) {
+				finishWithError('送信を開始できませんでした。もう一度お試しください。');
+			}
+		});
+		sendForm.addEventListener('dragenter', function (event) {
+			if (!hasDraggedFiles(event)) {
+				return;
+			}
+			event.preventDefault();
+			dragDepth++;
+			sendForm.classList.add('chat-send-form--dragover');
+		});
+		sendForm.addEventListener('dragover', function (event) {
+			if (hasDraggedFiles(event)) {
+				event.preventDefault();
+				event.dataTransfer.dropEffect = 'copy';
+			}
+		});
+		sendForm.addEventListener('dragleave', function (event) {
+			if (!hasDraggedFiles(event)) {
+				return;
+			}
+			dragDepth = Math.max(0, dragDepth - 1);
+			if (dragDepth === 0) {
+				sendForm.classList.remove('chat-send-form--dragover');
+			}
+		});
+		sendForm.addEventListener('drop', function (event) {
+			if (!hasDraggedFiles(event)) {
+				return;
+			}
+			event.preventDefault();
+			dragDepth = 0;
+			sendForm.classList.remove('chat-send-form--dragover');
+			var files = event.dataTransfer.files;
+			if (files.length !== 1) {
+				fileError.textContent = 'ファイルは1件ずつ添付してください。';
+				return;
+			}
+			try {
+				fileInput.files = files;
+				if (!fileInput.files || fileInput.files.length !== 1) {
+					throw new Error('File input did not accept the dropped file.');
+				}
+				updateFileName();
+			} catch (error) {
+				fileError.textContent = 'ドラッグで添付できませんでした。＋ボタンから選択してください。';
+			}
+		});
+		document.addEventListener('dragover', function (event) {
+			if (hasDraggedFiles(event)) {
+				event.preventDefault();
+			}
+		});
+		document.addEventListener('drop', function (event) {
+			if (hasDraggedFiles(event)) {
+				event.preventDefault();
+				dragDepth = 0;
+				sendForm.classList.remove('chat-send-form--dragover');
+			}
 		});
 	}
 

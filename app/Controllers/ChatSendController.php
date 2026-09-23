@@ -46,6 +46,15 @@ final class ChatSendController
             $this->auth->getLoginAdminUuid(),
             $files['chat_file'] ?? null
         );
+        if (strtolower($this->request->header('X-Requested-With')) === 'xmlhttprequest') {
+            header('Content-Type: application/json; charset=UTF-8');
+            echo json_encode([
+                'success' => (bool) $result['success'],
+                'error' => (string) $result['error'],
+                'redirect' => $result['success'] ? 'chat.php?i=' . rawurlencode($userUuid) : '',
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
         if ($result['success']) {
             header('Location: chat.php?i=' . rawurlencode($userUuid));
             exit;

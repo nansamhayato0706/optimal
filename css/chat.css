@@ -21,6 +21,11 @@
   margin-bottom: var(--sp-4);
 }
 
+.chat-send-form--dragover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
 /* 入力欄行：左＝＋付き入力ボックス、右＝送信ボタン（入力欄の外） */
 .chat-input-row {
   display: flex;
@@ -136,6 +141,44 @@
 
 .chat-file-name:empty {
   display: none;
+}
+
+.chat-drop-hint,
+.chat-file-error {
+  display: block;
+  padding-left: var(--sp-4);
+  font-size: 0.78rem;
+}
+
+.chat-drop-hint {
+  color: var(--color-text-soft);
+}
+
+.chat-file-error {
+  color: var(--color-danger, #d33);
+}
+
+.chat-file-error:empty {
+  display: none;
+}
+
+.chat-upload-progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding-left: var(--sp-4);
+  color: var(--color-text-soft);
+  font-size: 0.78rem;
+}
+
+.chat-upload-progress[hidden] {
+  display: none;
+}
+
+.chat-upload-progress progress {
+  flex: 1;
+  max-width: 240px;
+  accent-color: var(--color-accent);
 }
 
 /* メッセージ */
