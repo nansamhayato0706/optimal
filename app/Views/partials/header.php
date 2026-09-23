@@ -53,7 +53,4 @@ $isManagement = in_array($linkPath, ['group.php', 'admin.php', 'user_edit.php'],
 		</details>
 	</div>
 </header>
-<?php if (in_array($currentHeaderPath, ['chat.php', 'log.php'], true)): ?>
-<a class="site-mobile-back" href="user.php">← ユーザー一覧</a>
-<?php endif; ?>
 <script src="<?= $h($jsBase) ?>site_nav.js?v=<?= $h($assetVer) ?>" defer></script>
