@@ -154,7 +154,7 @@ $(function(){
 	}
 
 	function scrollMobileUserRowIntoView(row) {
-		if (!window.matchMedia('(max-width: 640px)').matches) {
+		if (!window.matchMedia('(max-width: 759px)').matches) {
 			return;
 		}
 		window.requestAnimationFrame(function() {
