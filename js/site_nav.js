@@ -7,7 +7,7 @@
   var closeButton = menu.querySelector('.site-nav-dismiss');
   var main = document.getElementById('main');
   var previousInert = main ? main.hasAttribute('inert') : false;
-  var mobile = window.matchMedia('(max-width: 1000px)');
+  var mobile = window.matchMedia('(max-width: 1069px)');
   function close() {
     menu.open = false;
     sync();

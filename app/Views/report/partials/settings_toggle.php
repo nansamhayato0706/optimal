@@ -1,0 +1,1 @@
+<button type="button" class="report-index-settings-toggle" id="report-index-settings-toggle" aria-controls="report-index-settings-panel" aria-expanded="false" aria-label="表示期間とCSV・PDF出力を開く"><span aria-hidden="true">▼</span></button>

@@ -29,6 +29,47 @@ $(function(){
 
 	initMobileNavigation();
 
+	$(document).on('change', '#report_index_user_select', function(){
+		if (!this.value) {
+			return;
+		}
+		var $periodForm = $('#frm');
+		var query = '?i=' + encodeURIComponent(this.value);
+		query += '&date_st=' + encodeURIComponent($periodForm.find('[name="date_st"]').val() || '');
+		query += '&date_ed=' + encodeURIComponent($periodForm.find('[name="date_ed"]').val() || '');
+		window.location.href = 'report.php' + query;
+	});
+
+	var settingsShell = document.querySelector('.report-index-header-shell');
+	var settingsToggle = document.getElementById('report-index-settings-toggle');
+	var settingsPanel = document.getElementById('report-index-settings-panel');
+	if (settingsShell && settingsToggle && settingsPanel) {
+		function setReportSettingsOpen(isOpen) {
+			settingsShell.classList.toggle('is-open', isOpen);
+			settingsToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+			settingsToggle.setAttribute('aria-label', isOpen ? '表示期間とCSV・PDF出力を閉じる' : '表示期間とCSV・PDF出力を開く');
+			settingsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+		}
+		settingsToggle.addEventListener('click', function() {
+			setReportSettingsOpen(!settingsShell.classList.contains('is-open'));
+		});
+		document.addEventListener('click', function(event) {
+			var targetIsDatePicker = event.target.closest
+				&& event.target.closest('#mp-popup, .ui-datepicker');
+			if (settingsShell.classList.contains('is-open')
+				&& !settingsShell.contains(event.target)
+				&& !targetIsDatePicker) {
+				setReportSettingsOpen(false);
+			}
+		});
+		document.addEventListener('keydown', function(event) {
+			if (event.key === 'Escape' && settingsShell.classList.contains('is-open')) {
+				setReportSettingsOpen(false);
+				settingsToggle.focus();
+			}
+		});
+	}
+
 	$(document).on('keydown', '.report_edit_form', function(e){
 		if(e.key === 'Enter' && e.target.tagName !== 'TEXTAREA'){
 			e.preventDefault();

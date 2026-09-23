@@ -25,6 +25,9 @@ usort($mobileHeaderLinks, static function ($left, $right) use ($mobileNavOrder) 
 <header id="header" class="site-header" role="banner">
 	<div id="header-inner">
 		<<?= $headerBrandTag ?> id="header-brand"><span class="site-desktop-brand"><?= $h($loginAdminId) ?></span><span class="site-mobile-title"><?= $h(isset($title) ? $title : '在宅就労管理') ?></span></<?= $headerBrandTag ?>>
+<?php if (isset($headerExtraPartial)): ?>
+		<?php require $headerExtraPartial; ?>
+<?php endif; ?>
 		<div id="h_link_area">
 <?php foreach ($headerLinks as $link): ?>
 			<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>

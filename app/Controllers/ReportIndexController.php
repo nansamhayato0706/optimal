@@ -32,8 +32,16 @@ final class ReportIndexController
 	{
 		$this->auth->requireUserRoute();
 
-		$dateStart = trim((string) $this->request->post('date_st', date('Y-m')));
-		$dateEnd = trim((string) $this->request->post('date_ed', ''));
+		$dateStartInput = $this->request->post('date_st');
+		if ($dateStartInput === null) {
+			$dateStartInput = $this->request->query('date_st', date('Y-m'));
+		}
+		$dateEndInput = $this->request->post('date_ed');
+		if ($dateEndInput === null) {
+			$dateEndInput = $this->request->query('date_ed', '');
+		}
+		$dateStart = trim((string) $dateStartInput);
+		$dateEnd = trim((string) $dateEndInput);
 		$requestedUserUuid = ($value = $this->request->query('i')) !== null ? trim((string) $value) : null;
 		$userUuid = $this->auth->resolveReportUserUuid($requestedUserUuid);
 

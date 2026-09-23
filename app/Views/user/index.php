@@ -29,27 +29,29 @@ $h = array(Esc::class, 'h');
 	data-contact-detail-url="contact_detail.php"
 	data-contact-update-url="contact_update.php"
 	data-dummy-image="<?= $h($dummyImage) ?>">
-	<?php require dirname(__DIR__) . '/partials/header.php'; ?>
-	<div id="main">
-		<form id="frm" action="user.php" method="post" class="toolbar-form">
+	<div class="user-list-header-shell">
+		<?php $headerExtraPartial = __DIR__ . '/partials/settings_toggle.php'; ?>
+		<?php require dirname(__DIR__) . '/partials/header.php'; ?>
+		<div class="user-list-settings-panel" id="user-list-settings-panel" aria-hidden="true">
+		<form id="frm" action="user.php" method="post" class="user-list-settings-form">
 			<?= csrf_field() ?>
-			<div class="page-header">
-				<h3 class="page-title"><?= $h($title) ?>（<?= $h(date('Y-m-d H:i:s')) ?> 現在）</h3>
-				<div class="page-toolbar">
-					<span class="toolbar-label">表示条件</span>
-					<select name="delete_flg" onchange="document.getElementById('frm').submit()">
+			<div class="page-toolbar">
+				<label class="toolbar-label" for="delete_flg">表示条件</label>
+				<select id="delete_flg" name="delete_flg" onchange="document.getElementById('frm').submit()">
 						<option value="">選択してください</option>
 <?php foreach (($divMap['delete_flg'] ?? array()) as $id => $label): ?>
 						<option value="<?= $h($id) ?>"<?= (string) $id === $deleteFlag ? ' selected' : '' ?>><?= $h($label) ?></option>
 <?php endforeach; ?>
-					</select>
+				</select>
 <?php if ($statusSummaryRefreshEnabled): ?>
-					<input type="submit" class="h_link" name="status_summary_refresh" value="サマリ再反映（テスト用）" onclick="return confirm('利用中ユーザーのステータスサマリを再反映します。実行しますか？');">
+				<input type="submit" class="h_link" name="status_summary_refresh" value="サマリ再反映（テスト用）" onclick="return confirm('利用中ユーザーのステータスサマリを再反映します。実行しますか？');">
 <?php endif; ?>
-					<button type="button" class="h_link" id="notify-toggle" hidden>通知を有効にする</button>
-				</div>
+				<button type="button" class="h_link" id="notify-toggle" hidden>通知を有効にする</button>
 			</div>
 		</form>
+		</div>
+	</div>
+	<div id="main">
 		<div class="user-mobile-filters" aria-label="利用者の絞り込み">
 			<button type="button" class="is-active" data-mobile-filter="all">すべて</button>
 			<button type="button" data-mobile-filter="urgent">緊急 <span data-mobile-filter-count="urgent">0</span></button>

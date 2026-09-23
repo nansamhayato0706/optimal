@@ -7,6 +7,31 @@ $(function(){
 	var statusUrl = $wrapper.data('status-url') || 'user_status.php';
 	var contactDetailUrl = $wrapper.data('contact-detail-url') || 'contact_detail.php';
 	var contactUpdateUrl = $wrapper.data('contact-update-url') || 'contact_update.php';
+	var settingsShell = document.querySelector('.user-list-header-shell');
+	var settingsToggle = document.getElementById('user-list-settings-toggle');
+	var settingsPanel = document.getElementById('user-list-settings-panel');
+	if (settingsShell && settingsToggle && settingsPanel) {
+		function setSettingsOpen(isOpen) {
+			settingsShell.classList.toggle('is-open', isOpen);
+			settingsToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+			settingsToggle.setAttribute('aria-label', isOpen ? '表示条件を閉じる' : '表示条件を開く');
+			settingsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+		}
+		settingsToggle.addEventListener('click', function() {
+			setSettingsOpen(!settingsShell.classList.contains('is-open'));
+		});
+		document.addEventListener('click', function(event) {
+			if (settingsShell.classList.contains('is-open') && !settingsShell.contains(event.target)) {
+				setSettingsOpen(false);
+			}
+		});
+		document.addEventListener('keydown', function(event) {
+			if (event.key === 'Escape' && settingsShell.classList.contains('is-open')) {
+				setSettingsOpen(false);
+				settingsToggle.focus();
+			}
+		});
+	}
 
 	var originalTitle = document.title;
 	var flashTimer = null;

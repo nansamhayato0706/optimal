@@ -6,6 +6,83 @@
    日報一覧（report.php）
    ============================================================ */
 
+.report-index-header-shell {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.report-index-header-shell #header {
+  position: relative;
+  z-index: 2;
+}
+
+.report-index-header-shell #header-inner {
+  justify-content: flex-start;
+}
+
+.report-index-header-shell #h_link_area {
+  margin-left: auto;
+}
+
+.report-index-settings-toggle {
+  width: 44px;
+  min-width: 44px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.report-index-settings-toggle span {
+  display: inline-block;
+  transition: transform 220ms ease;
+}
+
+.report-index-header-shell.is-open .report-index-settings-toggle span {
+  transform: rotate(180deg);
+}
+
+.report-index-settings-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.report-index-settings-panel {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  max-height: calc(100vh - var(--header-h));
+  overflow-y: auto;
+  padding: var(--sp-3) max(var(--sp-5), calc((100% - 1400px) / 2));
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-100%);
+  visibility: hidden;
+  transition: transform 220ms ease, visibility 0s linear 220ms;
+}
+
+.report-index-header-shell.is-open .report-index-settings-panel {
+  transform: translateY(0);
+  visibility: visible;
+  transition: transform 220ms ease;
+}
+
+.report_index_current_period {
+  display: inline-block;
+  margin-left: var(--sp-3);
+  color: var(--color-text-soft);
+  font-size: 0.76rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 /* 一覧ヘッダー */
 .report_index_header {
   display: flex;
@@ -40,7 +117,7 @@
   font-weight: 700;
 }
 
-/* ツールバー行：検索・追加・PDF を横並び */
+/* ツールバー行：期間・出力・追加を横並び */
 .report_index_toolbar {
   display: flex;
   align-items: flex-start;
@@ -75,7 +152,7 @@
   white-space: nowrap;
 }
 
-/* CSV / PDF 出力エリアを枠で分けて視覚的に区別する */
+/* 表示期間と出力操作をひとまとめにする */
 .report_index_action_group {
   display: flex;
   flex-direction: column;
@@ -85,10 +162,6 @@
   background: var(--color-surface-alt);
   border: 1px solid var(--color-border);
   border-radius: var(--r-md);
-}
-
-.report_index_action_group-pdf {
-  background: var(--color-accent-soft);
 }
 
 .report_index_action_label {
@@ -486,6 +559,15 @@ input.date {
     gap: var(--sp-3);
   }
 
+  .report_index_current_period {
+    margin-left: var(--sp-2);
+    font-size: 0.7rem;
+  }
+
+  .report-index-settings-panel {
+    padding: var(--sp-3);
+  }
+
   .report_index_title_actions {
     width: 100%;
     gap: var(--sp-2);
@@ -522,19 +604,16 @@ input.date {
     grid-template-columns: 1fr;
   }
 
-  .report_index_search_form .mp-nav-wrap,
-  .report_index_action_group-pdf .mp-nav-wrap {
+  .report_index_search_form .mp-nav-wrap {
     width: 100%;
   }
 
-  .report_index_search_form input.month-picker,
-  .report_index_action_group-pdf input.month-picker {
+  .report_index_search_form input.month-picker {
     min-width: 0;
     width: 100%;
   }
 
-  .report_index_search_form .report_index_separator,
-  .report_index_action_group-pdf .report_index_separator {
+  .report_index_search_form .report_index_separator {
     display: none;
   }
 

@@ -51,21 +51,66 @@ $formatDateWithWeekday = static function (?string $date): string {
 	<script type="text/javascript" src="<?= $h($jsBase) ?>report.js?v=<?= $h($assetVer) ?>"></script>
 </head>
 
-<body>
+<body class="report-index-page">
 	<div id="wrapper">
-		<?php require dirname(__DIR__) . '/partials/header.php'; ?>
+		<div class="report-index-header-shell">
+			<?php $headerExtraPartial = __DIR__ . '/partials/settings_toggle.php'; ?>
+			<?php require dirname(__DIR__) . '/partials/header.php'; ?>
+			<div class="report-index-settings-panel" id="report-index-settings-panel" aria-hidden="true">
+				<div class="report_index_toolbar">
+					<div class="report_index_action_group report_index_action_group-period">
+						<span class="report_index_action_label"><?= $loginAuth > 0 ? '表示期間・出力' : '表示期間' ?></span>
+						<form id="frm" action="report.php<?= $currentUserUuid !== '' && $loginAuth > 0 ? '?i=' . rawurlencode($currentUserUuid) : '' ?>" method="post" class="report_index_search_form">
+							<?php if ($loginAuth > 0): ?>
+								<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
+								<input type="hidden" name="default_month" value="<?= $h(date('Y-m')) ?>">
+							<?php endif; ?>
+							<span class="mp-nav-wrap">
+								<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
+								<input type="text" class="month-picker" name="date_st" value="<?= $h($pageData['date_st']) ?>" placeholder="開始月" autocomplete="off">
+								<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
+							</span>
+							<span class="report_index_separator">～</span>
+							<span class="mp-nav-wrap">
+								<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
+								<input type="text" class="month-picker month-picker-end" name="date_ed" value="<?= $h($pageData['date_ed']) ?>" placeholder="終了月" autocomplete="off">
+								<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
+							</span>
+							<?php if ($loginAuth > 0): ?>
+								<input type="submit" class="h_link report_index_button btn-secondary" name="report" value="CSV">
+								<input type="submit" class="h_link report_index_button btn-secondary" value="PDF出力" formaction="report_pdf.php" formmethod="get" formtarget="_blank">
+							<?php endif; ?>
+						</form>
+					</div>
+					<?php if ($loginAuth === 1 || $loginAuth === 2): ?>
+						<div class="report_index_action_group report_index_action_group-create">
+							<span class="report_index_action_label">日報追加</span>
+							<form action="report_edit.php" method="get" class="report_index_create_form">
+								<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
+								<span class="mp-nav-wrap">
+									<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前日">&#8249;</button>
+									<input type="text" name="report_date" autocomplete="off" value="<?= $h($pageData['report_date_new']) ?>" class="date report_index_create_date">
+									<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌日">&#8250;</button>
+								</span>
+								<input type="submit" class="h_link report_index_button" value="追加">
+							</form>
+						</div>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
 		<div id="main">
 			<div class="page-card panel-stack report-index-page">
 				<div class="page-header report_index_header">
 					<div class="report_index_title_row">
-						<h3 class="page-title report_index_title"><?= $h($title) ?><?php if ($pageData['user_name'] !== ''): ?><span class="page-username"><?= $h($pageData['user_name']) ?></span><?php endif; ?></h3>
+						<h3 class="page-title report_index_title"><?= $h($title) ?><?php if ($pageData['user_name'] !== ''): ?><span class="page-username"><?= $h($pageData['user_name']) ?></span><?php endif; ?><span class="report_index_current_period">表示期間 <?= $h($pageData['date_st']) ?><?= $pageData['date_ed'] !== '' ? ' ～ ' . $h($pageData['date_ed']) : '' ?></span></h3>
 						<div class="report_index_title_actions">
 							<?php if ($loginAuth > 0 && !empty($userOptions)): ?>
 							<div class="report_detail_user_switch">
 								<label for="report_index_user_select">利用者</label>
 								<span class="mp-nav-wrap">
 									<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前の利用者">&#8249;</button>
-									<select id="report_index_user_select" onchange="if (this.value) { location.href = 'report.php?i=' + encodeURIComponent(this.value); }">
+									<select id="report_index_user_select">
 <?php foreach ($userOptions as $option): ?>
 										<option value="<?= $h($option['user_uuid']) ?>"<?= $option['user_uuid'] === $currentUserUuid ? ' selected' : '' ?>><?= $h($option['user_name']) ?></option>
 <?php endforeach; ?>
@@ -74,61 +119,7 @@ $formatDateWithWeekday = static function (?string $date): string {
 								</span>
 							</div>
 							<?php endif; ?>
-							<?php if ($loginAuth === 1 || $loginAuth === 2): ?>
-							<form action="report_edit.php" method="get" class="report_index_create_form">
-								<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
-								<span class="report_index_create_label">日報追加</span>
-								<span class="mp-nav-wrap">
-									<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前日">&#8249;</button>
-									<input type="text" name="report_date" autocomplete="off" value="<?= $h($pageData['report_date_new']) ?>" class="date report_index_create_date">
-									<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌日">&#8250;</button>
-								</span>
-								<input type="submit" class="h_link report_index_button" value="追加">
-							</form>
-							<?php endif; ?>
 						</div>
-					</div>
-					<div class="report_index_toolbar">
-						<div class="report_index_action_group">
-							<span class="report_index_action_label"><?= $loginAuth > 0 ? '表示期間・CSV出力' : '表示期間' ?></span>
-							<form id="frm" action="report.php<?= $currentUserUuid !== '' && $loginAuth > 0 ? '?i=' . rawurlencode($currentUserUuid) : '' ?>" method="post" class="report_index_search_form">
-								<span class="mp-nav-wrap">
-									<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
-									<input type="text" class="month-picker" name="date_st" value="<?= $h($pageData['date_st']) ?>" placeholder="開始月" autocomplete="off">
-									<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
-								</span>
-								<span class="report_index_separator">～</span>
-								<span class="mp-nav-wrap">
-									<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
-									<input type="text" class="month-picker month-picker-end" name="date_ed" value="<?= $h($pageData['date_ed']) ?>" placeholder="終了月" autocomplete="off">
-									<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
-								</span>
-								<?php if ($loginAuth > 0): ?>
-									<input type="submit" class="h_link report_index_button btn-secondary" name="report" value="CSV">
-								<?php endif; ?>
-							</form>
-						</div>
-						<?php if ($loginAuth > 0): ?>
-							<div class="report_index_action_group report_index_action_group-pdf">
-								<span class="report_index_action_label">PDF出力</span>
-								<form action="report_pdf.php" method="get" target="_blank" class="report_index_create_form">
-									<input type="hidden" name="user_uuid" value="<?= $h($pageData['user_uuid']) ?>">
-									<input type="hidden" name="default_month" value="<?= $h(date('Y-m')) ?>">
-									<span class="mp-nav-wrap">
-										<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
-										<input type="text" class="month-picker" name="date_st" value="<?= $h($pageData['date_st']) ?>" placeholder="開始月" autocomplete="off">
-										<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
-									</span>
-									<span class="report_index_separator">～</span>
-									<span class="mp-nav-wrap">
-										<button type="button" class="mp-nav-btn mp-nav-prev" aria-label="前月">&#8249;</button>
-										<input type="text" class="month-picker month-picker-end" name="date_ed" value="<?= $h($pageData['date_ed']) ?>" placeholder="終了月" autocomplete="off">
-										<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
-									</span>
-									<input type="submit" class="h_link report_index_button btn-secondary" value="PDF出力">
-								</form>
-							</div>
-						<?php endif; ?>
 					</div>
 				</div>
 				<div class="report-table-scroll">

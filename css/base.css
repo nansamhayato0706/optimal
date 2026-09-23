@@ -374,8 +374,8 @@ hr {
   }
 }
 
-/* --- レスポンシブ：モバイルナビゲーション（1000px以下） ------- */
-@media (max-width: 1000px) {
+/* --- レスポンシブ：モバイルナビゲーション（1070px未満） ------- */
+@media (max-width: 1069px) {
   #main {
     padding: var(--sp-3);
   }
@@ -532,7 +532,7 @@ hr {
 }
 
 /* 641px 以上では本文のタブレット用余白を維持し、ナビゲーションのみモバイル化する。 */
-@media (min-width: 641px) and (max-width: 1000px) {
+@media (min-width: 641px) and (max-width: 1069px) {
   #main {
     padding: var(--sp-4);
   }
