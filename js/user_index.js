@@ -7,6 +7,7 @@ $(function(){
 	var statusUrl = $wrapper.data('status-url') || 'user_status.php';
 	var contactDetailUrl = $wrapper.data('contact-detail-url') || 'contact_detail.php';
 	var contactUpdateUrl = $wrapper.data('contact-update-url') || 'contact_update.php';
+	var selectedMobileUserUuid = '';
 	var settingsShell = document.querySelector('.user-list-header-shell');
 	var settingsToggle = document.getElementById('user-list-settings-toggle');
 	var settingsPanel = document.getElementById('user-list-settings-panel');
@@ -132,7 +133,10 @@ $(function(){
 			row.classList.toggle('has-mobile-unconfirmed', mobileRowMatches(row, 'unconfirmed'));
 			row.classList.toggle('has-mobile-report', mobileRowMatches(row, 'report'));
 			row.classList.toggle('has-mobile-chat', mobileRowMatches(row, 'chat'));
-			row.hidden = !mobileRowMatches(row, activeFilter);
+			var matchesStatusFilter = mobileRowMatches(row, activeFilter);
+			var matchesUserFilter = selectedMobileUserUuid === ''
+				|| row.getAttribute('data-user-uuid') === selectedMobileUserUuid;
+			row.hidden = !matchesStatusFilter || !matchesUserFilter;
 		});
 	}
 
@@ -159,6 +163,8 @@ $(function(){
 	}
 
 	function initMobileUserList() {
+		var userSelect = document.getElementById('user-list-user-select');
+
 		document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
 			row.tabIndex = 0;
 			row.setAttribute('aria-expanded', 'false');
@@ -184,12 +190,53 @@ $(function(){
 		document.querySelectorAll('.user-mobile-filters button').forEach(function(button) {
 			button.addEventListener('click', function() {
 				collapseMobileUserRows(null);
+				selectedMobileUserUuid = '';
+				if (userSelect) {
+					userSelect.value = '';
+				}
 				document.querySelectorAll('.user-mobile-filters button').forEach(function(item) {
 					item.classList.toggle('is-active', item === button);
 				});
 				updateMobileFilters();
 			});
 		});
+
+		if (userSelect) {
+			userSelect.addEventListener('change', function() {
+				var selectedUuid = userSelect.value;
+				var selectedRow = null;
+				selectedMobileUserUuid = selectedUuid;
+				if (selectedUuid === '') {
+					collapseMobileUserRows(null);
+					updateMobileFilters();
+					return;
+				}
+				document.querySelectorAll('.user_list tr[data-user-uuid]').forEach(function(row) {
+					if (row.getAttribute('data-user-uuid') === selectedUuid) {
+						selectedRow = row;
+					}
+				});
+				if (!selectedRow) {
+					selectedMobileUserUuid = '';
+					return;
+				}
+
+				document.querySelectorAll('.user-mobile-filters button').forEach(function(button) {
+					button.classList.toggle('is-active', button.getAttribute('data-mobile-filter') === 'all');
+				});
+				updateMobileFilters();
+				collapseMobileUserRows(selectedRow);
+				setMobileRowExpanded(selectedRow, true);
+				if (settingsToggle && settingsShell && settingsShell.classList.contains('is-open')) {
+					settingsToggle.click();
+					window.setTimeout(function() {
+						scrollMobileUserRowIntoView(selectedRow);
+					}, 240);
+				} else {
+					scrollMobileUserRowIntoView(selectedRow);
+				}
+			});
+		}
 	}
 
 	function startFlash(label, urgent) {

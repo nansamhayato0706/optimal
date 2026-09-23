@@ -43,6 +43,14 @@ $h = array(Esc::class, 'h');
 						<option value="<?= $h($id) ?>"<?= (string) $id === $deleteFlag ? ' selected' : '' ?>><?= $h($label) ?></option>
 <?php endforeach; ?>
 				</select>
+				<div class="user-list-user-jump">
+					<select class="user-list-user-select" id="user-list-user-select" aria-label="利用者を選択して一覧へ移動">
+						<option value="">全ての利用者</option>
+<?php foreach ($users as $user): ?>
+						<option value="<?= $h($user['user_uuid']) ?>"><?= $h($user['user_name']) ?></option>
+<?php endforeach; ?>
+					</select>
+				</div>
 <?php if ($statusSummaryRefreshEnabled): ?>
 				<input type="submit" class="h_link" name="status_summary_refresh" value="サマリ再反映（テスト用）" onclick="return confirm('利用中ユーザーのステータスサマリを再反映します。実行しますか？');">
 <?php endif; ?>

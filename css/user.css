@@ -117,6 +117,24 @@
   margin-left: auto;
 }
 
+.user-list-user-jump {
+  display: flex;
+  align-items: center;
+}
+
+.user-list-user-select {
+  width: 220px;
+  max-width: 100%;
+  min-width: 0;
+  height: 36px;
+  padding: 0 30px 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 0.9rem;
+}
+
 .user-list-settings-toggle {
   width: 44px;
   min-width: 44px;
@@ -330,6 +348,21 @@
     margin: calc(var(--sp-3) * -1) 0 var(--sp-3);
     padding: var(--sp-3) 0 var(--sp-2);
     background: var(--color-bg);
+  }
+
+  .user-list-user-jump {
+    display: contents;
+  }
+
+  .user-list-settings-form .page-toolbar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+    gap: var(--sp-2);
+  }
+
+  .user-list-user-select {
+    width: 100%;
   }
 
   .user-mobile-filters button {
