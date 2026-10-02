@@ -58,9 +58,25 @@ final class ChatService
             && (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
 
         if ($hasFile) {
+            $uploadError = (int) ($file['error'] ?? UPLOAD_ERR_OK);
+            if ($uploadError === UPLOAD_ERR_INI_SIZE || $uploadError === UPLOAD_ERR_FORM_SIZE) {
+                error_log(sprintf(
+                    '[chat upload] size limit exceeded: error=%d size=%d upload_max_filesize=%s post_max_size=%s',
+                    $uploadError,
+                    (int) ($file['size'] ?? 0),
+                    (string) ini_get('upload_max_filesize'),
+                    (string) ini_get('post_max_size')
+                ));
+                return ['success' => false, 'error' => 'サーバーのアップロード上限（' . ini_get('upload_max_filesize') . '）を超えています。'];
+            }
+            if ($uploadError !== UPLOAD_ERR_OK) {
+                error_log('[chat upload] upload error=' . $uploadError);
+                return ['success' => false, 'error' => 'ファイルのアップロードに失敗しました。（エラーコード: ' . $uploadError . '）'];
+            }
+
             $stored = $this->chatFileStorage->store($file, $userUuid);
             if ($stored === null) {
-                return ['success' => false, 'error' => 'ファイルの送信に失敗しました。対応形式・サイズ（10MBまで）をご確認ください。'];
+                return ['success' => false, 'error' => 'ファイルの送信に失敗しました。対応形式・サイズ（300MBまで）をご確認ください。'];
             }
             $text = $this->chatFileStorage->buildMessageText($stored);
         } else {

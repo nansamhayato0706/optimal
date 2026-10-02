@@ -1,6 +1,20 @@
 RewriteEngine On
 RewriteBase /zaitakukanri_honbu_new/
 
+# チャット添付（最大300MB）用のアップロード上限（mod_php 時のみ有効）
+<IfModule mod_php.c>
+    php_value upload_max_filesize 320M
+    php_value post_max_size 330M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+<IfModule mod_php7.c>
+    php_value upload_max_filesize 320M
+    php_value post_max_size 330M
+    php_value max_input_time 600
+    php_value max_execution_time 600
+</IfModule>
+
 # アプリ内部ディレクトリへの直接アクセス禁止
 RewriteRule ^(app|bootstrap|config|db|docs|lib|logs|skills|\.git|\.claude)(/|$) - [F,L]
 

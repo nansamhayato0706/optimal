@@ -10,6 +10,8 @@ final class ChatFileStorage
         'jpg', 'jpeg', 'png', 'gif', 'bmp',
         'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx',
         'zip', 'txt', 'csv',
+        'mp3', 'wav', 'm4a', 'aac', 'ogg',
+        'mp4', 'mov', 'm4v', 'webm',
     ];
     private const MAX_SIZE_BYTES = 300 * 1024 * 1024;
 
@@ -32,11 +34,13 @@ final class ChatFileStorage
         if (!isset($file['tmp_name'])
             || (int) ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK
             || !is_uploaded_file((string) $file['tmp_name'])) {
+            error_log('[chat upload] rejected: invalid upload error=' . (string) ($file['error'] ?? 'n/a'));
             return null;
         }
 
         $size = (int) ($file['size'] ?? 0);
         if ($size <= 0 || $size > self::MAX_SIZE_BYTES) {
+            error_log('[chat upload] rejected: size=' . $size);
             return null;
         }
 
@@ -48,16 +52,19 @@ final class ChatFileStorage
             $extension = strtolower(pathinfo((string) ($file['name'] ?? ''), PATHINFO_EXTENSION));
         }
         if (!in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
+            error_log('[chat upload] rejected: extension=' . $extension);
             return null;
         }
 
         $dir = $this->config->chatFileDir() . $userUuid . '/';
         if (!is_dir($dir) && !mkdir($dir, 0755, true) && !is_dir($dir)) {
+            error_log('[chat upload] rejected: mkdir failed dir=' . $dir);
             return null;
         }
 
         $storedName = Uuid::v4() . '.' . $extension;
         if (!move_uploaded_file((string) $file['tmp_name'], $dir . $storedName)) {
+            error_log('[chat upload] rejected: move_uploaded_file failed dir=' . $dir);
             return null;
         }
 
