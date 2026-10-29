@@ -198,47 +198,7 @@ input.date {
   min-height: 36px;
 }
 
-/* 月ナビ（前月・翌月）ボタングループ */
-.mp-nav-wrap {
-  display: inline-flex;
-  align-items: center;
-}
-
-.mp-nav-wrap input.month-picker,
-.mp-nav-wrap input.date,
-.mp-nav-wrap select {
-  border-radius: 0;
-  border-left: none;
-  border-right: none;
-}
-
-.mp-nav-wrap select {
-  height: 36px;
-}
-
-.mp-nav-btn {
-  height: 36px;
-  padding: 0 10px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-  cursor: pointer;
-  font-size: 1.2rem;
-  line-height: 1;
-  flex-shrink: 0;
-}
-
-.mp-nav-btn.mp-nav-prev {
-  border-radius: var(--r-md) 0 0 var(--r-md);
-}
-
-.mp-nav-btn.mp-nav-next {
-  border-radius: 0 var(--r-md) var(--r-md) 0;
-}
-
-.mp-nav-btn:hover {
-  background: var(--color-surface-hover, #f0f0f0);
-}
+/* 月ナビ（前月・翌月）ボタングループは components.css に共通化済み */
 
 /* 一覧テーブル */
 .report_index_table {

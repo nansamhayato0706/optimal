@@ -136,6 +136,89 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
         return $counts;
     }
 
+    /**
+     * チャット月間集計用: 担当ユーザーの最小限の一覧。
+     */
+    public function findUsersForChatSummary(string $adminUuid, string $deleteFlag): array
+    {
+        $sql = 'SELECT m2.user_uuid, m2.user_id, m2.user_name, m2.work_style_div'
+             . ' FROM mst_user_admin m1'
+             . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             . ' ORDER BY m2.work_style_div ASC, m2.user_id ASC';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'admin_uuid' => $adminUuid,
+            'delete_flg' => $deleteFlag,
+        ]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * チャット月間集計用: 指定期間のチャット送受信回数を担当ユーザー分まとめて日別に集計する。
+     * send = 管理者→就労者、recv = 就労者→管理者。$monthEnd は期間の終端（含まない）。
+     *
+     * @return array<string, array<int, array{send:int, recv:int}>> [user_uuid][日] の連想配列
+     */
+    public function findMonthlyChatCounts(string $adminUuid, string $deleteFlag, string $monthStart, string $monthEnd): array
+    {
+        $sql = 'SELECT c.user_uuid, DAY(c.insert_date) AS d,'
+             . ' SUM(c.insert_uuid <> c.user_uuid) AS send_cnt,'
+             . ' SUM(c.insert_uuid = c.user_uuid) AS recv_cnt'
+             . ' FROM mst_user_admin m1'
+             . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
+             . ' JOIN tbl_chat c ON c.user_uuid = m2.user_uuid'
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             . ' AND c.delete_flg = 0 AND c.insert_date >= :month_start AND c.insert_date < :month_end'
+             . ' GROUP BY c.user_uuid, DAY(c.insert_date)';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'admin_uuid'  => $adminUuid,
+            'delete_flg'  => $deleteFlag,
+            'month_start' => $monthStart,
+            'month_end'   => $monthEnd,
+        ]);
+
+        $counts = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $counts[(string) $row['user_uuid']][(int) $row['d']] = [
+                'send' => (int) $row['send_cnt'],
+                'recv' => (int) $row['recv_cnt'],
+            ];
+        }
+        return $counts;
+    }
+
+    /**
+     * チャット月間集計用: 勤務した日（開始/終了/問い合せ/緊急の連絡がある日）を日別に返す。
+     *
+     * @return array<string, array<int, bool>> [user_uuid][日] => true
+     */
+    public function findMonthlyWorkedDays(string $adminUuid, string $deleteFlag, string $monthStart, string $monthEnd): array
+    {
+        $sql = 'SELECT c.insert_uuid AS user_uuid, DAY(c.contact_date) AS d'
+             . ' FROM mst_user_admin m1'
+             . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
+             . ' JOIN tbl_contact c ON c.insert_uuid = m2.user_uuid'
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             . ' AND c.delete_flg = 0 AND c.contact_div IN (1, 2, 3, 5)'
+             . ' AND c.contact_date >= :month_start AND c.contact_date < :month_end'
+             . ' GROUP BY c.insert_uuid, DAY(c.contact_date)';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'admin_uuid'  => $adminUuid,
+            'delete_flg'  => $deleteFlag,
+            'month_start' => $monthStart,
+            'month_end'   => $monthEnd,
+        ]);
+
+        $worked = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $worked[(string) $row['user_uuid']][(int) $row['d']] = true;
+        }
+        return $worked;
+    }
+
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array
     {
         $sql = 'SELECT m2.user_uuid,'

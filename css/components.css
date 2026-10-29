@@ -624,3 +624,55 @@ td.user_contact_f_3 {
     gap: var(--sp-3);
   }
 }
+
+/* ============================================================
+   月ナビ（前月・翌月）ボタングループ
+   report 系・chat_summary など複数ページで共通利用
+   ============================================================ */
+.mp-nav-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.mp-nav-wrap input.month-picker,
+.mp-nav-wrap input.date,
+.mp-nav-wrap select {
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+.mp-nav-wrap select {
+  height: 36px;
+}
+
+/* 月入力の大きさ（report.css の input.month-picker と同じ） */
+.mp-nav-wrap input.month-picker {
+  width: var(--calendar-month-width);
+  height: 36px;
+  padding: 0 var(--sp-3);
+}
+
+.mp-nav-btn {
+  height: 36px;
+  padding: 0 10px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  font-size: 1.2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.mp-nav-btn.mp-nav-prev {
+  border-radius: var(--r-md) 0 0 var(--r-md);
+}
+
+.mp-nav-btn.mp-nav-next {
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+
+.mp-nav-btn:hover {
+  background: var(--color-surface-hover, #f0f0f0);
+}

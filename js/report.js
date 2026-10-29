@@ -150,18 +150,7 @@ $(function(){
 		var $btn = $(this);
 		var delta = $btn.hasClass('mp-nav-prev') ? -1 : 1;
 
-		var $monthInput = delta === -1 ? $btn.next('input.month-picker') : $btn.prev('input.month-picker');
-		if ($monthInput.length) {
-			var val = $monthInput.val();
-			if (!val || !/^\d{4}-\d{2}/.test(val)) { return; }
-			var y = parseInt(val.substring(0, 4), 10);
-			var m = parseInt(val.substring(5, 7), 10) - 1 + delta;
-			y += Math.floor(m / 12);
-			m = ((m % 12) + 12) % 12;
-			$monthInput.val(y + '-' + (m + 1 < 10 ? '0' : '') + (m + 1)).trigger('change');
-			return;
-		}
-
+		// 月入力の前月・翌月は month-picker.js 側で処理する
 		var $dateInput = delta === -1 ? $btn.next('input.date') : $btn.prev('input.date');
 		if ($dateInput.length) {
 			var dval = $dateInput.val();

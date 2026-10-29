@@ -419,8 +419,15 @@
 }
 /* チャット列は円・バッジで内容が高くなるため、上下の余白を詰めて行の高さを変えない */
 .data-table td[data-col="chat"] {
+  /* 幅を固定する（表の自動レイアウトでも伸び縮みしないよう width/min/max を揃える） */
+  width: 130px;
+  min-width: 130px;
+  max-width: 130px;
   padding-top: 2px;
   padding-bottom: 2px;
+}
+.user-chat-cell {
+  white-space: nowrap;
 }
 /* 注意のときだけ「確認」を赤いピル型ボタンにする（クリア・対象外は通常のリンク） */
 .user-chat-link {

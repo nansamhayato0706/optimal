@@ -12,6 +12,9 @@ interface UserRepositoryInterface
     public function findUsers(string $groupUuid, string $adminUuid, string $deleteFlag): array;
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array;
     public function findTodayChatCounts(string $adminUuid, string $deleteFlag): array;
+    public function findUsersForChatSummary(string $adminUuid, string $deleteFlag): array;
+    public function findMonthlyChatCounts(string $adminUuid, string $deleteFlag, string $monthStart, string $monthEnd): array;
+    public function findMonthlyWorkedDays(string $adminUuid, string $deleteFlag, string $monthStart, string $monthEnd): array;
     public function findReportsByDate(string $groupUuid, string $adminUuid, string $date): array;
     public function findUserByUuid(string $userUuid): ?array;
     public function findDivMap(): array;

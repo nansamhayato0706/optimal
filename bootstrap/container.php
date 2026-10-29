@@ -31,6 +31,7 @@ use App\Controllers\LogIndexController;
 use App\Controllers\NoticeIndexController;
 use App\Controllers\ReportCompleteController;
 use App\Controllers\ReportConfirmController;
+use App\Controllers\ChatSummaryController;
 use App\Controllers\ReportDailyIndexController;
 use App\Controllers\ReportDetailController;
 use App\Controllers\ReportEditController;
@@ -73,6 +74,7 @@ use App\Services\LoginService;
 use App\Services\LinkService;
 use App\Services\LogService;
 use App\Services\NoticeService;
+use App\Services\ChatMonthlySummaryService;
 use App\Services\ReportDailyListService;
 use App\Services\ReportDetailService;
 use App\Services\ReportFormService;
@@ -152,6 +154,9 @@ $container->singleton(ChatService::class, static function (Container $c) {
 });
 $container->singleton(ReportListService::class, static function (Container $c) {
     return new ReportListService($c->get(ReportRepository::class), $c->get(UserRepositoryInterface::class), $c->get(AppConfig::class));
+});
+$container->singleton(ChatMonthlySummaryService::class, static function (Container $c) {
+    return new ChatMonthlySummaryService($c->get(UserRepositoryInterface::class));
 });
 $container->singleton(ReportDailyListService::class, static function (Container $c) {
     return new ReportDailyListService($c->get(UserRepositoryInterface::class));
@@ -269,6 +274,9 @@ $container->bind(LogIndexController::class, static function (Container $c) {
 });
 $container->bind(ReportIndexController::class, static function (Container $c) {
     return new ReportIndexController($c->get(ReportAuth::class), $c->get(ReportListService::class), $c->get(ViewRenderer::class), $c->get(RequestContext::class));
+});
+$container->bind(ChatSummaryController::class, static function (Container $c) {
+    return new ChatSummaryController($c->get(UserAdminAuth::class), $c->get(ChatMonthlySummaryService::class), $c->get(View::class), $c->get(RequestContext::class));
 });
 $container->bind(ReportDailyIndexController::class, static function (Container $c) {
     return new ReportDailyIndexController($c->get(UserAdminAuth::class), $c->get(ReportDailyListService::class), $c->get(View::class), $c->get(RequestContext::class));

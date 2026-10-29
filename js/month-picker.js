@@ -52,6 +52,25 @@
                 self._close();
             });
 
+            // 前月・翌月ボタン（.mp-nav-btn）で隣の月入力を1か月動かす
+            $(document).on('click.monthpicker', '.mp-nav-btn', function () {
+                var $btn = $(this);
+                var delta = $btn.hasClass('mp-nav-prev') ? -1 : 1;
+                var $monthInput = delta === -1 ? $btn.next('input.month-picker') : $btn.prev('input.month-picker');
+                if (!$monthInput.length) {
+                    return;
+                }
+                var val = $monthInput.val();
+                if (!val || !/^\d{4}-\d{2}/.test(val)) {
+                    return;
+                }
+                var y = parseInt(val.substring(0, 4), 10);
+                var m = parseInt(val.substring(5, 7), 10) - 1 + delta;
+                y += Math.floor(m / 12);
+                m = ((m % 12) + 12) % 12;
+                $monthInput.val(y + '-' + (m + 1 < 10 ? '0' : '') + (m + 1)).trigger('change');
+            });
+
             // ESC で閉じる
             $(document).on('keydown.monthpicker', function (e) {
                 if (e.key === 'Escape') {
@@ -204,9 +223,16 @@
                 top = offset.top - popupH - 6;
             }
 
+            // 入力欄が画面右寄りでも、ポップアップが画面の右端からはみ出さないようにする
+            var popupW = self._$popup.outerWidth(true);
+            var winW   = $(window).width();
+            var scrollX = $(window).scrollLeft();
+            var left = Math.min(offset.left, scrollX + winW - popupW - 8);
+            left = Math.max(left, scrollX + 8);
+
             self._$popup.css({
                 top:  top,
-                left: offset.left
+                left: left
             });
         },
 

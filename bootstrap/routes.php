@@ -28,6 +28,7 @@ use App\Controllers\LogIndexController;
 use App\Controllers\NoticeIndexController;
 use App\Controllers\ReportCompleteController;
 use App\Controllers\ReportConfirmController;
+use App\Controllers\ChatSummaryController;
 use App\Controllers\ReportDailyIndexController;
 use App\Controllers\ReportDetailController;
 use App\Controllers\ReportEditController;
@@ -82,6 +83,7 @@ $routes->add(['POST'], '/contact_update.php', static function (): void { app_con
 $routes->add(['GET', 'POST'], '/log.php', static function (): void { app_container()->get(LogIndexController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/report.php', static function (): void { app_container()->get(ReportIndexController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/report_daily.php', static function (): void { app_container()->get(ReportDailyIndexController::class)->handle(); });
+$routes->add(['GET'], '/chat_summary.php', static function (): void { app_container()->get(ChatSummaryController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/report_edit.php', static function (): void { app_container()->get(ReportEditController::class)->handle(); });
 $routes->add(['GET'], '/report_confirm.php', static function (): void { app_container()->get(ReportConfirmController::class)->handle(); });
 $routes->add(['GET', 'POST'], '/report_complete.php', static function (): void { app_container()->get(ReportCompleteController::class)->handle(); });

@@ -11,7 +11,7 @@ use App\Support\UserViewHelpers;
 final class UserListService
 {
 	// 1日のチャットのやり取り（送信+受信）がこの回数以上で注意を解除する
-	private const CHAT_MIN_EXCHANGES = 3;
+	public const CHAT_MIN_EXCHANGES = 3;
 
 	private $userRepository;
 	private $userStatusSummaryRepository;
