@@ -45,7 +45,9 @@ final class UserStatusController
 		$deleteFlag = $this->auth->getDeleteFlag() === '' ? '0' : $this->auth->getDeleteFlag();
 
 		$statusSignature = $this->summaryRepository->fetchGroupStatusSignature($groupUuid, $adminUuid, $deleteFlag);
-		$etag = '"' . sha1($groupUuid . '|' . $adminUuid . '|' . $deleteFlag . '|' . $statusSignature) . '"';
+		// 本日の送受信回数はサマリーの更新時刻に反映されないため、ETag にも含めて変化を検知する
+		$chatCounts = $this->userListService->fetchTodayChatCounts($adminUuid, $deleteFlag);
+		$etag = '"' . sha1($groupUuid . '|' . $adminUuid . '|' . $deleteFlag . '|' . $statusSignature . '|' . json_encode($chatCounts)) . '"';
 
 		header('ETag: ' . $etag);
 		$clientEtag = $this->request->header('If-None-Match');
@@ -58,7 +60,8 @@ final class UserStatusController
 			$groupUuid,
 			$adminUuid,
 			$deleteFlag,
-			$this->userRepository->findDivMap()
+			$this->userRepository->findDivMap(),
+			$chatCounts
 		);
 
 		header('Cache-Control: no-cache');

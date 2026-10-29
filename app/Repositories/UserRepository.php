@@ -103,6 +103,39 @@ final class UserRepository extends AbstractRepository implements UserRepositoryI
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    /**
+     * 本日分のチャット送受信回数を担当ユーザー分まとめて集計する（N+1 回避）。
+     * send = 管理者→就労者、recv = 就労者→管理者。
+     *
+     * @return array<string, array{send:int, recv:int}> user_uuid をキーにした連想配列
+     */
+    public function findTodayChatCounts(string $adminUuid, string $deleteFlag): array
+    {
+        $sql = 'SELECT c.user_uuid,'
+             . ' SUM(c.insert_uuid <> c.user_uuid) AS send_cnt,'
+             . ' SUM(c.insert_uuid = c.user_uuid) AS recv_cnt'
+             . ' FROM mst_user_admin m1'
+             . ' JOIN mst_user m2 ON m1.user_uuid = m2.user_uuid'
+             . ' JOIN tbl_chat c ON c.user_uuid = m2.user_uuid'
+             . ' WHERE m1.admin_uuid = :admin_uuid AND m2.delete_flg = :delete_flg'
+             . ' AND c.delete_flg = 0 AND c.insert_date >= CURDATE() AND c.insert_date < CURDATE() + INTERVAL 1 DAY'
+             . ' GROUP BY c.user_uuid';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            'admin_uuid' => $adminUuid,
+            'delete_flg' => $deleteFlag,
+        ]);
+
+        $counts = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $counts[(string) $row['user_uuid']] = [
+                'send' => (int) $row['send_cnt'],
+                'recv' => (int) $row['recv_cnt'],
+            ];
+        }
+        return $counts;
+    }
+
     public function findUserStatuses(string $groupUuid, string $adminUuid, string $deleteFlag): array
     {
         $sql = 'SELECT m2.user_uuid,'

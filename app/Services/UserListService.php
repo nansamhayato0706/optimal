@@ -6,9 +6,13 @@ namespace App\Services;
 
 use App\Repositories\UserRepository;
 use App\Repositories\UserStatusSummaryRepository;
+use App\Support\UserViewHelpers;
 
 final class UserListService
 {
+	// 1日のチャットのやり取り（送信+受信）がこの回数以上で注意を解除する
+	private const CHAT_MIN_EXCHANGES = 3;
+
 	private $userRepository;
 	private $userStatusSummaryRepository;
 
@@ -26,8 +30,13 @@ final class UserListService
 		}
 
 		$users = $this->userRepository->findUsers($groupUuid, $adminUuid, $deleteFlag);
+		$chatCounts = $this->userRepository->findTodayChatCounts($adminUuid, $deleteFlag);
 		foreach ($users as &$user) {
 			$user['contact_class'] = $this->contactClass($user);
+			$uuid = (string) $user['user_uuid'];
+			$user['chat_send_today'] = isset($chatCounts[$uuid]) ? $chatCounts[$uuid]['send'] : 0;
+			$user['chat_recv_today'] = isset($chatCounts[$uuid]) ? $chatCounts[$uuid]['recv'] : 0;
+			$user['chat_state'] = $this->chatState($user, $user['chat_send_today'], $user['chat_recv_today']);
 		}
 		unset($user);
 		$summary = $this->buildSummary($users);
@@ -43,11 +52,19 @@ final class UserListService
 		);
 	}
 
-	public function buildStatusPayload(string $groupUuid, string $adminUuid, string $deleteFlag, array $divMap): array
+	public function fetchTodayChatCounts(string $adminUuid, string $deleteFlag): array
+	{
+		return $this->userRepository->findTodayChatCounts($adminUuid, $deleteFlag);
+	}
+
+	public function buildStatusPayload(string $groupUuid, string $adminUuid, string $deleteFlag, array $divMap, array $chatCounts): array
 	{
 		$data = $this->userRepository->findUserStatuses($groupUuid, $adminUuid, $deleteFlag);
 		$users = array();
 		foreach ($data as $user) {
+			$uuid = (string) $user['user_uuid'];
+			$sendCount = isset($chatCounts[$uuid]) ? $chatCounts[$uuid]['send'] : 0;
+			$recvCount = isset($chatCounts[$uuid]) ? $chatCounts[$uuid]['recv'] : 0;
 			$users[] = array(
 				'user_uuid' => $user['user_uuid'],
 				'contact_class' => $this->contactClass($user),
@@ -55,10 +72,24 @@ final class UserListService
 				'report_class' => $this->reportClass($user),
 				'report_html' => $this->reportHtml($user),
 				'chat_class' => empty($user['chat_user_uuid']) ? '' : 'user_chat',
-				'chat_html' => '<a href="chat.php?i=' . htmlspecialchars((string) $user['user_uuid'], ENT_QUOTES, 'UTF-8') . '">確認</a>',
+				'chat_html' => UserViewHelpers::chatCellHtml($uuid, $sendCount, $recvCount, $this->chatState($user, $sendCount, $recvCount)),
 			);
 		}
 		return array('users' => $users);
+	}
+
+	// 本日のやり取り（送+受）が3回以上なら 'clear'。2回以下は、本日 開始/終了/問い合せ/緊急 の連絡がある就労者のみ 'warn'。
+	private function chatState(array $user, int $sendCount, int $recvCount): string
+	{
+		if ($sendCount + $recvCount >= self::CHAT_MIN_EXCHANGES) {
+			return 'clear';
+		}
+		$contactDate = (string) ($user['contact_date'] ?? '');
+		$isToday = $contactDate !== '' && substr($contactDate, 0, 10) === date('Y-m-d');
+		if ($isToday && in_array((int) ($user['contact_div'] ?? 0), array(1, 2, 3, 5), true)) {
+			return 'warn';
+		}
+		return '';
 	}
 
 	private function buildSummary(array $users): array

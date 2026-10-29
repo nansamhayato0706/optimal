@@ -28,7 +28,7 @@ foreach ($users as $user):
 <?php else: ?>
 						<td class="text-center" data-col="report"><a href="report_detail.php?i=<?= $h($user['report_uuid']) ?>">確認</a></td>
 <?php endif; ?>
-						<td class="<?= !empty($user['chat_user_uuid']) ? 'user_chat ' : '' ?>text-center" data-col="chat"><a href="chat.php?i=<?= $h($user['user_uuid']) ?>">確認</a></td>
+						<td class="<?= !empty($user['chat_user_uuid']) ? 'user_chat ' : '' ?>text-center" data-col="chat"><?= \App\Support\UserViewHelpers::chatCellHtml((string) $user['user_uuid'], (int) ($user['chat_send_today'] ?? 0), (int) ($user['chat_recv_today'] ?? 0), (string) ($user['chat_state'] ?? '')) ?></td>
 						<td class="text-center"><a href="log.php?i=<?= $h($user['user_uuid']) ?>">一覧</a></td>
 						<td class="text-center"><a href="user_edit.php?i=<?= $h($user['user_uuid']) ?>">変更</a></td>
 					</tr>

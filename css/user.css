@@ -410,6 +410,91 @@
 .data-table td.user_chat {
   background-color: #fbcfe8;
 }
+/* チャット列: 左に「確認」、右に本日の送信回数（上）・受信回数（下） */
+.user-chat-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+/* チャット列は円・バッジで内容が高くなるため、上下の余白を詰めて行の高さを変えない */
+.data-table td[data-col="chat"] {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+/* 注意のときだけ「確認」を赤いピル型ボタンにする（クリア・対象外は通常のリンク） */
+.user-chat-link {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 24px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ef4444, #b91c1c);
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: filter 0.15s;
+}
+.user-chat-link:hover {
+  filter: brightness(1.1);
+  color: #fff;
+}
+.user-chat-counts {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  font-size: 10px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+/* 送信=青 / 受信=緑のバッジ。ラベル部分を塗り、数字は白地で読ませる */
+.user-chat-count {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid;
+  border-radius: 999px;
+  overflow: hidden;
+  background: #fff;
+}
+.user-chat-count__label,
+.user-chat-count__num {
+  padding: 0 5px;
+  line-height: 1.1;
+}
+.user-chat-count__label {
+  color: #fff;
+  font-weight: bold;
+}
+.user-chat-count__num {
+  min-width: 18px;
+  text-align: center;
+}
+.user-chat-count--send {
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+.user-chat-count--send .user-chat-count__label {
+  background: #2563eb;
+}
+.user-chat-count--recv {
+  border-color: #16a34a;
+  color: #15803d;
+}
+.user-chat-count--recv .user-chat-count__label {
+  background: #16a34a;
+}
+.user-chat-count.is-zero {
+  border-color: #d1d5db;
+  color: #9ca3af;
+}
+.user-chat-count.is-zero .user-chat-count__label {
+  background: #d1d5db;
+}
 .data-table td.user_start {
   background-color: #d1fae5;
 }
