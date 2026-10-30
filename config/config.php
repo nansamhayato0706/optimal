@@ -75,6 +75,10 @@ $envToConfig = static function (array $env): array {
         'openai_api_key'            => ['ZAITAKU_OPENAI_API_KEY'],
         'openai_transcribe_model'   => ['ZAITAKU_OPENAI_TRANSCRIBE_MODEL'],
         'transcribe_daily_seconds'  => ['ZAITAKU_TRANSCRIBE_DAILY_SECONDS'],
+        'ext_db_name'               => ['ZAITAKU_EXT_DB_NAME'],
+        'ext_db_host'               => ['ZAITAKU_EXT_DB_HOST'],
+        'ext_db_user'               => ['ZAITAKU_EXT_DB_USER'],
+        'ext_db_pass'               => ['ZAITAKU_EXT_DB_PASS'],
     ];
 
     $config = [];
@@ -149,6 +153,11 @@ define('SLACK_WEBHOOK_URL',    $localConfig['slack_webhook_url']     ?? '');
 define('OPENAI_API_KEY',       $localConfig['openai_api_key']            ?? '');
 define('OPENAI_TRANSCRIBE_MODEL', $localConfig['openai_transcribe_model']   ?? 'gpt-transcribe');
 define('TRANSCRIBE_DAILY_SECONDS', (int) ($localConfig['transcribe_daily_seconds'] ?? 3600));
+define('EXT_DB_NAME', $localConfig['ext_db_name'] ?? 'jigyodan_kouzono');
+// 外部DBを別ユーザー/別ホストで参照する場合のみ設定する（未設定なら本体DBの接続を共用）
+define('EXT_DB_HOST', $localConfig['ext_db_host'] ?? '');
+define('EXT_DB_USER', $localConfig['ext_db_user'] ?? '');
+define('EXT_DB_PASS', $localConfig['ext_db_pass'] ?? '');
 
 // ファイルパス
 define('UPLOAD_DIR', ($localConfig['sv_root'] ?? dirname(__DIR__) . '/') . 'img/');
