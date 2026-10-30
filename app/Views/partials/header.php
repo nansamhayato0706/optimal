@@ -13,6 +13,22 @@ $navIcons = [
     'user_edit.php' => 'M12 5v14M5 12h14',
     'login.php' => 'M9 3H3v18h6M9 12h12M16 7l5 5-5 5',
 ];
+// リンクが多いときだけ、頻度の低い画面を「管理」メニューにまとめる（PC表示のみ）
+$desktopMenuPaths = ['notice.php', 'link.php', 'user_edit.php', 'group.php', 'admin.php'];
+$desktopMainLinks = [];
+$desktopMenuLinks = [];
+$desktopLogoutLink = null;
+$groupDesktopLinks = count($headerLinks) > 6;
+foreach ($headerLinks as $headerLink) {
+    $headerLinkPath = basename((string) $headerLink['link']);
+    if ($headerLinkPath === 'login.php') {
+        $desktopLogoutLink = $headerLink;
+    } elseif ($groupDesktopLinks && in_array($headerLinkPath, $desktopMenuPaths, true)) {
+        $desktopMenuLinks[] = $headerLink;
+    } else {
+        $desktopMainLinks[] = $headerLink;
+    }
+}
 $mobileHeaderLinks = $headerLinks;
 $mobileNavOrder = ['user.php' => 0, 'report_daily.php' => 1, 'notice.php' => 2, 'link.php' => 3, 'group.php' => 4, 'admin.php' => 5, 'user_edit.php' => 6, 'login.php' => 8];
 usort($mobileHeaderLinks, static function ($left, $right) use ($mobileNavOrder) {
@@ -29,9 +45,22 @@ usort($mobileHeaderLinks, static function ($left, $right) use ($mobileNavOrder) 
 		<?php require $headerExtraPartial; ?>
 <?php endif; ?>
 		<div id="h_link_area">
-<?php foreach ($headerLinks as $link): ?>
+<?php foreach ($desktopMainLinks as $link): ?>
 			<a class="h_link" href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
 <?php endforeach; ?>
+<?php if ($desktopMenuLinks !== []): ?>
+			<details class="h_menu">
+				<summary class="h_link">管理 ▾</summary>
+				<div class="h_menu_list">
+<?php foreach ($desktopMenuLinks as $link): ?>
+					<a href="<?= $h($link['link']) ?>"><?= $h($link['text']) ?></a>
+<?php endforeach; ?>
+				</div>
+			</details>
+<?php endif; ?>
+<?php if ($desktopLogoutLink !== null): ?>
+			<a class="h_link" href="<?= $h($desktopLogoutLink['link']) ?>"><?= $h($desktopLogoutLink['text']) ?></a>
+<?php endif; ?>
 		</div>
 		<details class="site-mobile-nav">
 			<summary aria-controls="site-mobile-panel"><span aria-hidden="true">☰</span> メニュー</summary>

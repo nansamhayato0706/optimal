@@ -49,3 +49,11 @@
   window.addEventListener('pageshow', function () { menu.open = false; sync(); });
   sync();
 }());
+
+/* 管理ドロップダウン：外側クリックで閉じる */
+document.addEventListener("click", function (e) {
+	var menus = document.querySelectorAll(".h_menu[open]");
+	for (var i = 0; i < menus.length; i++) {
+		if (!menus[i].contains(e.target)) { menus[i].removeAttribute("open"); }
+	}
+});
