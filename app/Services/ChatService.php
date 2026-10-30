@@ -25,14 +25,20 @@ final class ChatService
         $this->chatFileStorage = $chatFileStorage;
     }
 
-    public function buildPageData(string $userUuid, ?string $insertDate, bool $history): array
+    public function buildPageData(string $userUuid, ?string $insertDate, bool $history, ?string $onlyDate = null): array
     {
+        $untilDate = null;
+        if ($onlyDate !== null && !$history) {
+            // 指定日の 00:00:00 以上、翌日 00:00:00 未満だけを表示する。
+            $insertDate = $onlyDate . ' 00:00:00';
+            $untilDate = date('Y-m-d 00:00:00', strtotime($onlyDate . ' +1 day'));
+        }
         $baseDate = $this->resolveBaseDate($insertDate);
         $queryDate = $history
             ? date('Y-m-d 00:00:00', strtotime('-10 Year ' . $baseDate))
             : $baseDate;
 
-        $messages = $this->chatRepository->findMessages($userUuid, $queryDate);
+        $messages = $this->chatRepository->findMessages($userUuid, $queryDate, $untilDate);
         $unreadChatUuids = [];
         foreach ($messages as $message) {
             if ((int) ($message['admin_chat_div'] ?? 0) === 1) {

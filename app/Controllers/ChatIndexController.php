@@ -34,10 +34,17 @@ final class ChatIndexController
             exit;
         }
 
+        $onlyDate = trim((string) $this->request->query('d', ''));
+        $dateObj = \DateTime::createFromFormat('!Y-m-d', $onlyDate);
+        if ($dateObj === false || $dateObj->format('Y-m-d') !== $onlyDate) {
+            $onlyDate = '';
+        }
+
         $page = $this->chatService->buildPageData(
             $userUuid,
             trim((string) $this->request->post('insert_date', '')) !== '' ? trim((string) $this->request->post('insert_date', '')) : null,
-            trim((string) $this->request->post('history', '')) !== ''
+            trim((string) $this->request->post('history', '')) !== '',
+            $onlyDate !== '' ? $onlyDate : null
         );
 
         $this->view->render('chat/index', [

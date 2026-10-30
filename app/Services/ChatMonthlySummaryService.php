@@ -54,6 +54,8 @@ final class ChatMonthlySummaryService
             $cells = [];
             $totalSend = 0;
             $totalRecv = 0;
+            $achieved = 0;
+            $missed = 0;
             foreach ($days as $day) {
                 $d = $day['day'];
                 $send = isset($counts[$uuid][$d]) ? $counts[$uuid][$d]['send'] : 0;
@@ -66,6 +68,13 @@ final class ChatMonthlySummaryService
                     'worked' => $isWorked,
                     'state'  => $isWarn ? 'warn' : '',
                 ];
+                if ($isWorked && !$day['is_future']) {
+                    if ($isWarn) {
+                        $missed++;
+                    } else {
+                        $achieved++;
+                    }
+                }
                 $totalSend += $send;
                 $totalRecv += $recv;
             }
@@ -76,6 +85,8 @@ final class ChatMonthlySummaryService
                 'cells'      => $cells,
                 'total_send' => $totalSend,
                 'total_recv' => $totalRecv,
+                'achieved'   => $achieved,
+                'missed'     => $missed,
             ];
         }
 

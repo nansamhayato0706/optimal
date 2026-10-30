@@ -19,19 +19,24 @@ final class ChatRepository extends AbstractRepository
         return $value === false ? '' : (string) $value;
     }
 
-    public function findMessages(string $userUuid, string $insertDate): array
+    public function findMessages(string $userUuid, string $insertDate, ?string $untilDate = null): array
     {
         $sql = 'SELECT c.*, u.user_name, a.admin_name'
             . ' FROM tbl_chat c'
             . ' LEFT JOIN mst_user u ON c.insert_uuid = u.user_uuid'
             . ' LEFT JOIN mst_admin a ON c.insert_uuid = a.admin_uuid'
             . ' WHERE c.user_uuid = :user_uuid AND c.insert_date >= :insert_date AND c.delete_flg = 0'
+            . ($untilDate !== null ? ' AND c.insert_date < :until_date' : '')
             . ' ORDER BY c.insert_date DESC, c.chat_uuid DESC';
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
+        $params = [
             'user_uuid' => $userUuid,
             'insert_date' => $insertDate,
-        ]);
+        ];
+        if ($untilDate !== null) {
+            $params['until_date'] = $untilDate;
+        }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

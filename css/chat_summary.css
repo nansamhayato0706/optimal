@@ -97,7 +97,7 @@
 }
 .chat-summary-table td.cs-total-col,
 .chat-summary-table th.cs-total-col {
-  min-width: 36px;
+  min-width: 48px;
   padding: 2px 4px;
   text-align: center;
 }
@@ -113,10 +113,25 @@
 .cs-badge--recv {
   color: #15803d;
 }
+.cs-badge--ok {
+  color: #15803d;
+}
+.cs-badge--ng {
+  color: #b91c1c;
+}
 .cs-badge.is-zero {
   color: #9ca3af;
   font-weight: normal;
 }
 .chat-summary-legend .cs-badge {
   display: inline;
+}
+
+.cs-cell-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.cs-cell-link:hover {
+  background: #e0f2fe;
 }

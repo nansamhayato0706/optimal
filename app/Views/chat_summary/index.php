@@ -67,14 +67,16 @@ declare(strict_types=1);
 <?php $hasCell = $cell['worked'] || $cell['send'] > 0 || $cell['recv'] > 0; ?>
 							<td class="cs-cell<?= $cell['state'] === 'warn' ? ' is-warn' : '' ?><?= ($dow === 0 || $dow === 6) ? ' is-holiday' : '' ?>"<?= $hasCell ? ' title="' . $h($days[$i]['day']) . '日 送信' . $h($cell['send']) . '回・受信' . $h($cell['recv']) . '回"' : '' ?>>
 <?php if ($hasCell): ?>
-								<span class="cs-badge cs-badge--send<?= $cell['send'] === 0 ? ' is-zero' : '' ?>">送<?= $h($cell['send']) ?></span>
-								<span class="cs-badge cs-badge--recv<?= $cell['recv'] === 0 ? ' is-zero' : '' ?>">受<?= $h($cell['recv']) ?></span>
+								<a class="cs-cell-link" href="chat.php?i=<?= $h($row['user_uuid']) ?>&amp;d=<?= $h($month . '-' . sprintf('%02d', $days[$i]['day'])) ?>" target="_blank" rel="noopener">
+									<span class="cs-badge cs-badge--send<?= $cell['send'] === 0 ? ' is-zero' : '' ?>">送<?= $h($cell['send']) ?></span>
+									<span class="cs-badge cs-badge--recv<?= $cell['recv'] === 0 ? ' is-zero' : '' ?>">受<?= $h($cell['recv']) ?></span>
+								</a>
 <?php endif; ?>
 							</td>
 <?php endforeach; ?>
-							<td class="cs-total-col" title="送信<?= $h($row['total_send']) ?>回・受信<?= $h($row['total_recv']) ?>回">
-								<span class="cs-badge cs-badge--send">送<?= $h($row['total_send']) ?></span>
-								<span class="cs-badge cs-badge--recv">受<?= $h($row['total_recv']) ?></span>
+							<td class="cs-total-col" title="達成<?= $h($row['achieved']) ?>日・未達成<?= $h($row['missed']) ?>日（送信<?= $h($row['total_send']) ?>回・受信<?= $h($row['total_recv']) ?>回）">
+								<span class="cs-badge cs-badge--ok<?= $row['achieved'] === 0 ? ' is-zero' : '' ?>">達成<?= $h($row['achieved']) ?></span>
+								<span class="cs-badge cs-badge--ng<?= $row['missed'] === 0 ? ' is-zero' : '' ?>">未達<?= $h($row['missed']) ?></span>
 							</td>
 						</tr>
 <?php endforeach; ?>
