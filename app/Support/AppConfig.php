@@ -20,6 +20,7 @@ final class AppConfig
     private $openAiApiKey;
     private $openAiTranscribeModel;
     private $transcribeDailySeconds;
+    private $extDbName;
 
     private function __construct(
         string $dbHost,
@@ -35,7 +36,8 @@ final class AppConfig
         string $slackWebhookUrl,
         string $openAiApiKey,
         string $openAiTranscribeModel,
-        int $transcribeDailySeconds
+        int $transcribeDailySeconds,
+        string $extDbName
     ) {
         $this->dbHost  = $dbHost;
         $this->dbName  = $dbName;
@@ -51,6 +53,7 @@ final class AppConfig
         $this->openAiApiKey       = $openAiApiKey;
         $this->openAiTranscribeModel = $openAiTranscribeModel === '' ? 'gpt-transcribe' : $openAiTranscribeModel;
         $this->transcribeDailySeconds = $transcribeDailySeconds > 0 ? $transcribeDailySeconds : 3600;
+        $this->extDbName = $extDbName === '' ? 'jigyodan_kouzono' : $extDbName;
     }
 
     public static function fromGlobals(): self
@@ -69,7 +72,8 @@ final class AppConfig
             (string) (defined('SLACK_WEBHOOK_URL')    ? SLACK_WEBHOOK_URL    : ''),
             (string) (defined('OPENAI_API_KEY')       ? OPENAI_API_KEY       : ''),
             (string) (defined('OPENAI_TRANSCRIBE_MODEL') ? OPENAI_TRANSCRIBE_MODEL : 'gpt-transcribe'),
-            (int)    (defined('TRANSCRIBE_DAILY_SECONDS') ? TRANSCRIBE_DAILY_SECONDS : 3600)
+            (int)    (defined('TRANSCRIBE_DAILY_SECONDS') ? TRANSCRIBE_DAILY_SECONDS : 3600),
+            (string) (defined('EXT_DB_NAME') ? EXT_DB_NAME : 'jigyodan_kouzono')
         );
     }
 
@@ -87,6 +91,7 @@ final class AppConfig
     public function openAiApiKey(): string     { return $this->openAiApiKey; }
     public function openAiTranscribeModel(): string { return $this->openAiTranscribeModel; }
     public function transcribeDailySeconds(): int { return $this->transcribeDailySeconds; }
+    public function extDbName(): string { return $this->extDbName; }
     public function openAiTranscriptionEnabled(): bool { return $this->openAiApiKey !== ''; }
     public function rootPath(): string { return dirname(__DIR__, 2) . '/'; }
     public function siblingImageProjectDirs(): array { return array('zaitakukanri_honbu_new', 'zaitakukanri_honbu'); }

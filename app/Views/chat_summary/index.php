@@ -37,7 +37,7 @@ declare(strict_types=1);
 			<p class="chat-summary-legend">
 				<span class="cs-badge cs-badge--send">送</span> ＝ 送信（管理者→就労者）、
 				<span class="cs-badge cs-badge--recv">受</span> ＝ 受信（就労者→管理者）
-				<span class="cs-legend-warn">赤</span> 勤務した日で、やり取りが<?= $h($minExchanges - 1) ?>回以下
+				<span class="cs-legend-warn">赤</span> 勤務した日で、やり取りが<?= $h($minExchanges - 1) ?>回以下（土日・祝日は対象外）
 			</p>
 <?php if ($rows === []): ?>
 			<p class="chat-summary-empty">表示できる利用者がいません。</p>
@@ -48,13 +48,13 @@ declare(strict_types=1);
 						<tr>
 							<th rowspan="2" class="cs-user-col">ユーザー</th>
 <?php foreach ($days as $day): ?>
-							<th class="cs-day<?= $day['dow'] === 6 ? ' is-sat' : '' ?><?= $day['dow'] === 0 ? ' is-sun' : '' ?><?= $day['is_today'] ? ' is-today' : '' ?>"><?= $h($day['day']) ?></th>
+							<th class="cs-day<?= $day['dow'] === 6 ? ' is-sat' : '' ?><?= ($day['dow'] === 0 || $day['is_holiday']) ? ' is-sun' : '' ?><?= $day['is_today'] ? ' is-today' : '' ?>"<?= $day['is_holiday'] ? ' title="' . $h($day['holiday_name']) . '"' : '' ?>><?= $h($day['day']) ?></th>
 <?php endforeach; ?>
 							<th rowspan="2" class="cs-total-col">合計</th>
 						</tr>
 						<tr>
 <?php foreach ($days as $day): ?>
-							<th class="cs-weekday<?= $day['dow'] === 6 ? ' is-sat' : '' ?><?= $day['dow'] === 0 ? ' is-sun' : '' ?><?= $day['is_today'] ? ' is-today' : '' ?>"><?= $h($day['weekday']) ?></th>
+							<th class="cs-weekday<?= $day['dow'] === 6 ? ' is-sat' : '' ?><?= ($day['dow'] === 0 || $day['is_holiday']) ? ' is-sun' : '' ?><?= $day['is_today'] ? ' is-today' : '' ?>"<?= $day['is_holiday'] ? ' title="' . $h($day['holiday_name']) . '"' : '' ?>><?= $h($day['is_holiday'] ? '祝' : $day['weekday']) ?></th>
 <?php endforeach; ?>
 						</tr>
 					</thead>
@@ -65,7 +65,7 @@ declare(strict_types=1);
 <?php foreach ($row['cells'] as $i => $cell): ?>
 <?php $dow = $days[$i]['dow']; ?>
 <?php $hasCell = $cell['worked'] || $cell['send'] > 0 || $cell['recv'] > 0; ?>
-							<td class="cs-cell<?= $cell['state'] === 'warn' ? ' is-warn' : '' ?><?= ($dow === 0 || $dow === 6) ? ' is-holiday' : '' ?>"<?= $hasCell ? ' title="' . $h($days[$i]['day']) . '日 送信' . $h($cell['send']) . '回・受信' . $h($cell['recv']) . '回"' : '' ?>>
+							<td class="cs-cell<?= $cell['state'] === 'warn' ? ' is-warn' : '' ?><?= $days[$i]['is_off'] ? ' is-holiday' : '' ?>"<?= $hasCell ? ' title="' . $h($days[$i]['day']) . '日 送信' . $h($cell['send']) . '回・受信' . $h($cell['recv']) . '回"' : '' ?>>
 <?php if ($hasCell): ?>
 								<a class="cs-cell-link" href="chat.php?i=<?= $h($row['user_uuid']) ?>&amp;d=<?= $h($month . '-' . sprintf('%02d', $days[$i]['day'])) ?>" target="_blank" rel="noopener">
 									<span class="cs-badge cs-badge--send<?= $cell['send'] === 0 ? ' is-zero' : '' ?>">送<?= $h($cell['send']) ?></span>

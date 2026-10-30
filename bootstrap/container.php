@@ -52,9 +52,11 @@ use App\Repositories\ChatRepository;
 use App\Repositories\ContactRepository;
 use App\Repositories\Contracts\AdminRepositoryInterface;
 use App\Repositories\Contracts\GroupRepositoryInterface;
+use App\Repositories\Contracts\HolidayRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\FirstRepository;
 use App\Repositories\GroupRepository;
+use App\Repositories\HolidayRepository;
 use App\Repositories\LinkRepository;
 use App\Repositories\LogRepository;
 use App\Repositories\NoticeRepository;
@@ -120,6 +122,7 @@ $container->singleton(ReportPdfGenerator::class, static function (Container $c) 
 $container->singleton(AdminRepositoryInterface::class, static function () { return new AdminRepository(Database::connection()); });
 $container->singleton(GroupRepositoryInterface::class, static function () { return new GroupRepository(Database::connection()); });
 $container->singleton(UserRepositoryInterface::class,  static function () { return new UserRepository(Database::connection()); });
+$container->singleton(HolidayRepositoryInterface::class, static function (Container $c) { return new HolidayRepository($c->get(AppConfig::class)); });
 $container->singleton(ReportRepository::class, static function () { return new ReportRepository(Database::connection()); });
 $container->singleton(ScreenshotRequestRepository::class, static function () { return new ScreenshotRequestRepository(Database::connection()); });
 
@@ -156,7 +159,7 @@ $container->singleton(ReportListService::class, static function (Container $c) {
     return new ReportListService($c->get(ReportRepository::class), $c->get(UserRepositoryInterface::class), $c->get(AppConfig::class));
 });
 $container->singleton(ChatMonthlySummaryService::class, static function (Container $c) {
-    return new ChatMonthlySummaryService($c->get(UserRepositoryInterface::class));
+    return new ChatMonthlySummaryService($c->get(UserRepositoryInterface::class), $c->get(HolidayRepositoryInterface::class));
 });
 $container->singleton(ReportDailyListService::class, static function (Container $c) {
     return new ReportDailyListService($c->get(UserRepositoryInterface::class));

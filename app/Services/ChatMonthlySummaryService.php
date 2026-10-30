@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Repositories\Contracts\HolidayRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 
 final class ChatMonthlySummaryService
@@ -12,10 +13,12 @@ final class ChatMonthlySummaryService
     private const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
 
     private $userRepository;
+    private $holidayRepository;
 
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $userRepository, HolidayRepositoryInterface $holidayRepository)
     {
         $this->userRepository = $userRepository;
+        $this->holidayRepository = $holidayRepository;
     }
 
     /**
@@ -29,6 +32,8 @@ final class ChatMonthlySummaryService
         $monthStart = sprintf('%04d-%02d-01 00:00:00', $year, $mon);
         $monthEnd = date('Y-m-d H:i:s', mktime(0, 0, 0, $mon + 1, 1, $year));
 
+        $holidays = $this->holidayRepository->findHolidays(substr($monthStart, 0, 10), substr($monthEnd, 0, 10));
+
         $today = date('Y-m-d');
         $days = [];
         for ($d = 1; $d <= $daysInMonth; $d++) {
@@ -39,6 +44,10 @@ final class ChatMonthlySummaryService
                 'day'       => $d,
                 'weekday'   => self::WEEKDAYS[$dow],
                 'dow'       => $dow,
+                'is_holiday' => isset($holidays[$date]),
+                'holiday_name' => isset($holidays[$date]) ? $holidays[$date] : '',
+                // 土日・祝日は達成/未達成の集計に含めない
+                'is_off'    => $dow === 0 || $dow === 6 || isset($holidays[$date]),
                 'is_today'  => $date === $today,
                 'is_future' => $date > $today,
             ];
@@ -61,14 +70,14 @@ final class ChatMonthlySummaryService
                 $send = isset($counts[$uuid][$d]) ? $counts[$uuid][$d]['send'] : 0;
                 $recv = isset($counts[$uuid][$d]) ? $counts[$uuid][$d]['recv'] : 0;
                 $isWorked = isset($worked[$uuid][$d]);
-                $isWarn = $isWorked && !$day['is_future'] && ($send + $recv) < UserListService::CHAT_MIN_EXCHANGES;
+                $isWarn = $isWorked && !$day['is_future'] && !$day['is_off'] && ($send + $recv) < UserListService::CHAT_MIN_EXCHANGES;
                 $cells[] = [
                     'send'   => $send,
                     'recv'   => $recv,
                     'worked' => $isWorked,
                     'state'  => $isWarn ? 'warn' : '',
                 ];
-                if ($isWorked && !$day['is_future']) {
+                if ($isWorked && !$day['is_future'] && !$day['is_off']) {
                     if ($isWarn) {
                         $missed++;
                     } else {
