@@ -34,6 +34,20 @@ final class ChatSummaryController
             $deleteFlag = '0';
         }
 
+        $csvType = trim((string) $this->request->query('csv', ''));
+        if ($csvType === 'summary' || $csvType === 'daily') {
+            $result = $this->service->buildCsv(
+                $this->auth->getLoginAdminUuid(),
+                $deleteFlag,
+                trim((string) $this->request->query('month', '')),
+                $csvType
+            );
+            header('Content-Type: text/csv; charset=Shift_JIS');
+            header('Content-Disposition: attachment; filename=' . $result['file_name']);
+            echo $result['csv'];
+            exit;
+        }
+
         $page = $this->service->buildPageData(
             $this->auth->getLoginAdminUuid(),
             $deleteFlag,

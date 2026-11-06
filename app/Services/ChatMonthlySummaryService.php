@@ -108,6 +108,132 @@ final class ChatMonthlySummaryService
     }
 
     /**
+     * CSV を組み立てる。type は summary（ユーザー別サマリー）/ daily（日別明細）。
+     * 戻り値は ['csv' => Shift_JIS の CSV 文字列, 'file_name' => ファイル名]。
+     */
+    public function buildCsv(string $adminUuid, string $deleteFlag, string $month, string $type): array
+    {
+        $page = $this->buildPageData($adminUuid, $deleteFlag, $month);
+        $ym = str_replace('-', '', $page['month']);
+
+        if ($type === 'daily') {
+            $rows = $this->buildDailyCsvRows($page);
+            $fileName = 'chat_summary_' . $ym . '_daily.csv';
+        } else {
+            $rows = $this->buildSummaryCsvRows($page);
+            $fileName = 'chat_summary_' . $ym . '_summary.csv';
+        }
+
+        return ['csv' => $this->encodeCsv($rows), 'file_name' => $fileName];
+    }
+
+    private function buildSummaryCsvRows(array $page): array
+    {
+        $rows = [[
+            'ユーザーID', '氏名', '勤務日数', '対象日数', '達成日数', '未達成日数', '達成率(%)',
+            '送信合計', '受信合計', 'やり取り合計', '勤務日あたり平均やり取り数',
+        ]];
+
+        $sum = ['worked' => 0, 'achieved' => 0, 'missed' => 0, 'send' => 0, 'recv' => 0];
+        foreach ($page['rows'] as $row) {
+            $workedDays = 0;
+            foreach ($row['cells'] as $i => $cell) {
+                $day = $page['days'][$i];
+                if ($cell['worked'] && !$day['is_future']) {
+                    $workedDays++;
+                }
+            }
+            $rows[] = $this->summaryLine(
+                $row['user_id'], $row['user_name'], $workedDays,
+                $row['achieved'], $row['missed'], $row['total_send'], $row['total_recv']
+            );
+            $sum['worked'] += $workedDays;
+            $sum['achieved'] += $row['achieved'];
+            $sum['missed'] += $row['missed'];
+            $sum['send'] += $row['total_send'];
+            $sum['recv'] += $row['total_recv'];
+        }
+
+        if ($page['rows'] !== []) {
+            $rows[] = $this->summaryLine('', '全体', $sum['worked'], $sum['achieved'], $sum['missed'], $sum['send'], $sum['recv']);
+        }
+
+        return $rows;
+    }
+
+    private function summaryLine(string $userId, string $name, int $workedDays, int $achieved, int $missed, int $send, int $recv): array
+    {
+        $target = $achieved + $missed;
+        $total = $send + $recv;
+        return [
+            $userId,
+            $name,
+            $workedDays,
+            $target,
+            $achieved,
+            $missed,
+            $target > 0 ? round($achieved / $target * 100, 1) : '',
+            $send,
+            $recv,
+            $total,
+            $workedDays > 0 ? round($total / $workedDays, 1) : '',
+        ];
+    }
+
+    private function buildDailyCsvRows(array $page): array
+    {
+        $rows = [['日付', '曜日', '祝日名', 'ユーザーID', '氏名', '勤務', '送信', '受信', '判定']];
+        foreach ($page['rows'] as $row) {
+            foreach ($row['cells'] as $i => $cell) {
+                $day = $page['days'][$i];
+                if ($cell['state'] === 'warn') {
+                    $judge = '未達成';
+                } elseif ($cell['worked'] && !$day['is_future'] && !$day['is_off']) {
+                    $judge = '達成';
+                } else {
+                    $judge = '対象外';
+                }
+                $rows[] = [
+                    sprintf('%s-%02d', $page['month'], $day['day']),
+                    $day['weekday'],
+                    $day['holiday_name'],
+                    $row['user_id'],
+                    $row['user_name'],
+                    $cell['worked'] ? '○' : '',
+                    $cell['send'],
+                    $cell['recv'],
+                    $judge,
+                ];
+            }
+        }
+        return $rows;
+    }
+
+    /**
+     * Shift_JIS(CP932) の CSV 文字列にする。数式として解釈されうる文字列は先頭に ' を付ける。
+     */
+    private function encodeCsv(array $rows): string
+    {
+        $stream = fopen('php://temp', 'r+');
+        foreach ($rows as $row) {
+            $encoded = [];
+            foreach ($row as $value) {
+                $text = (string) $value;
+                if (is_string($value) && $text !== '' && strpos('=+-@', $text[0]) !== false) {
+                    $text = "'" . $text;
+                }
+                $encoded[] = mb_convert_encoding($text, 'SJIS-win', 'UTF-8');
+            }
+            fputcsv($stream, $encoded);
+        }
+        rewind($stream);
+        $csv = stream_get_contents($stream);
+        fclose($stream);
+
+        return $csv === false ? '' : $csv;
+    }
+
+    /**
      * YYYY-MM を検証して [年, 月] にする。不正な値は当月に倒す。
      */
     private function parseMonth(string $month): array

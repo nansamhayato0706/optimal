@@ -32,6 +32,8 @@ declare(strict_types=1);
 						<input type="text" class="month-picker" name="month" value="<?= $h($month) ?>" autocomplete="off">
 						<button type="button" class="mp-nav-btn mp-nav-next" aria-label="翌月">&#8250;</button>
 					</span>
+					<a class="btn btn-secondary" href="chat_summary.php?month=<?= $h($month) ?>&amp;csv=summary">CSV出力（ユーザー別集計）</a>
+					<a class="btn btn-secondary" href="chat_summary.php?month=<?= $h($month) ?>&amp;csv=daily">CSV出力（日別明細）</a>
 				</form>
 			</div>
 			<p class="chat-summary-legend">
