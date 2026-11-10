@@ -57,6 +57,24 @@
   border-left: 1px solid var(--color-border);
   background: var(--color-surface);
 }
+.chat-summary-table .cs-work-style {
+  display: inline-block;
+  margin-right: 3px;
+  padding: 0 3px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.5;
+  vertical-align: baseline;
+}
+.chat-summary-table .cs-work-style--1 {
+  background: #dcfce7;
+  color: #166534;
+}
+.chat-summary-table .cs-work-style--2 {
+  background: #ffedd5;
+  color: #9a3412;
+}
 .chat-summary-table thead .cs-user-col {
   background: var(--color-surface-alt);
 }

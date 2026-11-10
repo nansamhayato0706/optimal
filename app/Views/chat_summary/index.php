@@ -62,8 +62,13 @@ declare(strict_types=1);
 					</thead>
 					<tbody>
 <?php foreach ($rows as $row): ?>
+<?php
+$workStyleDiv = (int) ($row['work_style_div'] ?? 0);
+$workStyleLabel = $workStyleDiv === 2 ? '通所' : ($workStyleDiv === 1 ? '在宅' : '');
+$workStyleShort = $workStyleDiv === 2 ? '通' : ($workStyleDiv === 1 ? '在' : '');
+?>
 						<tr>
-							<td class="cs-user-col" title="<?= $h($row['user_name']) ?>"><a href="chat.php?i=<?= $h($row['user_uuid']) ?>"><?= $h($row['user_name']) ?></a></td>
+							<td class="cs-user-col" title="<?= $h(($workStyleLabel !== '' ? $workStyleLabel . '：' : '') . $row['user_name']) ?>"><?php if ($workStyleShort !== ''): ?><span class="cs-work-style cs-work-style--<?= $h($workStyleDiv) ?>"><?= $h($workStyleShort) ?></span><?php endif; ?><a href="chat.php?i=<?= $h($row['user_uuid']) ?>"><?= $h($row['user_name']) ?></a></td>
 <?php foreach ($row['cells'] as $i => $cell): ?>
 <?php $dow = $days[$i]['dow']; ?>
 <?php $hasCell = $cell['worked'] || $cell['send'] > 0 || $cell['recv'] > 0; ?>

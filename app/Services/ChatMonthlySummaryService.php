@@ -91,6 +91,7 @@ final class ChatMonthlySummaryService
                 'user_uuid'  => $uuid,
                 'user_id'    => (string) $user['user_id'],
                 'user_name'  => (string) $user['user_name'],
+                'work_style_div' => (int) ($user['work_style_div'] ?? 0),
                 'cells'      => $cells,
                 'total_send' => $totalSend,
                 'total_recv' => $totalRecv,
