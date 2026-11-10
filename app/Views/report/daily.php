@@ -70,8 +70,6 @@ $dateLabel = $dateTimestamp === false
 						<th>利用者名</th>
 						<th class="report_nowrap text-nowrap">開始時間</th>
 						<th class="report_nowrap text-nowrap">終了時間</th>
-						<th>備考</th>
-						<th>返信</th>
 						<th>支援記録及び評価</th>
 						<th class="report_nowrap text-nowrap">状況</th>
 					</tr>
@@ -81,8 +79,6 @@ $dateLabel = $dateTimestamp === false
 						<td><?= $h($row['user_name']) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_start_time'])) ?></td>
 						<td class="report_nowrap text-nowrap"><?= $h($formatTime($row['training_end_time'])) ?></td>
-						<td class="report_align_top"><?= nl2br($h($row['remark'] ?? '')) ?></td>
-						<td class="report_align_top"><?= nl2br($h($row['reply'] ?? '')) ?></td>
 						<td class="report_align_top"><?= nl2br($h($row['charge_comment'] ?? '')) ?><?php if (!empty($row['report_admin_uuid'])): ?><div class="report_comment_time text-nowrap"><?= $h($formatDateTime($row['update_date'] ?? null)) ?></div><?php endif; ?></td>
 <?php if ($isUnsubmitted): ?>
 						<td class="report_nowrap text-nowrap">未提出</td>
