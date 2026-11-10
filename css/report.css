@@ -68,6 +68,11 @@
   transition: transform 220ms ease, visibility 0s linear 220ms;
 }
 
+.report-index-header-shell.is-restoring .report-index-settings-panel,
+.report-index-header-shell.is-restoring .report-index-settings-toggle span {
+  transition: none !important;
+}
+
 .report-index-header-shell.is-open .report-index-settings-panel {
   transform: translateY(0);
   visibility: visible;

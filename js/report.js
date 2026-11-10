@@ -116,6 +116,20 @@ $(function(){
 			settingsToggle.setAttribute('aria-label', isOpen ? '表示期間とCSV・PDF出力を閉じる' : '表示期間とCSV・PDF出力を開く');
 			settingsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 		}
+		try {
+			// 月変更による再読み込み直後だけ、パネルを開いた状態に戻す（1回限り）
+			if (window.sessionStorage.getItem('reportSettingsReopen') === '1') {
+				window.sessionStorage.removeItem('reportSettingsReopen');
+				// 復元時はスライドさせず、最初から開いた状態で表示する
+				settingsShell.classList.add('is-restoring');
+				setReportSettingsOpen(true);
+				window.requestAnimationFrame(function() {
+					window.requestAnimationFrame(function() {
+						settingsShell.classList.remove('is-restoring');
+					});
+				});
+			}
+		} catch (e) {}
 		settingsToggle.addEventListener('click', function() {
 			setReportSettingsOpen(!settingsShell.classList.contains('is-open'));
 		});
@@ -143,6 +157,12 @@ $(function(){
 	});
 
 	$(document).on('change', '#frm .month-picker', function(){
+		// 再読み込み後も表示期間パネルを開いたままにする
+		try {
+			if (document.querySelector('.report-index-header-shell.is-open')) {
+				window.sessionStorage.setItem('reportSettingsReopen', '1');
+			}
+		} catch (e) {}
 		$('#frm').submit();
 	});
 
