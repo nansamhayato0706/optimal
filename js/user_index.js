@@ -528,7 +528,42 @@ $(function(){
 		return total;
 	}
 
+	// チャット通知音のオン/オフ（ブラウザごとに保存。緊急のビープは対象外）
+	var chatSoundMutedKey = 'zkChatSoundMuted';
+
+	function isChatSoundMuted() {
+		try {
+			return window.localStorage.getItem(chatSoundMutedKey) === '1';
+		} catch (e) {
+			return false;
+		}
+	}
+
+	function updateChatSoundToggle() {
+		var btn = document.getElementById('chat-sound-toggle');
+		if (!btn) {
+			return;
+		}
+		var muted = isChatSoundMuted();
+		btn.firstElementChild.textContent = muted ? '🔕' : '🔔';
+		btn.setAttribute('aria-pressed', muted ? 'false' : 'true');
+		btn.title = muted ? 'チャット通知音：オフ（クリックでオン）' : 'チャット通知音：オン（クリックでオフ）';
+	}
+
+	function toggleChatSound() {
+		try {
+			window.localStorage.setItem(chatSoundMutedKey, isChatSoundMuted() ? '0' : '1');
+		} catch (e) {}
+		updateChatSoundToggle();
+		if (!isChatSoundMuted()) {
+			playChatSound();
+		}
+	}
+
 	function playChatSound() {
+		if (isChatSoundMuted()) {
+			return;
+		}
 		try {
 			var src = $wrapper.data('chat-sound');
 			if (!src) {
@@ -923,6 +958,11 @@ $(function(){
 
 	$('#notify-toggle').on('click', requestNotificationPermission);
 	updateNotifyToggleButton();
+	updateChatSoundToggle();
+	var chatSoundBtn = document.getElementById('chat-sound-toggle');
+	if (chatSoundBtn) {
+		chatSoundBtn.addEventListener('click', toggleChatSound);
+	}
 	refreshUrgentNotification();
 	initMobileUserList();
 	updateMobileFilters();
