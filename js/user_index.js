@@ -516,6 +516,8 @@ $(function(){
 	}
 
 	var chatSound = null;
+	var chatSoundRepeatCount = 3;
+	var chatSoundRemaining = 0;
 	var lastChatRecvTotal = -1;
 
 	// 未読(ピンク)セルの「受」回数の合計。既にピンクの人から追加で届いた場合も検知する。
@@ -571,13 +573,28 @@ $(function(){
 			}
 			if (!chatSound) {
 				chatSound = new Audio(src);
+				chatSound.addEventListener('ended', function () {
+					chatSoundRemaining--;
+					if (chatSoundRemaining > 0) {
+						startChatSoundOnce();
+					}
+				});
 			}
+			chatSoundRemaining = chatSoundRepeatCount;
+			startChatSoundOnce();
+		} catch (e) {}
+	}
+
+	function startChatSoundOnce() {
+		try {
 			chatSound.currentTime = 0;
 			var p = chatSound.play();
 			if (p && typeof p.catch === 'function') {
-				p.catch(function () {});
+				p.catch(function () { chatSoundRemaining = 0; });
 			}
-		} catch (e) {}
+		} catch (e) {
+			chatSoundRemaining = 0;
+		}
 	}
 
 	function refreshUrgentNotification() {
