@@ -515,6 +515,36 @@ $(function(){
 		} catch (e) {}
 	}
 
+	var chatSound = null;
+	var lastChatRecvTotal = -1;
+
+	// 未読(ピンク)セルの「受」回数の合計。既にピンクの人から追加で届いた場合も検知する。
+	function countUnreadChatRecv() {
+		var total = 0;
+		var nums = document.querySelectorAll('td.user_chat .user-chat-count--recv .user-chat-count__num');
+		for (var i = 0; i < nums.length; i++) {
+			total += parseInt(nums[i].textContent, 10) || 0;
+		}
+		return total;
+	}
+
+	function playChatSound() {
+		try {
+			var src = $wrapper.data('chat-sound');
+			if (!src) {
+				return;
+			}
+			if (!chatSound) {
+				chatSound = new Audio(src);
+			}
+			chatSound.currentTime = 0;
+			var p = chatSound.play();
+			if (p && typeof p.catch === 'function') {
+				p.catch(function () {});
+			}
+		} catch (e) {}
+	}
+
 	function refreshUrgentNotification() {
 		var emergencyCount = countActiveEmergencies();
 		var pendingInquiryIds = getPendingInquiryIds();
@@ -528,6 +558,13 @@ $(function(){
 		lastEmergencyCount = emergencyCount;
 		lastInquiryCount = inquiryCount;
 		lastChatCount = chatCount;
+
+		var chatRecvTotal = countUnreadChatRecv();
+		var wasChatRecvIncreased = lastChatRecvTotal >= 0 && chatRecvTotal > lastChatRecvTotal;
+		lastChatRecvTotal = chatRecvTotal;
+		if ((wasChatIncreased || wasChatRecvIncreased) && emergencyCount === 0) {
+			playChatSound();
+		}
 
 		if (emergencyCount > 0) {
 			startFlash('🚨 緊急' + emergencyCount + '件', true);
@@ -889,6 +926,8 @@ $(function(){
 	refreshUrgentNotification();
 	initMobileUserList();
 	updateMobileFilters();
-	document.addEventListener('click', initAudioContext, { once: true });
-	document.addEventListener('keydown', initAudioContext, { once: true });
+	// 一度きりにせず、suspended に戻った場合も次の操作で再開できるようにする
+	['pointerdown', 'click', 'keydown', 'touchstart'].forEach(function(type) {
+		document.addEventListener(type, initAudioContext, { passive: true });
+	});
 });

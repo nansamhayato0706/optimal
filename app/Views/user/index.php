@@ -28,6 +28,7 @@ $h = array(Esc::class, 'h');
 	data-status-url="user_status.php"
 	data-contact-detail-url="contact_detail.php"
 	data-contact-update-url="contact_update.php"
+	data-chat-sound="sound/chat_bright_triple.mp3"
 	data-dummy-image="<?= $h($dummyImage) ?>">
 	<div class="user-list-header-shell">
 		<?php $headerExtraPartial = __DIR__ . '/partials/settings_toggle.php'; ?>
