@@ -18,6 +18,19 @@ $(function(){
 			settingsToggle.setAttribute('aria-label', isOpen ? '表示条件を閉じる' : '表示条件を開く');
 			settingsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 		}
+		try {
+			// 表示条件変更による再読み込み直後だけ、パネルを開いた状態に戻す（1回限り）
+			if (window.sessionStorage.getItem('userSettingsReopen') === '1') {
+				window.sessionStorage.removeItem('userSettingsReopen');
+				settingsShell.classList.add('is-restoring');
+				setSettingsOpen(true);
+				window.requestAnimationFrame(function() {
+					window.requestAnimationFrame(function() {
+						settingsShell.classList.remove('is-restoring');
+					});
+				});
+			}
+		} catch (e) {}
 		settingsToggle.addEventListener('click', function() {
 			setSettingsOpen(!settingsShell.classList.contains('is-open'));
 		});

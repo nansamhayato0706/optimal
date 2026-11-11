@@ -38,7 +38,7 @@ $h = array(Esc::class, 'h');
 			<?= csrf_field() ?>
 			<div class="page-toolbar">
 				<label class="toolbar-label" for="delete_flg">表示条件</label>
-				<select id="delete_flg" name="delete_flg" onchange="document.getElementById('frm').submit()">
+				<select id="delete_flg" name="delete_flg" onchange="try{if(document.querySelector('.user-list-header-shell.is-open')){sessionStorage.setItem('userSettingsReopen','1');}}catch(e){}document.getElementById('frm').submit()">
 						<option value="">選択してください</option>
 <?php foreach (($divMap['delete_flg'] ?? array()) as $id => $label): ?>
 						<option value="<?= $h($id) ?>"<?= (string) $id === $deleteFlag ? ' selected' : '' ?>><?= $h($label) ?></option>

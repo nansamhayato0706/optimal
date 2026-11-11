@@ -194,6 +194,11 @@
   transition: transform 220ms ease, visibility 0s linear 220ms;
 }
 
+.user-list-header-shell.is-restoring .user-list-settings-panel,
+.user-list-header-shell.is-restoring .user-list-settings-toggle span {
+  transition: none !important;
+}
+
 .user-list-header-shell.is-open .user-list-settings-panel {
   transform: translateY(0);
   visibility: visible;
